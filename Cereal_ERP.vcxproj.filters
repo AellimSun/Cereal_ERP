@@ -16,6 +16,9 @@
     <Filter Include="소스 파일\123">
       <UniqueIdentifier>{b1d35b36-1bf7-4d95-b23c-c7cef16fc17e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\server_client">
+      <UniqueIdentifier>{ae0e9c43-a965-4ef3-b2a1-932b37785ac3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01.c">
@@ -30,9 +33,21 @@
     <ClCompile Include="소스.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
+    <ClCompile Include="process.c">
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
+    <ClCompile Include="client.c">
+      <Filter>소스 파일\server_client</Filter>
+    </ClCompile>
+    <ClCompile Include="server.c">
+      <Filter>소스 파일\server_client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="local.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
