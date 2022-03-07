@@ -30,9 +30,6 @@
     <ClCompile Include="소스.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
-    <ClCompile Include="cheol_wook.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">
