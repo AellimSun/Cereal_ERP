@@ -142,6 +142,7 @@
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="material.c" />
     <ClCompile Include="소스.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
