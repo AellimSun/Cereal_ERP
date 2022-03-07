@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
+    <ClCompile Include="cheol_wook.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="소스.c" />
   </ItemGroup>
