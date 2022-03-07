@@ -2,13 +2,15 @@
 
 void production_management(void);
 void material_management(void);
-void stock(void);
-void order(void);
-void delivery(void);
-void account(void);
-void base_information(void);
-void production_plan(void);
-void process(void);
+
+void stock(void);				// 재고
+void order(void);				// 발주
+void delivery(void);			// 납품
+void account(void);				// 거래처
+void base_information(void);	// 기초정보
+void product_list(void);		// 생산품목리스트
+void production_plan(void);		// 생산계획
+void process(void);				// 공정관리
 
 int main(void)
 {
@@ -20,6 +22,7 @@ int main(void)
 	printf("0.종료\n");
 
 	scanf("%d", &input);
+	system("cls");
 	switch (input)
 	{
 	case 1:
@@ -37,7 +40,7 @@ int main(void)
 	return 0;
 }
 
-void production_management(void)
+void material_management(void)
 {
 	int input = 0;
 	printf("메뉴를 선택하세요.\n");
@@ -48,6 +51,7 @@ void production_management(void)
 	printf("0.이전으로\n");
 
 	scanf("%d", &input);
+	system("cls");
 	switch (input)
 	{
 	case 1:
@@ -70,7 +74,7 @@ void production_management(void)
 	}
 
 }
-void material_management(void)
+void production_management(void)
 {
 	int input = 0;
 	printf("메뉴를 선택하세요.\n");
@@ -79,6 +83,7 @@ void material_management(void)
 	printf("3.공정관리\n");
 
 	scanf("%d", &input);
+	system("cls");
 	switch (input)
 	{
 	case 1:
@@ -116,13 +121,36 @@ void account(void)
 }
 void base_information(void)
 {
+	int input = 0;
+	printf("메뉴를 선택하세요.\n");
+	printf("1.BOM 등록\n");
+	printf("2.BOM 조회\n");
+	printf("3.생산품목 리스트\n");
+	printf("0.이전으로\n");
 
+	scanf("%d", &input);
+	system("cls");
+	switch (input)
+	{
+	case 1:
+	case 2:
+	case 3:
+		product_list();
+	case 0:
+		material_management();
+	}
+	
 }
 void production_plan(void)
 {
 
 }
 void process(void)
+{
+
+}
+
+void product_list(void)
 {
 
 }
