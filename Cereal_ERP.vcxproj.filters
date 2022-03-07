@@ -13,22 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\123">
+      <UniqueIdentifier>{b1d35b36-1bf7-4d95-b23c-c7cef16fc17e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="01.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="33.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="소스.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="cheol_wook.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cereal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
