@@ -18,17 +18,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="01.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="33.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="소스.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
