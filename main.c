@@ -68,7 +68,7 @@ void material_management(void)
 		break;
 
 	case 4:
-		account();
+		//account();
 		break;
 
 	case 0:
@@ -139,10 +139,7 @@ void base_information(void)
 	}
 	
 }
-void production_plan(void)
-{
 
-}
 void process(void)
 {
 
