@@ -51,9 +51,6 @@
     <ClCompile Include="Order.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\PKNU\Documents\카카오톡 받은 파일\Local_File_IO\sample.c">
-      <Filter>소스 파일\123</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">

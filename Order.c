@@ -45,10 +45,10 @@ void storage_Order(char* prd_code, char* acc_code, int num)
 
 	conditional = "ACC_CODE = newOrder.ACC_CODE";
 
-	if ()
-	{
-		return -1;
-	}
+	//if ()
+	//{
+	//	return -1;
+	//}
 }
 
 void search_Order()
