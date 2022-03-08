@@ -142,6 +142,7 @@
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
     <ClCompile Include="account.c" />
+    <ClCompile Include="bom_test.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="process.c" />

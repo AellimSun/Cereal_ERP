@@ -48,6 +48,9 @@
     <ClCompile Include="test.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
+    <ClCompile Include="bom_test.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">
