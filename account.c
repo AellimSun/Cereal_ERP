@@ -1,7 +1,17 @@
 #include "cereal.h"
+#include "local.h"
+
+void test()
+{
+	if (_create("acoount", "ACC_CODE VARCHAR(5) BN_REGI_NUM INT NAME VARCHAR(30)") == -1) {
+		printf(" % s\n", err_msg);
+
+		return -1;
+	}
+}
 
 typedef struct Accountnode {
-	int acconut_code;
+	int ACC_CODE;
 	char account_name[20];
 	char account_contact[20];
 	struct Accontnode * next;
@@ -9,9 +19,10 @@ typedef struct Accountnode {
 
 void insertAcconut()
 {
+	
 	int new_code;
-	char new_name[20] = { 0 };
-	char new_contract[20] = { "0" };
+	char new_name[20];
+	char new_contract[20];
 
 	printf("====================\n");
 	printf("거래처를 등록합니다.\n");
@@ -26,9 +37,9 @@ void insertAcconut()
 	scanf("%s", &new_contract);
 	Anode* newNode =(Anode *) malloc(sizeof(Anode));
 	if (newNode == NULL)return;
-	newNode->acconut_code = new_code;
-	/*newNode->account_name = new_name;
-	newNode->account_contact = new_contract;*/
+	newNode->ACC_CODE = new_code;
+	strcpy(newNode->account_name, new_name);
+	strcpy(newNode->account_contact, new_contract);
 
 
 }
