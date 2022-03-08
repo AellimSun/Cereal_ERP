@@ -23,7 +23,7 @@ void insertAcconut()
 	printf("거래처 이름 등록 : ");
 	scanf("%s", &new_name);
 	printf("거래처 연락처 등록 : ");
-	scnaf("%s", &new_contract);
+	scanf("%s", &new_contract);
 	Anode* newNode =(Anode *) malloc(sizeof(Anode));
 	if (newNode == NULL)return;
 	newNode->acconut_code = new_code;
@@ -59,12 +59,12 @@ void account()
 
 	switch (menu)
 	{
-	case 1:
-		insertAccount();
+	/*case 1:
+		insertAcconut();
 		break;
 	case 2:
 		updateAccount();
-		break;
+		break;*/
 	case 3:
 		readAccount();
 		break;
