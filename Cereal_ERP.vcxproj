@@ -151,6 +151,9 @@
     <ClInclude Include="cereal.h" />
     <ClInclude Include="local.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="process.dat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -71,6 +71,7 @@ void material_management(void)
 
 	case 0:
 		main();
+		break;
 	}
 
 }
@@ -100,6 +101,7 @@ void production_management(void)
 
 	case 0:
 		main();
+		break;
 	}
 }
 void stock(void)
@@ -142,10 +144,6 @@ void base_information(void)
 	
 }
 void production_plan(void)
-{
-
-}
-void process(void)
 {
 
 }
