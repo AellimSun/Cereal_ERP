@@ -10,6 +10,7 @@ typedef struct Material {
 void stock();
 void all_read();
 void code_read();
+void material_create();
 
 void stock()
 {
@@ -17,6 +18,7 @@ void stock()
 	printf("메뉴를 선택하세요.\n");
 	printf("1. 전품목 조회\n");
 	printf("2. 품목코드로 조회\n");
+	printf("3. create\n");
 	printf("0. 이전으로\n");
 
 	scanf("%d", &input);
@@ -30,7 +32,11 @@ void stock()
 	case 2:
 		code_read();
 		break;
-		
+
+	case 3:
+		material_create();
+		break;
+
 	case 0:
 		material_management();
 		break;
@@ -44,21 +50,12 @@ void all_read() {
 	int result_count;
 	result* _result;
 
-	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
-
 	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
-
-	/*if (_insert(values) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}*/
 
 	if (_select(conditional, select_column, &select_result_str) == -1) {
 		printf("조회할 데이터가 없습니다.\n");
@@ -78,7 +75,7 @@ void all_read() {
 		result_print(_result, result_count);
 		printf("\n\n");
 	}
-	
+
 	file_column_free();
 	result_free(_result, result_count);
 
@@ -131,6 +128,60 @@ void code_read() {
 
 	file_column_free();
 	result_free(_result, result_count);
+
+	system("pause");
+	system("cls");
+	stock();
+}
+
+void material_create() {
+	char values[50];
+	char PRD_CODE[5];
+	char STATUS[5];
+	char DATE[8];
+	char ACC_CODE[5];
+
+	printf("등록하려는 자재의 코드를 입력해 주세요 : ");
+	scanf("%s", PRD_CODE);
+	printf("등록하려는 자재의 상태를 입력해 주세요 : ");
+	scanf("%s", STATUS);
+	printf("자재의 입고일자를 입력해 주세요 : ");
+	scanf("%s", DATE);
+	printf("자재의 거래처를 입력해 주세요 : ");
+	scanf("%s", ACC_CODE);
+
+	strcpy(values, "'");
+	strcat(values, PRD_CODE);
+	strcat(values, "', '");
+	strcat(values, STATUS);
+	strcat(values, "', ");
+	strcat(values, DATE);
+	strcat(values, ", '");
+	strcat(values, ACC_CODE);
+	strcat(values, "'");
+	printf("\n");
+	printf("%s", values);
+	printf("\n");
+
+	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
+
+	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_insert(values) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	file_column_free();
 
 	system("pause");
 	system("cls");
