@@ -42,6 +42,9 @@
     <ClCompile Include="account.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
+    <ClCompile Include="material.c">
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">

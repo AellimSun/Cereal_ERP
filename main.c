@@ -102,10 +102,6 @@ void production_management(void)
 		main();
 	}
 }
-void stock(void)
-{
-
-}
 void order(void)
 {
 
