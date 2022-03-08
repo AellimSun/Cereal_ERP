@@ -12,6 +12,8 @@ typedef struct _process {
 }S_process;
 void init(void);
 
+void view(void);
+
 void process(void)
 {
 	//init();
@@ -51,7 +53,7 @@ void process(void)
 		break;
 	case 2:
 		printf("공정을 조회합니다.\n");
-		printf("");
+		view();
 		break;
 	case 0:
 		break;
