@@ -147,6 +147,8 @@
     <ClCompile Include="material.c" />
     <ClCompile Include="process.c" />
     <ClCompile Include="server.c" />
+    <ClCompile Include="test.c" />
+    <ClCompile Include="Test01.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h" />
