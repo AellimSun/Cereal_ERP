@@ -1,4 +1,6 @@
+#include "local.h"
 #include "cereal.h"
+
 
 void production_management(void);
 void material_management(void);
@@ -115,10 +117,10 @@ void delivery(void)
 
 }
 
-void account(void)
-{
-
-}
+//void account(void)
+//{
+//
+//}
 void base_information(void)
 {
 	int input = 0;
