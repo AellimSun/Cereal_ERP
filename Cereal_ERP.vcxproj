@@ -143,6 +143,7 @@
     <ClCompile Include="33.c" />
     <ClCompile Include="account.c" />
     <ClCompile Include="client.c" />
+    <ClCompile Include="Delivery.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="process.c" />
     <ClCompile Include="server.c" />
