@@ -142,6 +142,7 @@
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
     <ClCompile Include="account.c" />
+    <ClCompile Include="C:\Users\PKNU\Documents\카카오톡 받은 파일\Local_File_IO\sample.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Order.c" />
