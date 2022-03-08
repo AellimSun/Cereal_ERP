@@ -148,10 +148,12 @@
     <ClCompile Include="server.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="Test01.c" />
+    <ClCompile Include="UI.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h" />
     <ClInclude Include="local.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="process.dat" />

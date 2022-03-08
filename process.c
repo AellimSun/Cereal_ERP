@@ -1,6 +1,11 @@
 #include "cereal.h"
+#include "UI.h"
 
 #define FILE_NAME "process"
+
+int cursor_x = 0;
+int cursor_y = 0;
+
 typedef struct _process {
 	int data;
 	struct _process* next;
@@ -12,11 +17,19 @@ void process(void)
 	//init();
 	initalizing("FILE_NAME");
 	int input;
+	CursorView(false);
 	printf("메뉴를 선택하세요.\n");
-	printf("1.공정등록\n");
-	printf("2.공정조회\n");
-	printf("0.이전으로\n");
-	scanf("%d", &input);
+
+	while (1)
+	{
+		goto_xy(cursor_x, cursor_y + 1);
+		textcolor(8);
+		printf("1.공정등록\n");
+		textcolor(15);
+		printf("2.공정조회\n");
+		printf("0.이전으로\n");
+		scanf("%d", &input);
+	}
 	system("cls");
 
 	if (input < 0 || input >2)
