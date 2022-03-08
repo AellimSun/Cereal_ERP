@@ -30,7 +30,7 @@ void stock()
 		break;
 
 	case 2:
-		code_read();
+		code_read(NULL);
 		break;
 
 	case 3:
@@ -84,21 +84,25 @@ void all_read() {
 	stock();
 }
 
-void code_read() {
-	char search[5];
-	char tmpCondition[30] = "PRD_CODE='";
-
-	getchar();
-	printf("검색할 품목코드를 입력해 주세요 : ");
-	scanf("%s", search);
-
-	strcat(tmpCondition, search);
-	strcat(tmpCondition, "'");
-
-	char* conditional = tmpCondition;
+void code_read(char* condition) {
 	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
 	int result_count;
 	result* _result;
+	char* conditional = condition;
+
+	if (conditional == NULL) {
+		char search[5];
+		char tmpCondition[30] = "PRD_CODE='";
+
+		getchar();
+		printf("검색할 품목코드를 입력해 주세요 : ");
+		scanf("%s", search);
+
+		strcat(tmpCondition, search);
+		strcat(tmpCondition, "'");
+
+		conditional = tmpCondition;
+	}
 
 	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
 		printf("%s\n", err_msg);
@@ -186,4 +190,17 @@ void material_create() {
 	system("pause");
 	system("cls");
 	stock();
+}
+
+//생산계획 입력 후 받아와서 재고 확인
+void confirm_Material(plan* p) {
+	char* CODE = p->CODE;
+	int* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
+
+	//BOM 조회
+
+	//출력
+	printf("품목명 : ");
+	printf("\t필요\t\t\t현황\n\n");
+	printf("옥수수 : 3개\t\t\t옥수수 : 1개");
 }
