@@ -102,6 +102,10 @@ void production_management(void)
 		main();
 	}
 }
+void stock(void)
+{
+
+}
 void order(void)
 {
 	// 파일 위치 :: 초기화한다. 저장소 지정
