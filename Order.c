@@ -23,14 +23,56 @@ result* cur;
 Order* insert_ord;
 char* values;
 
+
+void creatNode_Order(Order* head, int num)
+{
+	//printf("\ncur->name %s \n", cur->name);
+	Order* newNode;
+	if ((newNode = (column*)malloc(sizeof(column))) == NULL) {
+
+		return -1;
+	}
+
+	newNode->ACC_CODE = NULL; 
+	newNode->PRD_CODE = NULL;
+	newNode->D_Day = 0; 
+	newNode->NUM = 0; 
+	newNode->O_Day = 0;
+	newNode->next = 0;
+
+
+	
+	
+	//printf("       cur->_string_data[num]/%s\n", cur->_string_data[num]);
+	if (strcmp(cur->name, "ACC_CODE") == 0)
+	{
+		
+		newNode->ACC_CODE = cur->_string_data[num];
+		//printf("       newNode->ACC_CODE/%s\n", newNode->ACC_CODE);
+	}
+	if (strcmp(cur->name, "PRD_CODE") == 0)
+	{
+		
+		newNode->PRD_CODE = cur->_string_data[num];
+		//printf("       newNode->PRD_CODE/%s\n", newNode->PRD_CODE);
+	}
+	
+	newNode->next = head->next;
+	head->next = newNode;
+
+
+}
+
+
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 char* Request_Order(char* prd_code, int num)
 {
+
 	//initialization 구조체
 	//insert_ord = (Order*)malloc(sizeof(Order));
 
 	if ((insert_ord = (column*)malloc(sizeof(column))) == NULL) {
-		
+
 		return -1;
 	}
 
@@ -146,6 +188,9 @@ char* Request_Order(char* prd_code, int num)
 
 			cur = _result;
 			while (1) {
+
+
+
 				switch (cur->type) {
 				case _INT:
 					if (int_is_null(cur->_int_data[i]))
@@ -176,17 +221,11 @@ char* Request_Order(char* prd_code, int num)
 						printf("     (NULL)");
 					else
 					{
-						printf("       /%s", cur->name);
-						if (strcmp(cur->name, "ACC_CODE") == 0)
-						{
-							strcpy(insert_ord->ACC_CODE, cur->name);
-						}
-						if (strcmp(cur->name, "PRD_CODE") == 0)
-						{
-							strcpy(insert_ord->PRD_CODE, cur->name);
-						}
+						//차라리 함수를 새로 선언해서 넘겨주자.
+						creatNode_Order(insert_ord,i);
+						//발주 파일에 insert할 구조체 리스트 생성 완료
 
-						printf("       /%s", cur->_string_data[i]);
+						printf("       %s", cur->_string_data[i]);
 					}
 					break;
 				}
@@ -217,60 +256,59 @@ char* Request_Order(char* prd_code, int num)
 //01 자재 -> 발주 -> 거래처 루트
 char* storage_Order(char* prd_code, char* acc_code, int num)
 {
-	//구조체 배열을 다 char로 선언, 형변환하여 저장.
-	//구조체배열로 받자. 거래처에서 
-	printf("2\n");
-	// !!! 배열명은 주소값을 가리킨다 !!!
-	Order newOrder;
 
-	//발주이력을 저장하는 파일
-	//int _update(char* conditional, char* set) {
-	printf("3\n");
-	strcpy(newOrder.ACC_CODE, acc_code);
-	printf("4\n");
-	strcpy(newOrder.PRD_CODE, prd_code);
-	printf("5\n");
-	newOrder.NUM = num;
-	printf("6\n");
-	
-	//함수로 빼자
-	/*
+	while (insert_ord->next != 0)
+	{
+		//구조체 배열을 다 char로 선언, 형변환하여 저장.
+		//구조체배열로 받자. 거래처에서 
+		
+		// !!! 배열명은 주소값을 가리킨다 !!!
+		Order newOrder;
+
+		//발주이력을 저장하는 파일
+		//int _update(char* conditional, char* set) {
+		strcpy(newOrder.ACC_CODE, acc_code);
+		strcpy(newOrder.PRD_CODE, prd_code);
+		newOrder.NUM = num;
+
+		//함수로 빼자
+		/*
+			strcat(values, "'");
+			strcat(values, newOrder.ACC_CODE);
+			strcat(values, "', ");
+			strcat(values, "'");
+		*/
+
+		values = malloc(sizeof(char) * 50);
+		//char* values = "'NULL', 'NULL', acc, prd, null";
+		//strcpy(values, newOrder.ACC_CODE);
+
+		strcpy(values, "NULL");
+		strcat(values, ", ");
+		strcat(values, "NULL");
+		strcat(values, ", ");
 		strcat(values, "'");
 		strcat(values, newOrder.ACC_CODE);
+		//strcat(values, "NULL");
 		strcat(values, "', ");
 		strcat(values, "'");
-	*/
+		strcat(values, newOrder.PRD_CODE);
+		//strcat(values, "NULL");
+		strcat(values, "', ");
+		strcat(values, "NULL");
 
-	values = malloc(sizeof(char) * 50);
-	//char* values = "'NULL', 'NULL', acc, prd, null";
-	//strcpy(values, newOrder.ACC_CODE);
-	
-	strcpy(values, "NULL");
-	strcat(values, ", ");
-	strcat(values, "NULL");
-	strcat(values, ", ");
-	strcat(values, "'");
-	strcat(values, newOrder.ACC_CODE);
-	//strcat(values, "NULL");
-	strcat(values, "', ");
-	strcat(values, "'");
-	strcat(values, newOrder.PRD_CODE);
-	//strcat(values, "NULL");
-	strcat(values, "', ");
-	strcat(values, "NULL");
-	
-	printf("%s\n", values);
-	
+		printf("%s\n", values);
 
-	
-	if (_insert(values) == -1)
-	{
-		printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
+
+		if (_insert(values) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
 	}
-
 	
 	free(values);
 
