@@ -117,10 +117,12 @@ char* Request_Order(char* prd_code, int num)
 		}
 	*/
 
+
+
 	//특정 컬럼 추출
-	printf("특정컬럼 추출 소스\n");
+	printf("특정컬럼 추출 소스\n\n");
 	result* cur;
-	cur = _result;
+	
 	if ((find = find_result(_result, "PRD_CODE")) == -1) {
 		printf("%s\n", err_msg);
 
@@ -134,7 +136,18 @@ char* Request_Order(char* prd_code, int num)
 		if (strcmp(find->_string_data[i], prd_code) == 0)
 		{
 			//그에 해당하는 구조체 추출하기
-			printf("prd_code : %s\n", find->_string_data[i]);
+			//printf("prd_code : %s\n", find->_string_data[i]);
+
+			cur = _result;
+			while (1) {
+				printf("    %s", cur->name);
+				if (cur->next == 0)
+					break;
+				else
+					cur = cur->next;
+			}
+			printf("\n=====================================================\n");
+			cur = _result;
 			while (1) {
 				switch (cur->type) {
 				case INT:
@@ -158,21 +171,18 @@ char* Request_Order(char* prd_code, int num)
 				case CHAR:
 					if (char_is_null(cur->_char_data[i]))
 						printf("     (NULL)");
-					else
+					else 
 						printf("     %c", cur->_char_data[i]);
 					break;
 				case VARCHAR:
 					if (string_is_null(cur->_string_data[i]))
 						printf("     (NULL)");
 					else
-						printf("     %s", cur->_string_data[i]);
+						printf("       %s", cur->_string_data[i]);
 					break;
 				}
 				if (cur->next == 0)
-				{
-					printf("\n");
 					break;
-				}	
 				else
 					cur = cur->next;
 			}
@@ -181,6 +191,7 @@ char* Request_Order(char* prd_code, int num)
 		}
 		i++;
 	}
+	printf("\n\n");
 
 	printf("특정컬럼 추출 소스 끗\n");
 	/*
@@ -232,10 +243,10 @@ char* Request_Order(char* prd_code, int num)
 	
 	}
 
+
+	*/
 	file_column_free();
 	result_free(_result, result_count);
-	*/
-
 	free(values);
 	
 }

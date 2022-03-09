@@ -26,7 +26,12 @@ int main(void)
 		file_column_free();
 		return -1;
 	}
+	if (_insert("'a001', 'co001', NULL, 'sample08'") == -1) {
+		printf("%s\n", err_msg);
 
+		file_column_free();
+		return -1;
+	}
 	print_data();
 
 	/*
@@ -107,7 +112,7 @@ int main(void)
 		return -1;
 	}
 	result_print(_result, result_count);
-	printf("\n\n,,");
+	printf("\n\n");
 
 	//if ((find = find_result(_result, "FLdf")) == -1) {
 	//	printf("%s\n", err_msg);

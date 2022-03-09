@@ -117,7 +117,7 @@ void order(void)
 	//}
 
 
-	Request_Order("co001", 3);
+	Request_Order("c003", 3);
 
 	//printf("1\n");
 	//storage_Order("003", 5);
