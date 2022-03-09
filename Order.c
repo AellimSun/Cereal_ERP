@@ -1,15 +1,17 @@
 #include "cereal.h"
-#include <stdlib.h>
-#define _GNU_SOURCE
+//#include <stdlib.h>
+//#define _GNU_SOURCE
 #include <string.h>
 
 typedef struct _order
 {
 	int O_Day;
 	int D_Day;
-	char ACC_CODE[6]; //배열명은 주소값을 가리킨다.
-	char PRD_CODE[6]; //배열명은 주소값을 가리킨다.
+	char *ACC_CODE; //배열명은 주소값을 가리킨다.
+	char *PRD_CODE; //배열명은 주소값을 가리킨다.
 	int NUM;
+	
+	struct _order* next;
 
 }Order;
 
@@ -17,12 +19,25 @@ result* _result;
 result* find;
 int result_count;
 
+result* cur;
+Order* insert_ord;
 char* values;
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 char* Request_Order(char* prd_code, int num)
 {
+	//initialization 구조체
+	//insert_ord = (Order*)malloc(sizeof(Order));
+
+	if ((insert_ord = (column*)malloc(sizeof(column))) == NULL) {
+		
+		return -1;
+	}
+
+	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
+	insert_ord->next = 0;
 	
+
 	/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
 
 	/*
@@ -72,40 +87,7 @@ char* Request_Order(char* prd_code, int num)
 	//print_data();
 	values = malloc(sizeof(prd_code) * 2);
 	strcpy(values, "PRD_CODE=");
-	strcat(values, "1234");
-
-	//if (_select("*", " * ", &select_result_str)== -1) {
-	//	printf("%s\n", err_msg);
-
-	//	file_column_free();
-	//	return -1;
-	//}
-
-	//select로 모든 함수 불러오고, 구조체로 정렬된 데이터에서 strcmd써서 추출하자
-
-	//printf("%s\n\n", values);
-	//if (_select("NAME=sample06", "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
-	//	printf("%s\n", err_msg);
-
-	//	file_column_free();
-	//	return -1;
-	//}
-	//else {
-	//	printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
-
-	//	//printf("%s\n\n", select_result_str);
-	//}
-
-
-	//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-	//	printf("%s\n", err_msg);
-
-	//	file_column_free();
-	//	return -1;
-	//}
-	//result_print(_result, result_count);
-	printf("\n\n");
-
+	strcat(values, prd_code);
 
 	printf("추출한 데이터 확인\n");
 	if (_select(values, "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
@@ -118,27 +100,35 @@ char* Request_Order(char* prd_code, int num)
 		printf("%s\n\n", select_result_str);
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 	}
+
 	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
+
+
+
+	result_print(_result, result_count);
+	printf("\n\n");
+	
+	//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
 	int i = 0;
-	/*
-		printf("select_result_str : %s\n", select_result_str);
 
-		for (int i = 0; i < result_count; i++) {
-			printf("     %s\n", _result->next->_string_data[i]);
-		}
-	*/
-
+	
+	
 
 
 	//특정 컬럼 추출
-	printf("특정컬럼 추출 소스\n\n");
-	result* cur;
-	
+	printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+
+
 	if ((find = find_result(_result, "PRD_CODE")) == -1) {
 		printf("%s\n", err_msg);
 
@@ -156,45 +146,48 @@ char* Request_Order(char* prd_code, int num)
 
 			cur = _result;
 			while (1) {
-				printf("    %s", cur->name);
-				if (cur->next == 0)
-					break;
-				else
-					cur = cur->next;
-			}
-			printf("\n=====================================================\n");
-			cur = _result;
-			while (1) {
 				switch (cur->type) {
-				case INT:
+				case _INT:
 					if (int_is_null(cur->_int_data[i]))
 						printf("     (NULL)");
 					else
 						printf("     %d", cur->_int_data[i]);
 					break;
-				case FLOAT:
+				case _FLOAT:
 					if (float_is_null(cur->_float_data[i]))
 						printf("     (NULL)");
 					else
 						printf("     %.5f", cur->_float_data[i]);
 					break;
-				case DOUBLE:
+				case _DOUBLE:
 					if (double_is_null(cur->_double_data[i]))
 						printf("     (NULL)");
 					else
 						printf("     %.12lf", cur->_double_data[i]);
 					break;
-				case CHAR:
+				case _CHAR:
 					if (char_is_null(cur->_char_data[i]))
 						printf("     (NULL)");
 					else 
 						printf("     %c", cur->_char_data[i]);
 					break;
-				case VARCHAR:
+				case _VARCHAR:
 					if (string_is_null(cur->_string_data[i]))
 						printf("     (NULL)");
 					else
-						printf("       %s", cur->_string_data[i]);
+					{
+						printf("       /%s", cur->name);
+						if (strcmp(cur->name, "ACC_CODE") == 0)
+						{
+							strcpy(insert_ord->ACC_CODE, cur->name);
+						}
+						if (strcmp(cur->name, "PRD_CODE") == 0)
+						{
+							strcpy(insert_ord->PRD_CODE, cur->name);
+						}
+
+						printf("       /%s", cur->_string_data[i]);
+					}
 					break;
 				}
 				if (cur->next == 0)
@@ -203,9 +196,10 @@ char* Request_Order(char* prd_code, int num)
 					cur = cur->next;
 			}
 
-
+			printf("\n");
 		}
 		i++;
+
 	}
 	printf("\n\n");
 

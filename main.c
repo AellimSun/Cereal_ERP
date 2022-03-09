@@ -102,10 +102,7 @@ void production_management(void)
 		main();
 	}
 }
-void stock(void)
-{
 
-}
 void order(void)
 {
 	// 파일 위치 :: 초기화한다. 저장소 지정
@@ -117,7 +114,7 @@ void order(void)
 	//}
 
 
-	Request_Order("c003", 3);
+	Request_Order("co001", 3);
 
 	//printf("1\n");
 	//storage_Order("003", 5);
