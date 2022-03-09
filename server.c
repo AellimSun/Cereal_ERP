@@ -851,10 +851,12 @@ int _select(char* conditional, char* select, char** result) {
 	int result_count = 0;
 
 	strcpy(_conditional, conditional);
+	
 	strcpy(_select, select);
 
 	conditional_name = strtok(_conditional, "= ");
 	conditional_value = strtok(NULL, "\0");
+	
 
 	while (1) {
 		if (!strcmp(cur->name, conditional_name)) {

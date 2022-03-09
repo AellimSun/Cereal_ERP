@@ -26,12 +26,7 @@ int main(void)
 		file_column_free();
 		return -1;
 	}
-	if (_insert("'a001', 'co001', NULL, 'sample08'") == -1) {
-		printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
 	print_data();
 
 	/*
@@ -94,14 +89,14 @@ int main(void)
 	*/
 
 
-	if (_select("PRD_CODE=co001","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	if (_select("*","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
 	else {
-		//printf("%s\n\n", select_result_str);
+		printf("%s\n\n", select_result_str);
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 	}
 

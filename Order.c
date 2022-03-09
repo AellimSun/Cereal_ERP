@@ -72,7 +72,7 @@ char* Request_Order(char* prd_code, int num)
 	//print_data();
 	values = malloc(sizeof(prd_code) * 2);
 	strcpy(values, "PRD_CODE=");
-	strcat(values, prd_code);
+	strcat(values, "1234");
 
 	//if (_select("*", " * ", &select_result_str)== -1) {
 	//	printf("%s\n", err_msg);
@@ -83,31 +83,47 @@ char* Request_Order(char* prd_code, int num)
 
 	//select로 모든 함수 불러오고, 구조체로 정렬된 데이터에서 strcmd써서 추출하자
 
-	printf("%s\n\n", values);
-	if (_select("NAME=sample06", "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	//printf("%s\n\n", values);
+	//if (_select("NAME=sample06", "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
+	//else {
+	//	printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
+
+	//	//printf("%s\n\n", select_result_str);
+	//}
+
+
+	//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
+	//result_print(_result, result_count);
+	printf("\n\n");
+
+
+	printf("추출한 데이터 확인\n");
+	if (_select(values, "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
 	else {
+		printf("%s\n\n", select_result_str);
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
-
-		//printf("%s\n\n", select_result_str);
 	}
-
-
 	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
-	//result_print(_result, result_count);
-	printf("\n\n");
-
-
-	printf("추출한 데이터 확인\n");
 	int i = 0;
 	/*
 		printf("select_result_str : %s\n", select_result_str);
@@ -194,57 +210,10 @@ char* Request_Order(char* prd_code, int num)
 	printf("\n\n");
 
 	printf("특정컬럼 추출 소스 끗\n");
-	/*
-	if ((find = find_result(_result, "PRD_CODE")) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		result_free(_result, result_count);
-		return -1;
-	}
-
-	//find = _result;
-
-	printf("     %s\n", find->name);
-	printf("=============\n");
-	for (int i = 0; i < result_count; i++) {
-	switch (find->type) {
-		case INT:
-			if (int_is_null(find->_int_data[i]))
-				printf("     (null)\n");
-			else
-				printf("     %d\n", find->_int_data[i]);
-			break;
-		case FLOAT:
-			if (float_is_null(find->_float_data[i]))
-				printf("     (null)\n");
-			else
-				printf("     %.5f\n", find->_float_data[i]);
-			break;
-		case DOUBLE:
-			if (double_is_null(find->_double_data[i]))
-				printf("     (null)\n");
-			else
-				printf("     %.12lf\n", find->_double_data[i]);
-			break;
-		case CHAR:
-			if (char_is_null(find->_char_data[i]))
-				printf("     (null)\n");
-			else
-				printf("     %c\n", find->_char_data[i]);
-			break;
-		case VARCHAR:
-			if (string_is_null(find->_string_data[i]))
-				printf("     (null)\n");
-			else
-				printf("     %s\n", find->_string_data[i]);
-			break;
-		}
 	
-	}
-
-
-	*/
+	
+	
+	
 	file_column_free();
 	result_free(_result, result_count);
 	free(values);
