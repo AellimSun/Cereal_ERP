@@ -16,6 +16,16 @@ void process(void);				// 공정관리
 
 int main(void)
 {
+	system("title 시리얼 공장 관리 ERP");
+	printf("\n");
+	printf("\t\t=====================================\n");
+	printf("\t\t|                                   |\n");
+	printf("\t\t|       시리얼 공장 관리 ERP        |\n");
+	printf("\t\t|                                   |\n");
+	printf("\t\t=====================================\n");
+	Sleep(2000);
+	system("cls");
+
 	int input=0;
 
 	printf("메뉴를 선택하세요.\n");
