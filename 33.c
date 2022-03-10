@@ -90,7 +90,7 @@ void product_list()
 
 void insertMaterials()
 {
-	char value[50];
+	char values[50];
 	char CODE[5];
 	char NAME[30];
 	int BACKUP=0;
@@ -117,15 +117,15 @@ void insertMaterials()
 	//strcpy(newNode->materials_name, Materials_name);
 	//strcpy(newNode->backup, safe_stock);
 
-	strcpy(value, "'");
-	strcat(value, CODE);
-	strcat(value, "','");
-	strcat(value, NAME);
-	strcat(value, "','");
-	strcat(value, BACKUP_S);
-	strcat(value, "'");
+	strcpy(values, "'");
+	strcat(values, CODE);
+	strcat(values, "','");
+	strcat(values, NAME);
+	strcat(values, "','");
+	strcat(values, BACKUP_S);
+	strcat(values, "'");
 
-	printf("%s\n", value);
+	printf("%s\n", values);
 
 	if (initalizing("list") == -1)
 	{
@@ -163,7 +163,7 @@ void insertMaterials()
 		return -1;
 	}
 
-	if (_insert(value) == -1)
+	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
 
