@@ -113,7 +113,7 @@ void insertMaterials()
 	strcat(value, CODE);
 	strcat(value, "','");
 	strcat(value, NAME);
-	strcat(value, "'");
+	strcat(value, "','");
 	strcat(value, BACKUP);
 	strcat(value, "'");
 
@@ -197,7 +197,7 @@ void readMaterials()
 		read_NAME();
 		break;
 	case 3:
-		read_Code_Name();
+		read_Code_Name_Backup();
 		break;
 	case 0:
 		product_list();
@@ -225,7 +225,7 @@ void read_CODE()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "CODE, NAME";
+	char* select_column = "CODE, NAME, BACKUP";
 
 	if (initalizing("product_list") == -1)
 	{
@@ -243,10 +243,12 @@ void read_CODE()
 		file_column_free();
 		return -1;
 	}
-	else {
+	else 
+	{
 		printf("%s\n", select_result_str);
 	}
-	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) 
+	{
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -277,7 +279,7 @@ void read_NAME()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "CODE, NAME";
+	char* select_column = "CODE, NAME, BACKUP";
 
 	if (initalizing("product_list") == -1)
 	{
@@ -295,11 +297,13 @@ void read_NAME()
 		file_column_free();
 		return -1;
 	}
-	else {
+	else 
+	{
 		printf("%s\n", select_result_str);
 	}
 
-	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) 
+	{
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -316,7 +320,7 @@ void read_NAME()
 	main();
 }
 
-void read_Code_Name()
+void read_Code_Name_Backup()
 {
 	if (initalizing("product_list") == -1)
 	{
