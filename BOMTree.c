@@ -7,9 +7,16 @@
 
 #define FILE_NAME "BOM_SAMPLE_3"
 
-BOM_TREE* BOM_SEARCH(char* conditional)
+BOM_TREE* BOM_SEARCH(char* _conditional)
 {
-	//BOM_TREE* result_ = BOM_SEARCH(conditional);
+	char* text1 = "ROOT_CODE = '";
+
+	char* text2 = "'";
+	char* conditional = (char*)malloc(sizeof(text1) + sizeof(_conditional) + sizeof(text2));
+
+	strcpy(conditional, text1);
+	strcat(conditional, _conditional);
+	strcat(conditional, text2);
 
 	result* _result;
 	int result_count;
@@ -23,8 +30,8 @@ BOM_TREE* BOM_SEARCH(char* conditional)
 		exit(1);
 	}
 
-	print_data();
-	printf("\n");
+	/*print_data();
+	printf("\n");*/
 
 	//conditional 조건에 맞는 select_result_str 구하기
 	if (_select(conditional, select_column, &select_result_str) == -1) {
@@ -41,7 +48,7 @@ BOM_TREE* BOM_SEARCH(char* conditional)
 		exit(1);
 	}
 
-	result_print(_result, result_count);
+	//result_print(_result, result_count);
 
 	//result_count 개수 만큼의 구조체 포인터를 가지는 이중 포인터 Node를 동적 할당으로 정의
 	BOM_TREE** Node = (BOM_TREE**)malloc(sizeof(BOM_TREE*) * result_count);
@@ -164,7 +171,7 @@ BOM_TREE* BOM_SEARCH(char* conditional)
 
 	//완성된 트리에서 루트노드 찾기
 	int index = 0;
-	while (/*strcmp(Node[index]->M_CODE, "(NULL)") != 0*/ strlen(Node[index]->M_CODE) < 1)
+	while (char_is_null(Node[index]->M_CODE))
 		index++;
 
 	return Node[index];	//해당 루트노드를 리턴
@@ -173,51 +180,51 @@ BOM_TREE* BOM_SEARCH(char* conditional)
 
 BOM_TREE* BOM_CreateNode(Element2 REQ_NUM, Element1* NODE_CODE, Element1* M_CODE)
 {
-    BOM_TREE* NewNode = (BOM_TREE*)malloc(sizeof(BOM_TREE));
-    if (NewNode == NULL)   exit(1);
+	BOM_TREE* NewNode = (BOM_TREE*)malloc(sizeof(BOM_TREE));
+	if (NewNode == NULL)   exit(1);
 
-    NewNode->REQ_NUM = REQ_NUM;
-    strcpy(NewNode->NODE_CODE, NODE_CODE);
-    strcpy(NewNode->M_CODE, M_CODE);
+	NewNode->REQ_NUM = REQ_NUM;
+	strcpy(NewNode->NODE_CODE, NODE_CODE);
+	strcpy(NewNode->M_CODE, M_CODE);
 
-    NewNode->LeftChild = NULL;
-    NewNode->RightSibling = NULL;
+	NewNode->LeftChild = NULL;
+	NewNode->RightSibling = NULL;
 
-    return NewNode;
+	return NewNode;
 }
 
 void BOM_DestroyNode(BOM_TREE* Node)
 {
-    free(Node);
+	free(Node);
 }
 
 void BOM_DestroyTree(BOM_TREE* Root)
 {
-    if (Root->RightSibling != NULL)      //RightSibling이 존재시
-        BOM_DestroyTree(Root->RightSibling);      //RightSibling이 가리키는 노드를 매개변수로 재귀호출
+	if (Root->RightSibling != NULL)      //RightSibling이 존재시
+		BOM_DestroyTree(Root->RightSibling);      //RightSibling이 가리키는 노드를 매개변수로 재귀호출
 
-    if (Root->LeftChild != NULL)      //LeftChild이 존재시
-        BOM_DestroyTree(Root->LeftChild);      //LeftChild이 가리키는 노드를 매개변수로 재귀호출
+	if (Root->LeftChild != NULL)      //LeftChild이 존재시
+		BOM_DestroyTree(Root->LeftChild);      //LeftChild이 가리키는 노드를 매개변수로 재귀호출
 
 
-    Root->LeftChild = NULL;
-    Root->RightSibling = NULL;
+	Root->LeftChild = NULL;
+	Root->RightSibling = NULL;
 
-    BOM_DestroyNode(Root);
+	BOM_DestroyNode(Root);
 }
 
 void BOM_AddChildNode(BOM_TREE* ParentNode, BOM_TREE* ChildNode)
 {
-    if (ParentNode->LeftChild == NULL)
-        ParentNode->LeftChild = ChildNode;
-    else
-    {
-        BOM_TREE* TempNode = ParentNode->LeftChild;
-        while (TempNode->RightSibling != NULL)
-            TempNode = TempNode->RightSibling;
+	if (ParentNode->LeftChild == NULL)
+		ParentNode->LeftChild = ChildNode;
+	else
+	{
+		BOM_TREE* TempNode = ParentNode->LeftChild;
+		while (TempNode->RightSibling != NULL)
+			TempNode = TempNode->RightSibling;
 
-        TempNode->RightSibling = ChildNode;
-    }
+		TempNode->RightSibling = ChildNode;
+	}
 }
 
 void BOM_record_main()
@@ -234,32 +241,32 @@ void BOM_record(char* values)
 
 void BOM_Forward_PrintTree(BOM_TREE* CurNode, Element1* NODE_CODE)
 {
-    if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
-    {
-        printf("LEVEL\t  품목코드\t필요수량\n");
-        printf("=================================\n");
-        _BOM_Forward_PrintTree(CurNode, 0);
-        return;
-    }
-    if (CurNode->LeftChild != NULL)
-        BOM_Forward_PrintTree(CurNode->LeftChild, NODE_CODE);
-    if (CurNode->RightSibling != NULL)
-        BOM_Forward_PrintTree(CurNode->RightSibling, NODE_CODE);
+	if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
+	{
+		printf("LEVEL\t  품목코드\t필요수량\n");
+		printf("=================================\n");
+		_BOM_Forward_PrintTree(CurNode, 0);
+		return;
+	}
+	if (CurNode->LeftChild != NULL)
+		BOM_Forward_PrintTree(CurNode->LeftChild, NODE_CODE);
+	if (CurNode->RightSibling != NULL)
+		BOM_Forward_PrintTree(CurNode->RightSibling, NODE_CODE);
 }
 
 void _BOM_Forward_PrintTree(BOM_TREE* CurNode, int Depth)
 {
-    //int i = 0; // 들여쓰기로 트리의 Depth 표현 
-    //for (i = 0; i < Depth; i++)
-    //   printf("   ");
+	//int i = 0; // 들여쓰기로 트리의 Depth 표현 
+	//for (i = 0; i < Depth; i++)
+	//   printf("   ");
 
-    printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
+	printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
 
-    if (CurNode->LeftChild != NULL) // 차일드 존재시
-        _BOM_Forward_PrintTree(CurNode->LeftChild, Depth + 1); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
+	if (CurNode->LeftChild != NULL) // 차일드 존재시
+		_BOM_Forward_PrintTree(CurNode->LeftChild, Depth + 1); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
 
-    if (CurNode->RightSibling != NULL) // 형제 존재시
-        _BOM_Forward_PrintTree(CurNode->RightSibling, Depth); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
+	if (CurNode->RightSibling != NULL) // 형제 존재시
+		_BOM_Forward_PrintTree(CurNode->RightSibling, Depth); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
 }
 
 
@@ -267,15 +274,15 @@ void _BOM_Forward_PrintTree(BOM_TREE* CurNode, int Depth)
 
 void BOM_Backward_PrintTree(BOM_TREE* CurNode, Element1* NODE_CODE)
 {
-    if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
-    {
-        _BOM_Backward_PrintTree(CurNode, 0);
-        return;
-    }
-    if (CurNode->LeftChild != NULL)
-        BOM_Backward_PrintTree(CurNode->LeftChild, NODE_CODE);
-    if (CurNode->RightSibling != NULL)
-        BOM_Backward_PrintTree(CurNode->RightSibling, NODE_CODE);
+	if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
+	{
+		_BOM_Backward_PrintTree(CurNode, 0);
+		return;
+	}
+	if (CurNode->LeftChild != NULL)
+		BOM_Backward_PrintTree(CurNode->LeftChild, NODE_CODE);
+	if (CurNode->RightSibling != NULL)
+		BOM_Backward_PrintTree(CurNode->RightSibling, NODE_CODE);
 }
 
 void _BOM_Backward_PrintTree(BOM_TREE* CurNode, int Depth)
