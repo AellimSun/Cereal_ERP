@@ -1,8 +1,8 @@
 #include "local.h"
 
 typedef struct Accontnode {
-	char ACC_CODE[5];
-	char BN_REGI_NUM;
+	char ACC_CODE[10];
+	char BN_REGI_NUM[10];
 	char M_CODE[30];
 	char RorD[5];
 	struct Accountnode* next;
@@ -86,12 +86,12 @@ void insertAccount()
 
 	printf("%s\n\n", values);
 
-	/*if (_create("account", "ACC_CODE VARCHAR(5) BN_REGI_NUM VARCHAR(20) M_CODE VARCHAR(5) RorD VARCHAR(2)") == -1)
+	if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) M_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
 	{
 		printf("%s\n", err_msg);
 
 		return -1;
-	}*/
+	}
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -101,9 +101,30 @@ void insertAccount()
 	}
 
 	char ex1[50] = "'A1001', '18-854-1123', 'C201', 'R'";
-	char ex2[50] = "'A1002', '18-854-1123', 'C201', 'R'";
-	char ex3[50] = "'A1003', '18-854-1123', 'C201', 'R'";
+	char ex2[50] = "'A1002', '20-774-4556', 'C202', 'R'";
+	char ex3[50] = "'A1003', '21-814-9563', 'D201', 'D'";
 
+	if (_insert(ex1) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	if (_insert(ex2) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	if (_insert(ex3) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
 	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -169,8 +190,11 @@ void readAccount()
 
 void read_ACC_CODE()
 {
-	char naver[5];
-	char temp[20] = "ACC_CODE='";
+	char naver[10];
+	char temp[30] = "ACC_CODE='";
+
+	result* _result;
+	int result_count;
 
 	printf("검색할 거래처의 코드를 입력하세요 : ");
 	scanf("%s", naver);
@@ -178,7 +202,7 @@ void read_ACC_CODE()
 	strcat(temp, naver);
 	strcat(temp, "'");
 
-	char* conditional = "ACC_CODE='A1001'";
+	char* conditional = temp;
 	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
 
 	if (initalizing("account") == -1)
@@ -200,8 +224,16 @@ void read_ACC_CODE()
 	else {
 		printf("%s\n", select_result_str);
 	}
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
 
-	print_data();
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
+	printf("\n\n");
+
+	//print_data();
 	printf("\n");
 	file_column_free();
 
@@ -210,7 +242,7 @@ void read_ACC_CODE()
 
 void read_BN_REGI_NUM()
 {
-	char naver[5];
+	char naver[10];
 	char temp[20] = "BN_REGI_NUM='";
 
 	printf("검색할 거래처의 사업자 번호를 입력하세요 : ");
@@ -251,7 +283,7 @@ void read_BN_REGI_NUM()
 
 void read_M_CODE()
 {
-	char naver[5];
+	char naver[10];
 	char temp[20] = "M_CODE='";
 
 	printf("검색할 품목의 코드를 입력하세요 : ");
