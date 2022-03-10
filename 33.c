@@ -30,7 +30,7 @@
 typedef struct Materialsnode {
 	char CODE[5];
 	char NAME[20];
-	int backup;
+	int BACKUP;
 	struct Materialsnode* next;
 }Matls;
 
@@ -88,7 +88,7 @@ void insertMaterials()
 	char value[50];
 	char CODE[5];
 	char NAME[30];
-	int safe_stock;
+	int BACKUP;
 
 	printf("==================\n");
 	printf("자재를 등록합니다.\n");
@@ -99,8 +99,8 @@ void insertMaterials()
 	scanf("%s", CODE);
 	printf("자재품목 이름 등록 : ");
 	scanf("%s", NAME);
-	printf("안전 재고 등록 : ");
-	scanf("%d", &safe_stock);
+	printf("안전 재고 등록 :(g) ");
+	scanf("%d", BACKUP);
 
 	//Matls* newNode = (Matls*)malloc(sizeof(Matls));
 	//if (newNode == NULL)
@@ -114,12 +114,12 @@ void insertMaterials()
 	strcat(value, "','");
 	strcat(value, NAME);
 	strcat(value, "'");
-	//strcat(value, safe_stock);
-	//strcat(value, "'");
+	strcat(value, BACKUP);
+	strcat(value, "'");
 
 	printf("%s\n", value);
 
-	if (initalizing("33") == -1)
+	if (initalizing("product_list") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -127,9 +127,33 @@ void insertMaterials()
 		return -1;
 	}
 
-	char ex1[50] = "'M1001', '옥수수'";
-	char ex2[50] = "'M1002', '설탕'";
-	char ex3[50] = "'M1003', '소금'";
+	char ex1[50] = "'M1001', '옥수수', '400'";
+	char ex2[50] = "'M1002', '설탕', '50'";
+	char ex3[50] = "'M1003', '소금', '10'";
+
+	if (_insert(ex1) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_insert(ex2) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_insert(ex3) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
 
 	if (_insert(value) == -1)
 	{
@@ -160,6 +184,8 @@ void readMaterials()
 
 	printf("1. 자재품목 코드로 조회\n");
 	printf("2. 자재품목 이름으로 조회\n");
+	printf("3. 자재품목 전체조회\n");
+	printf("0. 이전으로\n");
 	scanf("%d", &menu);
 
 	switch (menu)
@@ -168,7 +194,13 @@ void readMaterials()
 		read_CODE();
 		break;
 	case 2:
-		read_materials_name();
+		read_NAME();
+		break;
+	case 3:
+		read_Code_Name();
+		break;
+	case 0:
+		product_list();
 		break;
 	}
 }
@@ -183,16 +215,19 @@ void read_CODE()
 	char search[5];
 	char temp[20] = "CODE='";
 
+	result* _result;
+	int result_count;
+
 	printf("검색할 자재품목 코드를 입력 : ");
 	scanf("%s", search);
 
 	strcat(temp, search);
 	strcat(temp, "'");
 
-	char* conditional = "CODE='M1001'";
+	char* conditional = temp;
 	char* select_column = "CODE, NAME";
 
-	if (initalizing("33") == -1)
+	if (initalizing("product_list") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -211,6 +246,13 @@ void read_CODE()
 	else {
 		printf("%s\n", select_result_str);
 	}
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
 
 	print_data();
 	printf("\n");
@@ -220,12 +262,15 @@ void read_CODE()
 
 }
 
-void read_materials_name()
+void read_NAME()
 {
 	char search[5];
 	char temp[20] = "NAME='";
 
-	printf("검색할 거래처의 사업자 번호를 입력하세요 : ");
+	result* _result;
+	int result_count;
+
+	printf("검색할 자재품목 이름을 입력하세요 : ");
 	scanf("%s", search);
 
 	strcat(temp, search);
@@ -234,7 +279,7 @@ void read_materials_name()
 	char* conditional = temp;
 	char* select_column = "CODE, NAME";
 
-	if (initalizing("33") == -1)
+	if (initalizing("product_list") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -254,6 +299,16 @@ void read_materials_name()
 		printf("%s\n", select_result_str);
 	}
 
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
+	printf("\n\n");
+
+
 	print_data();
 	printf("\n");
 	file_column_free();
@@ -261,3 +316,19 @@ void read_materials_name()
 	main();
 }
 
+void read_Code_Name()
+{
+	if (initalizing("product_list") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	file_column_free();
+
+	product_list();
+}
