@@ -135,50 +135,50 @@ void insertMaterials()
 		return -1;
 	}
 
-	char ex1[50] = "'M1001', '옥수수', '400'";
-	char ex2[50] = "'M1002', '설탕', '50'";
-	char ex3[50] = "'M1003', '소금', '10'";
+	//char ex1[50] = "'M1001', '옥수수', '400'";
+	//char ex2[50] = "'M1002', '설탕', '50'";
+	//char ex3[50] = "'M1003', '소금', '10'";
 
-	if (_insert(ex1) == -1)
-	{
-		printf("%s\n", err_msg);
+	//if (_insert(ex1) == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
+	//	file_column_free();
+	//	return -1;
+	//}
 
-	if (_insert(ex2) == -1)
-	{
-		printf("%s\n", err_msg);
+	//if (_insert(ex2) == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
+	//	file_column_free();
+	//	return -1;
+	//}
 
-	if (_insert(ex3) == -1)
-	{
-		printf("%s\n", err_msg);
+	//if (_insert(ex3) == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
+	//	file_column_free();
+	//	return -1;
+	//}
 
-	if (_insert(values) == -1)
-	{
-		printf("%s\n", err_msg);
+	//if (_insert(values) == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
+	//	file_column_free();
+	//	return -1;
+	//}
 
 	print_data();
 	printf("\n");
 	file_column_free();
 
-	printf("새로운 자재품목 등록완료. 메인으로 이동합니다.\n\n");
+	printf("새로운 자재품목 등록완료. 자재품목 관리로 이동합니다.\n\n");
 	system("pause");
 	system("cls");
-	main();
+	product_list();
 }
 
 void updateMaterials()
