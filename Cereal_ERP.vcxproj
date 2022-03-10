@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
+    
+    <ClCompile Include="BOMTree.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="material.c" />
@@ -151,6 +153,7 @@
     <ClCompile Include="Test01.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BOMTree.h" />
     <ClInclude Include="cereal.h" />
     <ClInclude Include="local.h" />
   </ItemGroup>
