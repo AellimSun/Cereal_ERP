@@ -1,5 +1,6 @@
 #include "cereal.h"
 
+
 void production_management(void);
 void material_management(void);
 
@@ -133,6 +134,11 @@ void base_information(void)
 	switch (input)
 	{
 	case 1:
+	{
+		BOM_TREE* res = BOM_SEARCH();
+		BOM_Forward_PrintTree(res, 0);
+
+	}
 	case 2:
 	case 3:
 		product_list();
