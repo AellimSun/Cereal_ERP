@@ -16,6 +16,7 @@ void read_BN_REGI_NUM();
 void read_PRD_CODE();
 void read_RorD();
 void deleteAccount();
+void updateAccount();
 
 void account()
 {
@@ -36,7 +37,7 @@ void account()
 		insertAccount();
 		break;
 	case 2:
-		//updateAccount();
+		updateAccount();
 		break;
 	case 3:
 		readAccount();
@@ -71,7 +72,7 @@ void insertAccount()
 	printf("원자재 거래처는 'R' 납품 거래처는 'D'를 입력하세요 : ");
 	scanf("%s", RorD);
 
-	char temp = "R\n" || "D\n";
+	char temp = ("R\n" || "D\n");
 	while (temp == 0)
 	{
 		printf("잘못 입력했습니다. 다시 입력하세요		");
@@ -449,4 +450,62 @@ void deleteAccount()
 	file_column_free();
 
 	account();
+}
+
+void updateAccount()
+{
+	//수정할 거래처 볼 수 있게 조회해주기
+	if (initalizing("account") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+
+	char naver1[10];
+	char temp[30] = "ACC_CODE='";
+	char naver2[20], naver3[10];
+	char temp2[30];
+
+	//char new_ACC_CODE[5];		//거래처 코드
+	//char new_BN_REGI_NUM[20];	//사업자 등록 번호
+	//char new_PRD_CODE[5];			//취급 품목 코드
+	//char new_RorD[2];			//R:원자재 D:납품
+
+	//result* _result;
+	//int result_count;
+
+	printf("수정할 거래처의 코드를 입력하세요 : ");
+	scanf("%s", naver1);
+
+	strcat(temp, naver1);
+	strcat(temp, "'");
+
+	char* conditional = temp;
+
+	printf("수정할 컬럼명을 입력하세요 : ");
+	scanf("%s", naver2);
+	printf("새로운 값을 입력하세요 : ");
+	scanf("%s", naver3);
+	strcat(naver2, "='");
+	strcat(naver2, naver3);
+	strcat(naver2, "'");
+	char* set = naver2;
+
+	if (_update(conditional, set) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	file_column_free();
+	
 }
