@@ -1,16 +1,24 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
-#define INT 1
-#define FLOAT 2
-#define DOUBLE 3
-#define CHAR 4
-#define VARCHAR 5
+#define _INT 1
+#define _FLOAT 2
+#define _DOUBLE 3
+#define _CHAR 4
+#define _VARCHAR 5
 #define ERR_MSG_SIZE 51
+
+#define MENU_LENGTH 21
+#define DATE_LENGTH 11
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <math.h>
+#include <windows.h>
+#include <time.h>
+#include <conio.h>
+
 //로컬
 
 typedef struct column {
@@ -50,22 +58,21 @@ char err_msg[ERR_MSG_SIZE];
 char* select_result_str;   //로컬로 빠짐 (서버)
 //로컬
 
-int initalizing(char* file_name);						//"2.초기화" - 테이블 파일 이름(확장자 제외)를 매개변수로 사용
-int add_column(column tmp);								//
-int _create(char* file_name, char* column_list);		//"1.Create" - column_list에 "데이터타입 변수명" 형식으로 차례대로 입력
-int _insert(char* values);								//"3.INSERT" - 입력할 데이터 리스트의 문자열을 매개변수로 사용(컬럼 순서대로, 구분은 반점',')
-int _delete(char* conditional);							//"4.DELETE" - 조건에 맞는 데이터 전부 삭제("컬럼 = 데이터" 형식)
-int _update(char* conditional, char* set);				//"5.UPDATA" - 조건에 맞는 데이터 전부 수정(조건문, 수정문 모두 "컬럼 = 데이터")
-int _select(char* conditional, char* select, char** result);//"6.SELECT" - 조건에 맞는 데이터 원하는 컬럼 전부 추출
-															//(조건문, 추출할 컬럼 리스트, 결과문자열 저장될 공간)("컬럼 = 데이터", "컬럼1,컬럼2,컬럼3,..",&주소값)
-void print_column();									//
-int print_data();										//"2.초기화" - 테이블에 입력된 데이터 출력 함수. sample.c에 있는 데이터 리스트 출력
+int initalizing(char* file_name);
+int add_column(column tmp); 
+int _create(char* file_name, char* column_list);
+int _insert(char* values);
+int _delete(char* conditional);
+int _update(char* conditional, char* set);
+int _select(char* conditional, char* select, char** result);
+void print_column();
+int print_data();
 void sdts_free(sdts* node);
-void file_column_free();								//"2.초기화" - 프로그램 종료 전 initalizing 함수에 할당된 메모리 해제
+void file_column_free();
 
 //서버
 
-int recv_result(result** result_head, char* receive);	// "7.SELECT 후처리" _select에서 추출된 결과값을 구조체에 해당타입에 맞춰 배열형태로 저장시켜주는 함수
+int recv_result(result** result_head, char* receive);
 result* find_result(result* result_head, char* column_name);
 void result_print(result* result_head, int result_count);
 int int_is_null(int _int_data);

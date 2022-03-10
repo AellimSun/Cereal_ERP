@@ -104,10 +104,6 @@ void production_management(void)
 		break;
 	}
 }
-void stock(void)
-{
-
-}
 void order(void)
 {
 
