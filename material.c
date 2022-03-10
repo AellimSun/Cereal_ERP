@@ -7,10 +7,18 @@ typedef struct Material {
 	char ACC_CODE[5];
 };
 
+typedef struct _bomRes {
+	char* CODE;
+	int AMOUNT;
+	struct _bomRes* next;
+}bomRes;
+
 void stock();
 void all_read();
 void code_read();
 void material_create();
+void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE);
+void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
 
 void stock()
 {
@@ -195,15 +203,69 @@ void material_create() {
 //생산계획 입력 후 받아와서 재고 확인
 void confirm_Material(plan* p) {
 	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
+	bomRes* result = (bomRes*)malloc(sizeof(bomRes));
+	result->next = NULL;
+	bomRes* result2 = (bomRes*)malloc(sizeof(bomRes));
+	result2->next = NULL;
 
 	//BOM 조회
 	//char* con = "ROOT_CODE = 'A0002'";
 	char* code = p->CODE;
 	BOM_TREE* res = BOM_SEARCH(code);
-	BOM_Forward_PrintTree(res, res->NODE_CODE);
+	//BOM_Forward_PrintTree(res, res->NODE_CODE);
 
+	get_Materials_From_Bom(res, res->NODE_CODE, result);
+
+	result = result->next;
+	result2 = result2->next;
+	while (result->next != NULL) {
+		while (result2->next != NULL) {
+			if (strcmp(result2->CODE, result->CODE) == 0) {
+				result2->AMOUNT += result->AMOUNT;
+			}
+			result2 = result2->next;
+		}
+		bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+		newNode = result;
+		result2->next = result;
+	}
 	//출력
 	/*printf("품목명 : ");
 	printf("\t필요\t\t\t현황\n\n");
 	printf("옥수수 : 3개\t\t\t옥수수 : 1개");*/
+}
+
+void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE, bomRes* result) {
+	if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
+	{
+		_get_Materials_From_Bom(CurNode, 0, result);
+		return;
+	}
+
+	if (CurNode->LeftChild != NULL)
+		get_Materials_From_Bom(CurNode->LeftChild, NODE_CODE, result);
+	if (CurNode->RightSibling != NULL)
+		get_Materials_From_Bom(CurNode->RightSibling, NODE_CODE, result);
+}
+
+void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth, bomRes* result)
+{
+	//int i = 0; // 들여쓰기로 트리의 Depth 표현 
+	//for (i = 0; i < Depth; i++)
+	//   printf("   ");
+
+	printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
+
+	if (CurNode->LeftChild != NULL) // 차일드 존재시
+		_get_Materials_From_Bom(CurNode->LeftChild, Depth + 1, result); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
+	
+	if (CurNode->LeftChild == NULL) {
+		bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+		newNode->CODE = CurNode->NODE_CODE;
+		newNode->AMOUNT = CurNode->REQ_NUM;
+		newNode->next = result->next;
+		result->next = newNode;
+	}
+	if (CurNode->RightSibling != NULL) // 형제 존재시
+		_get_Materials_From_Bom(CurNode->RightSibling, Depth, result); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
 }
