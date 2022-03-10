@@ -14,19 +14,38 @@ int main(void)
 	//	return -1;
 	//}
 
-	//if (_create("sample_Client", "ACC_CODE VARCHAR(10)") == -1)
+	//if (_create("sample_Order", "O_DATE INT D_DATE INT ACC_CODE VARCHAR(10) ORDER_NUM INT PRD_CODE VARCHAR(10) NUM INT") == -1)
 	//{
 	//	printf("%s\n", err_msg);
 	//	return -1;
 	//}
 
-	if (initalizing("D:\\00_Bird_00\\Ã½½º\\project\\Cereal\\Clanguage\\make_Sample_file\\make_Sample_file\\sample_Client") == -1) {
+	//if (_create("sample_Client", "ACC_CODE VARCHAR(10)") == -1)
+	//{
+	//	printf("%s\n", err_msg);
+	//	return -1;
+	//}
+	
+
+	//if (initalizing("sample_Client") == -1) {
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
+	//if (_insert("'b003', 'co002', null, 3211") == -1) {
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
+	 
+	if (initalizing("sample_Order") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
-
 	print_data();
 
 	/*
@@ -87,6 +106,8 @@ int main(void)
 	//}
 	 
 	*/
+
+
 
 
 	if (_select("*","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {

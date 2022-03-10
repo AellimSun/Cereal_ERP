@@ -2,6 +2,20 @@
 //#include <stdlib.h>
 //#define _GNU_SOURCE
 #include <string.h>
+#include <time.h>
+//
+//struct tm {
+//	int tm_sec;         /* 초,  range 0 to 59            */
+//	int tm_min;         /* 분, range 0 to 59             */
+//	int tm_hour;        /* 시간, range 0 to 23            */
+//	int tm_mday;        /* 일, range 1 to 31             */
+//	int tm_mon;         /* 월, range 0 to 11             */
+//	int tm_year;        /* 1900년 부터의 년                */
+//	int tm_wday;        /* 요일, range 일(0) to 토(6)      */
+//	int tm_yday;        /* 1년 중 경과 일, range 0 to 365  */
+//	int tm_isdst;       /* 써머타임                        */
+//};
+
 
 typedef struct _order
 {
@@ -41,6 +55,8 @@ int result_count;
 result* cur;
 Order* insert_ord;//발주-삽입(파일) head 노드
 
+int col = 1;
+
 Order* creatNode_Order()
 {
 	Order* newNode;
@@ -49,7 +65,7 @@ Order* creatNode_Order()
 	}
 	newNode->ACC_CODE = NULL;
 	newNode->PRD_CODE = NULL;
-
+	newNode->next = NULL;
 	return newNode;
 }
 
@@ -58,6 +74,9 @@ void creat_Order_List(int num, char* prd_code)
 
 	
 	int i = 0;
+	
+
+
 
 	while (i < num)
 	{
@@ -135,6 +154,7 @@ void creat_Order_List(int num, char* prd_code)
 			printf("\n");
 		}
 		i++;
+		//후위삽입으로 변경해야함
 		newNode->next = insert_ord->next;
 		insert_ord->next = newNode;
 
@@ -159,21 +179,25 @@ void print_Node()
 }
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
-char* Request_Order(char* prd_code, int num)
+//char* Request_Order(char* prd_code, int num)
+void Request_Order(char* prd_code, int num)
 {
 	char* values;
-	
+	int amount = num;
 	//initialization 구조체
 	//insert_ord = (Order*)malloc(sizeof(Order));
-
-	if ((insert_ord = (column*)malloc(sizeof(column))) == NULL) {
+	//insert_ord = creatNode_Order();
+	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
 
 		return -1;
 	}
 
 	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
-	insert_ord->next = 0;
+	insert_ord->next = NULL;
 	
+
+
+
 
 	/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
 
@@ -224,19 +248,22 @@ char* Request_Order(char* prd_code, int num)
 		return -1;
 	}
 	//print_data();
-	values = malloc(sizeof(prd_code) * 2);
-	strcpy(values, "PRD_CODE=");
+	values = malloc(sizeof(prd_code) * 3);
+	strcpy(values, "PRD_CODE = '");
 	strcat(values, prd_code);
+	strcat(values, "'");
 
+	printf("%s\n", values);
 	printf("추출한 데이터 확인\n");
 	if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
+	//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
 	else {
-		printf("%s\n\n", select_result_str);
+		//printf("%s\n\n", select_result_str);
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 	}
 
@@ -367,7 +394,9 @@ char* Request_Order(char* prd_code, int num)
 	//return ACC_CODE; :: 연결리스트?
 	
 	print_Node();
-	
+	//return main();
+	storage_Order(amount);
+
 	file_column_free();
 	result_free(_result, result_count);
 	free(values);
@@ -375,71 +404,145 @@ char* Request_Order(char* prd_code, int num)
 }
 
 //01 자재 -> 발주 -> 거래처 루트
-char* storage_Order(char* acc_code, int num)
+int storage_Order(int num)
 {
+
+	//발주일 : 오늘 날짜, 납기일 : 내일
+	struct tm* t_order;
+	time_t base = time(NULL);
+
+	t_order = localtime(&base);
+
+	//발주일 및 납품일 담을 파일
+	char* ord_date;
+	char* o_day;
+
+	char* d_mon;
+	char* d_dau;
+
+
+	//발주일
+	//t_order->tm_mon;
+	//t_order->tm_mday;
+	ord_date = malloc(sizeof(int) * 2);
+	//itoa(o_mon,"%d", t_order->tm_mon);
+	//itoa(o_day, "%d", t_order->tm_mday);
+
+	//itoa(d_mon, "%d", t_order->tm_mon);
+	//itoa(d_mon, "%d", (t_order->tm_mday + 1));
+
+
+
+	//납기일
+	//t_order->tm_mon;
+	//(t_order->tm_mday) + 1;
 
 	/*
 		파일에 insert 하기 위해서 넣어야 할 데이터가 한 문장으로 정리가 되어야한다
 		데이터들은 구조체에 정리되어있다.
 
 	*/
-	char* values;
+	char* values = NULL;
+	char* int_to_char;
 	Order* cur = insert_ord->next; //노드의 헤드
-	while (cur != 0)
+	while (cur != NULL)
 	{
 		//구조체 배열을 다 char로 선언, 형변환하여 저장.
 		//구조체배열로 받자. 거래처에서 
 		
 		// !!! 배열명은 주소값을 가리킨다 !!!
-		Order *newOrder = creatNode_Order();
+		//Order *newOrder = creatNode_Order();
 		//형변환 할 함수
 
 		//발주이력을 저장하는 파일
 		//int _update(char* conditional, char* set) {
-		strcpy(newOrder->ACC_CODE, cur->ACC_CODE);
-		strcpy(newOrder->PRD_CODE, cur->PRD_CODE);
-		newOrder->NUM = num;
+		//strcpy(newOrder->ACC_CODE, cur->ACC_CODE);
+		//strcpy(newOrder->PRD_CODE, cur->PRD_CODE);
+		//newOrder->NUM = num;
 
 		//함수로 빼자
 		/*
+			
+			
+			values = strcat_Order();
 			strcat(values, "'");
 			strcat(values, newOrder.ACC_CODE);
 			strcat(values, "', ");
 			strcat(values, "'");
-		*/
 
-		values = malloc(sizeof(char) * 50);
+
+		*/
+		values = malloc(sizeof(char)*34);
+		//values = NULL;
 		//char* values = "'NULL', 'NULL', acc, prd, null";
 		//strcpy(values, newOrder.ACC_CODE);
 
-		strcpy(values, "NULL");
+		ord_date = (char*)malloc(sizeof(int));
+
+
+		//itoa(o_day, "%d", t_order->tm_mday);
+
+		//itoa(d_mon, "%d", t_order->tm_mon);
+		//itoa(d_mon, "%d", (t_order->tm_mday + 1));
+
+
+		//발주일
+		printf("%d\n", t_order->tm_mon+1);
+		itoa(t_order->tm_mon+1, ord_date, 10);		//월
+		printf("%c", ord_date);
+		strcat(values, ord_date);
+		itoa(t_order->tm_mday, ord_date, 10);	//일
+		strcat(values, ord_date);
 		strcat(values, ", ");
-		strcat(values, "NULL");
+		printf("values : %s\n", values);
+		//납기일
+		
+		itoa(t_order->tm_mon+1,ord_date, 10);		//월
+		strcat(values, ord_date);
+		itoa(t_order->tm_mday + 1,ord_date,  10);	//일
+		strcat(values, ord_date);
 		strcat(values, ", ");
+		printf("values : %s\n", values);
+		//거래처 코드
 		strcat(values, "'");
-		strcat(values, newOrder->ACC_CODE);
-		//strcat(values, "NULL");
-		strcat(values, "', ");
+		strcat(values, cur->ACC_CODE);
 		strcat(values, "'");
-		strcat(values, newOrder->PRD_CODE);
-		//strcat(values, "NULL");
-		strcat(values, "', ");
-		strcat(values, "NULL");
+		strcat(values, ", ");
+		printf("values : %s\n", values);
+		//발주번호 :: INT TO CHAR
+		itoa(t_order->tm_mon+1, ord_date, 10);		//월
+		strcat(values, ord_date);
+		itoa(col++,ord_date,10);		//대충난수
+		strcat(values, ord_date);
+		strcat(values, ", ");
+		printf("values : %s\n", values);
+		//품목코드 :: CHAR
+		strcat(values, "'");
+		strcat(values, cur->PRD_CODE);
+		strcat(values, "'");
+		strcat(values, ", ");
+		printf("values : %s\n", values);
+		
+		//수량 :: INT TO CHAR
+		itoa(num,ord_date,10);			//수량
+		strcat(values, ord_date);
 
-		printf("%s\n", values);
+
+
+		printf("values : %s\n", values);
 
 
 
-		if (_insert(values) == -1)
-		{
-			printf("%s\n", err_msg);
+		//if (_insert(values) == -1)
+		//{
+		//	printf("%s\n", err_msg);
 
-			file_column_free();
-			return -1;
-		}
-		cur = cur->next;
+		//	file_column_free();
+		//	return -1;
+		//}
+		//cur = cur->next;
 	}
-	
+	print_data();
 	free(values);
 
 }
