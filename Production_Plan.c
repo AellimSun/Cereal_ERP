@@ -180,7 +180,7 @@ plan* production_menu()
 	while(1)
 	{
 		printf("1. 새 계획 수립\n");
-		printf("2. 기존 계획 목록 열람\n");
+		printf("2. 기존 계획 열람\n");
 		scanf("%d", &key);
 
 		if (key == 1) 
@@ -191,16 +191,12 @@ plan* production_menu()
 		else if (key == 2)
 		{
 			plan_reading();
-			break;
 		}
-		else printf("잘못된 입력값입니다.\n\n"); // 메뉴 상단으로 돌아갸야하는데;
+		else printf("잘못된 입력값입니다.\n\n");
 	}	
 }
 
-void plan_reading()		//기존 계획 열람 함수, 정보 받아야되는데에에ㅔㅔ 어케받지이이이이니임,ㅊ;닌ㄴㅇ
+void plan_reading()		//기존 계획 열람 함수
 {
-	
+
 }
-
-
-// 어려웠던점 : 메인에서 작업하던걸 싹다 함수로 만들어서 하려니 평소에 생각 못한 에러사항이 많이 발생함

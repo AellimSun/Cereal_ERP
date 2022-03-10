@@ -6,7 +6,7 @@
 
 typedef struct Plan
 {
-	char PLAN_PRODUCTION[10];
-	char CODE[5];
-	char values[30];
+	char* PLAN_PRODUCTION;
+	char* CODE;
+	char* values;
 } plan;
