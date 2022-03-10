@@ -1,3 +1,4 @@
+#include "local.h"
 #include "cereal.h"
 
 
@@ -67,7 +68,7 @@ void material_management(void)
 		break;
 
 	case 4:
-		account();
+		//account();
 		break;
 
 	case 0:
@@ -103,10 +104,6 @@ void production_management(void)
 		main();
 	}
 }
-void stock(void)
-{
-
-}
 void order(void)
 {
 
@@ -116,10 +113,10 @@ void delivery(void)
 
 }
 
-void account(void)
-{
-
-}
+//void account(void)
+//{
+//
+//}
 void base_information(void)
 {
 	int input = 0;
@@ -147,10 +144,7 @@ void base_information(void)
 	}
 	
 }
-void production_plan(void)
-{
 
-}
 void process(void)
 {
 

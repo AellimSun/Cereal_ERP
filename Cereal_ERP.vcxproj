@@ -113,7 +113,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
@@ -141,11 +141,13 @@
   <ItemGroup>
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
-    <ClCompile Include="account.c" />
+    
     <ClCompile Include="BOMTree.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="material.c" />
     <ClCompile Include="process.c" />
+    <ClCompile Include="Production_Plan.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="Test01.c" />

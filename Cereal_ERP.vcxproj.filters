@@ -39,13 +39,16 @@
     <ClCompile Include="server.c">
       <Filter>소스 파일\server_client</Filter>
     </ClCompile>
-    <ClCompile Include="account.c">
-      <Filter>소스 파일\123</Filter>
-    </ClCompile>
     <ClCompile Include="Test01.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="test.c">
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
+    <ClCompile Include="material.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Production_Plan.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="BOMTree.c">
