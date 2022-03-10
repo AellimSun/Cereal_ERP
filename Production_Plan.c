@@ -1,4 +1,5 @@
 #include "cereal.h"
+#include "stdbool.h"
 
 plan* production_new_plan();
 plan* production_menu();
@@ -55,10 +56,9 @@ void production_plan(void)
 	}*/
 
 	//print_data();
-
 	file_column_free();
 
-	confirm_Material(values);
+	//confirm_Material(values);
 
 	printf("\n");
 
@@ -146,7 +146,6 @@ plan* production_new_plan()
 	{
 		char temp[100];
 		gets(temp);
-
 		str[i] = (char*)malloc(strlen(temp) + 1);
 		strcpy(str[i], temp);
 
@@ -182,7 +181,7 @@ plan* production_menu()
 	while(1)
 	{
 		printf("1. 새 계획 수립\n");
-		printf("2. 기존 계획 열람\n");
+		printf("2. 계획 목록 열람\n");
 		scanf("%d", &key);
 
 		if (key == 1) 
@@ -202,3 +201,4 @@ void plan_reading()		//기존 계획 열람 함수
 {
 
 }
+
