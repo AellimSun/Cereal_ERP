@@ -406,7 +406,13 @@ void Request_Order(char* prd_code, int num)
 //01 자재 -> 발주 -> 거래처 루트
 int storage_Order(int num)
 {
+	if (initalizing("sample_Order") == -1)
+	{
+		printf("%s\n", err_msg);
 
+		file_column_free();
+		return -1;
+	}
 	//발주일 : 오늘 날짜, 납기일 : 내일
 	struct tm* t_order;
 	time_t base = time(NULL);
@@ -415,16 +421,16 @@ int storage_Order(int num)
 
 	//발주일 및 납품일 담을 파일
 	char* ord_date;
-	char* o_day;
 
-	char* d_mon;
-	char* d_dau;
 
+	char* values = NULL;
+	char* int_to_char;
+	Order* cur = insert_ord->next; //노드의 헤드
 
 	//발주일
 	//t_order->tm_mon;
 	//t_order->tm_mday;
-	ord_date = malloc(sizeof(int) * 2);
+	ord_date = malloc(3);
 	//itoa(o_mon,"%d", t_order->tm_mon);
 	//itoa(o_day, "%d", t_order->tm_mday);
 
@@ -432,7 +438,7 @@ int storage_Order(int num)
 	//itoa(d_mon, "%d", (t_order->tm_mday + 1));
 
 
-
+	values = malloc(sizeof(char*) * 2);
 	//납기일
 	//t_order->tm_mon;
 	//(t_order->tm_mday) + 1;
@@ -442,9 +448,7 @@ int storage_Order(int num)
 		데이터들은 구조체에 정리되어있다.
 
 	*/
-	char* values = NULL;
-	char* int_to_char;
-	Order* cur = insert_ord->next; //노드의 헤드
+
 	while (cur != NULL)
 	{
 		//구조체 배열을 다 char로 선언, 형변환하여 저장.
@@ -472,12 +476,12 @@ int storage_Order(int num)
 
 
 		*/
-		values = malloc(sizeof(char)*34);
+		
+		
 		//values = NULL;
 		//char* values = "'NULL', 'NULL', acc, prd, null";
 		//strcpy(values, newOrder.ACC_CODE);
 
-		ord_date = (char*)malloc(sizeof(int));
 
 
 		//itoa(o_day, "%d", t_order->tm_mday);
@@ -540,7 +544,7 @@ int storage_Order(int num)
 		//	file_column_free();
 		//	return -1;
 		//}
-		//cur = cur->next;
+		cur = cur->next;
 	}
 	print_data();
 	free(values);
