@@ -23,12 +23,25 @@ void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
 void stock()
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1. 전품목 조회\n");
-	printf("2. 품목코드로 조회\n");
-	printf("3. create\n");
-	printf("0. 이전으로\n");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     1. 전품목 조회        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     2. 품목코드로 조회    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     3. create             |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     0. 이전으로           |\n");
+	printf("\t\t\t-----------------------------\n\n");
 
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -66,7 +79,7 @@ void all_read() {
 	}
 
 	if (_select(conditional, select_column, &select_result_str) == -1) {
-		printf("조회할 데이터가 없습니다.\n");
+		printf("\n\t\t\t < 조회할 데이터가 없습니다. >\n");
 
 		file_column_free();
 		system("pause");
@@ -102,9 +115,11 @@ void code_read(char* condition) {
 		char search[5];
 		char tmpCondition[30] = "PRD_CODE='";
 
-		getchar();
-		printf("검색할 품목코드를 입력해 주세요 : ");
-		scanf("%s", search);
+	getchar();
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> 품목코드조회\n");
+	printf("\n\t\t< 검색할 품목코드를 입력해 주세요 :               >");
+	gotoxy(52, 2);
+	scanf("%s", search);
 
 		strcat(tmpCondition, search);
 		strcat(tmpCondition, "'");
@@ -153,14 +168,26 @@ void material_create() {
 	char DATE[8];
 	char ACC_CODE[5];
 
-	printf("등록하려는 자재의 코드를 입력해 주세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> create\n\n");
+
+	printf("\t       =============================================\n\n");
+	printf("\t\t등록하려는 자재의 코드를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t등록하려는 자재의 상태를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 입고일자를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 거래처를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	gotoxy(57, 4);
 	scanf("%s", PRD_CODE);
-	printf("등록하려는 자재의 상태를 입력해 주세요 : ");
+	gotoxy(57, 8);
 	scanf("%s", STATUS);
-	printf("자재의 입고일자를 입력해 주세요 : ");
+	gotoxy(50, 12);
 	scanf("%s", DATE);
-	printf("자재의 거래처를 입력해 주세요 : ");
+	gotoxy(48, 16);
 	scanf("%s", ACC_CODE);
+	printf("\n\n");
 
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
