@@ -8,6 +8,7 @@ typedef struct _process {
 	int data;
 	struct _process* next;
 }S_process;
+
 typedef struct _req_code {
 	int num;
 	char* code;
@@ -18,9 +19,10 @@ typedef struct _req_code {
 void bg_process(int num, char* bom_res, char* code);
 //req_code* NewNode();
 
-void check_parts(int num, char* bom_res, req_code);
-int parts_produce(int num, char* bom_res, char* code);
-
+void check_parts(int num, char* bom_res, req_code);			// 자체생산부품 필요량 파악
+int parts_produce(int num, char* bom_res, char* code);		// 부족한 부품 생성/ 자재에 자품목 수량 업로드
+give_LOT();		// 생산품 LOT번호 생성
+produce_product();		//생산계획 품목 자재에 생산 수량 업로드
 
 void process(void)
 {
@@ -66,21 +68,57 @@ void bg_process(int num, char* bom_res, char* code)
 {
 	char* bom_res;
 
-	req_code* temp = (req_code*)malloc(sizeof(req_code));
+	req_code* head = (req_code*)malloc(sizeof(req_code));
 
-	check_parts(PLAN_NUM, bom_res,temp);			//부족한 제작부품 있는지 판단
+	check_parts(PLAN_NUM, bom_res,head);			//부족한 제작부품 개수 파악
 	produce_parts();		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();	//작업지시 확정 - 위에 있는지 확인
 	give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
-	produce_product();		//생산계획 품목 생산
-	material_upload();		//생산자제 등록
+	produce_product();		//생산계획 품목 생산 및 등록
+	//material_upload();		//생산자제 등록
 }
 
-void check_parts(int num, char* bom_res, req_code* temp)
+void check_parts(int num, char* bom_res, req_code* head)
 {
-	
+	//_BOM_Backward_PrintTree();
+	New(head, 10,"A4000");
+	New(head, 20,"A5000");
+	New(head, 30,"A6000");
+	New(head, 40,"A7000");
+	New(head, 50,"A8000");
+
+
+	while (0);
 }
 
+int produce_parts(req_code* head)
+{
+	req_code* cur = head->next;
+	int p_num;
+	char* p_code;
+
+	while (cur != NULL)
+	{
+		int cnt = 0;
+		p_num = cur->num;
+		p_code = cur->code;
+		while (cnt < p_num)
+		{
+
+			cnt++;
+		}
+		cur = cur->next;
+	}
+}
+
+req_code* New(req_code* head, int num, char* code)
+{
+	req_code* NewNode = (req_code*)malloc(sizeof(req_code));
+	NewNode->num = num;
+	NewNode->code = code;
+	NewNode->next = head->next;
+	head->next = NewNode;
+}
 //void init(void)
 //{
 //	_create("FILE_NAME","'품목코드' INT '자재코드' INT '수량' INT");
