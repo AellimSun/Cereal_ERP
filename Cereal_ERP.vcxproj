@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
+    
+    <ClCompile Include="BOMTree.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="material.c" />
@@ -149,10 +151,13 @@
     <ClCompile Include="server.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="Test01.c" />
+    <ClCompile Include="UI.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BOMTree.h" />
     <ClInclude Include="cereal.h" />
     <ClInclude Include="local.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

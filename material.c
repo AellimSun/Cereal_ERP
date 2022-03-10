@@ -7,20 +7,41 @@ typedef struct Material {
 	char ACC_CODE[5];
 };
 
+typedef struct _bomRes {
+	char* CODE;
+	int AMOUNT;
+	struct _bomRes* next;
+}bomRes;
+
 void stock();
 void all_read();
 void code_read();
 void material_create();
+void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE);
+void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
 
 void stock()
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1. 전품목 조회\n");
-	printf("2. 품목코드로 조회\n");
-	printf("3. create\n");
-	printf("0. 이전으로\n");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     1. 전품목 조회        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     2. 품목코드로 조회    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     3. create             |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     0. 이전으로           |\n");
+	printf("\t\t\t-----------------------------\n\n");
 
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -30,7 +51,7 @@ void stock()
 		break;
 
 	case 2:
-		code_read();
+		code_read(NULL);
 		break;
 
 	case 3:
@@ -58,7 +79,7 @@ void all_read() {
 	}
 
 	if (_select(conditional, select_column, &select_result_str) == -1) {
-		printf("조회할 데이터가 없습니다.\n");
+		printf("\n\t\t\t < 조회할 데이터가 없습니다. >\n");
 
 		file_column_free();
 		system("pause");
@@ -84,21 +105,27 @@ void all_read() {
 	stock();
 }
 
-void code_read() {
-	char search[5];
-	char tmpCondition[30] = "PRD_CODE='";
-
-	getchar();
-	printf("검색할 품목코드를 입력해 주세요 : ");
-	scanf("%s", search);
-
-	strcat(tmpCondition, search);
-	strcat(tmpCondition, "'");
-
-	char* conditional = tmpCondition;
+void code_read(char* condition) {
 	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
 	int result_count;
 	result* _result;
+	char* conditional = condition;
+
+	if (conditional == NULL) {
+		char search[5];
+		char tmpCondition[30] = "PRD_CODE='";
+
+	getchar();
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> 품목코드조회\n");
+	printf("\n\t\t< 검색할 품목코드를 입력해 주세요 :               >");
+	gotoxy(52, 2);
+	scanf("%s", search);
+
+		strcat(tmpCondition, search);
+		strcat(tmpCondition, "'");
+
+		conditional = tmpCondition;
+	}
 
 	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
 		printf("%s\n", err_msg);
@@ -141,14 +168,26 @@ void material_create() {
 	char DATE[8];
 	char ACC_CODE[5];
 
-	printf("등록하려는 자재의 코드를 입력해 주세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> create\n\n");
+
+	printf("\t       =============================================\n\n");
+	printf("\t\t등록하려는 자재의 코드를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t등록하려는 자재의 상태를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 입고일자를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 거래처를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	gotoxy(57, 4);
 	scanf("%s", PRD_CODE);
-	printf("등록하려는 자재의 상태를 입력해 주세요 : ");
+	gotoxy(57, 8);
 	scanf("%s", STATUS);
-	printf("자재의 입고일자를 입력해 주세요 : ");
+	gotoxy(50, 12);
 	scanf("%s", DATE);
-	printf("자재의 거래처를 입력해 주세요 : ");
+	gotoxy(48, 16);
 	scanf("%s", ACC_CODE);
+	printf("\n\n");
 
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
@@ -186,4 +225,74 @@ void material_create() {
 	system("pause");
 	system("cls");
 	stock();
+}
+
+//생산계획 입력 후 받아와서 재고 확인
+void confirm_Material(plan* p) {
+	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
+	bomRes* result = (bomRes*)malloc(sizeof(bomRes));
+	result->next = NULL;
+	bomRes* result2 = (bomRes*)malloc(sizeof(bomRes));
+	result2->next = NULL;
+
+	//BOM 조회
+	//char* con = "ROOT_CODE = 'A0002'";
+	char* code = p->CODE;
+	BOM_TREE* res = BOM_SEARCH(code);
+	//BOM_Forward_PrintTree(res, res->NODE_CODE);
+
+	get_Materials_From_Bom(res, res->NODE_CODE, result);
+
+	result = result->next;
+	result2 = result2->next;
+	while (result->next != NULL) {
+		while (result2->next != NULL) {
+			if (strcmp(result2->CODE, result->CODE) == 0) {
+				result2->AMOUNT += result->AMOUNT;
+			}
+			result2 = result2->next;
+		}
+		bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+		newNode = result;
+		result2->next = result;
+	}
+	//출력
+	/*printf("품목명 : ");
+	printf("\t필요\t\t\t현황\n\n");
+	printf("옥수수 : 3개\t\t\t옥수수 : 1개");*/
+}
+
+void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE, bomRes* result) {
+	if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
+	{
+		_get_Materials_From_Bom(CurNode, 0, result);
+		return;
+	}
+
+	if (CurNode->LeftChild != NULL)
+		get_Materials_From_Bom(CurNode->LeftChild, NODE_CODE, result);
+	if (CurNode->RightSibling != NULL)
+		get_Materials_From_Bom(CurNode->RightSibling, NODE_CODE, result);
+}
+
+void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth, bomRes* result)
+{
+	//int i = 0; // 들여쓰기로 트리의 Depth 표현 
+	//for (i = 0; i < Depth; i++)
+	//   printf("   ");
+
+	printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
+
+	if (CurNode->LeftChild != NULL) // 차일드 존재시
+		_get_Materials_From_Bom(CurNode->LeftChild, Depth + 1, result); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
+	
+	if (CurNode->LeftChild == NULL) {
+		bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+		newNode->CODE = CurNode->NODE_CODE;
+		newNode->AMOUNT = CurNode->REQ_NUM;
+		newNode->next = result->next;
+		result->next = newNode;
+	}
+	if (CurNode->RightSibling != NULL) // 형제 존재시
+		_get_Materials_From_Bom(CurNode->RightSibling, Depth, result); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
 }
