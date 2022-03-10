@@ -15,6 +15,7 @@ void read_ACC_CODE();
 void read_BN_REGI_NUM();
 void read_PRD_CODE();
 void read_RorD();
+void deleteAccount();
 
 void account()
 {
@@ -41,7 +42,7 @@ void account()
 		readAccount();
 		break;
 	case 4:
-		//deleteAccount();
+		deleteAccount();
 		break;
 	case 0:
 		main();
@@ -408,4 +409,44 @@ void read_RorD()
 	file_column_free();
 
 	main();
+}
+
+void deleteAccount()
+{
+	if (initalizing("account") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	//file_column_free();
+
+	char naver[10];
+	char temp[20] = "BN_REGI_NUM='";
+
+	printf("삭제할 거래처의 사업자 번호를 입력하세요 : ");
+	scanf("%s", &naver);
+	strcat(temp, naver);
+	strcat(temp, "'");
+
+	char* conditional = temp;
+	_delete(conditional);
+
+	if (_delete(conditional) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	//print_data();
+	printf("\n");
+	file_column_free();
+
+	account();
 }
