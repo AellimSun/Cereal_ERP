@@ -51,14 +51,14 @@
     <ClCompile Include="Production_Plan.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
+    <ClCompile Include="BOMTree.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="account.c">
       <Filter>소스 파일\123</Filter>
     </ClCompile>
-    <ClCompile Include="material.c">
+    <ClCompile Include="UI.c">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Order.c">
-      <Filter>소스 파일\123</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +66,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="local.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BOMTree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
