@@ -194,18 +194,14 @@ void material_create() {
 
 //생산계획 입력 후 받아와서 재고 확인
 void confirm_Material(plan* p) {
-	char* CODE = p->CODE;
-	int* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
+	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
 
 	//BOM 조회
 	//char* con = "ROOT_CODE = 'A0002'";
 	char* con = (char*)malloc(sizeof(char));
-	strcpy(con, "ROOT_CODE='");
-	strcat(con, CODE);
-	strcat(con, "'");
 
-	BOM_TREE* res = BOM_SEARCH(con);
-	BOM_Forward_PrintTree(res, res->NODE_CODE);
+	BOM_TREE* res = BOM_SEARCH(p->CODE);
+	BOM_Forward_PrintTree(res, p->CODE);
 
 	//출력
 	printf("품목명 : ");

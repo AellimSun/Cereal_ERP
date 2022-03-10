@@ -132,7 +132,7 @@ void base_information(void)
 	{
 	case 1:
 	{
-		char* con = "ROOT_CODE = 'A0002'";
+		char* con = "A0002";
 		BOM_TREE* res = BOM_SEARCH(con);
 		BOM_Forward_PrintTree(res, res->NODE_CODE);
 
