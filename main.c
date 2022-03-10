@@ -141,6 +141,12 @@ void base_information(void)
 	switch (input)
 	{
 	case 1:
+	{
+		char* con = "A0002";
+		BOM_TREE* res = BOM_SEARCH(con);
+		BOM_Forward_PrintTree(res, res->NODE_CODE);
+
+	}
 	case 2:
 	case 3:
 		product_list();
