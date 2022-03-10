@@ -1,6 +1,8 @@
 #include "cereal.h"
 
-#define FILE_NAME "process"
+#define PRO_FILE_NAME "process"
+#define MAT_FILE_NAME "material"
+
 #define PLAN_NUM 100
 #define PLAN_CODE "A1001"
 
@@ -16,26 +18,25 @@ typedef struct _req_code {
 }req_code;
 
 //void init(void);
-void bg_process(int num, char* bom_res, char* code);
+void bg_process(void);
 //req_code* NewNode();
 
-void check_parts(int num, char* bom_res, req_code);			// 자체생산부품 필요량 파악
+void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
 int parts_produce(int num, char* bom_res, char* code);		// 부족한 부품 생성/ 자재에 자품목 수량 업로드
 give_LOT();		// 생산품 LOT번호 생성
 produce_product();		//생산계획 품목 자재에 생산 수량 업로드
+req_code* New(req_code* head, int num, char* code);
 
 void process(void)
 {
 	//init();
-	initalizing("FILE_NAME");
+	//initalizing("FILE_NAME");
 	int input;
 
 	printf("메뉴를 선택하세요.\n");
 
-	while (1)
-	{
-		
-	}
+	bg_process();
+
 	system("cls");
 
 	if (input < 0 || input >2)
@@ -64,24 +65,26 @@ void process(void)
 	}
 }
 
-void bg_process(int num, char* bom_res, char* code)
+void bg_process(void)
 {
 	char* bom_res;
+	char* con = "A1000S";
+	BOM_SEARCH(con);
 
 	req_code* head = (req_code*)malloc(sizeof(req_code));
 
 	check_parts(PLAN_NUM, bom_res,head);			//부족한 제작부품 개수 파악
-	produce_parts();		//부족한 제작부품 생산명령 - LOT번호 필요...?
+	produce_parts(head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();	//작업지시 확정 - 위에 있는지 확인
-	give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
-	produce_product();		//생산계획 품목 생산 및 등록
+	//give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
+	//produce_product();		//생산계획 품목 생산 및 등록
 	//material_upload();		//생산자제 등록
 }
 
 void check_parts(int num, char* bom_res, req_code* head)
 {
 	//_BOM_Backward_PrintTree();
-	New(head, 10,"A4000");
+	New(head, 10,"A1000");
 	New(head, 20,"A5000");
 	New(head, 30,"A6000");
 	New(head, 40,"A7000");

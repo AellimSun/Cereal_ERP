@@ -148,8 +148,6 @@ void base_information(void)
 	
 }
 
-}
-}
 
 void product_list(void)
 {
