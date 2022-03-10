@@ -16,23 +16,23 @@ typedef struct _order
 
 }Order;
 
-typedef struct _acc_code
-{
-
-	char* ACC_CODE; //배열명은 주소값을 가리킨다.
-
-	struct _acc_code* next;
-
-}ACC_CODE;
-
-typedef struct _prd_code
-{
-
-	char* PRD_CODE; //배열명은 주소값을 가리킨다.
-
-	struct _prd_code* next;
-
-}PRD_CODE;
+//typedef struct _acc_code
+//{
+//
+//	char* ACC_CODE; //배열명은 주소값을 가리킨다.
+//
+//	struct _acc_code* next;
+//
+//}ACC_CODE;
+//
+//typedef struct _prd_code
+//{
+//
+//	char* PRD_CODE; //배열명은 주소값을 가리킨다.
+//
+//	struct _prd_code* next;
+//
+//}PRD_CODE;
 
 result* _result;
 result* find;
@@ -55,73 +55,14 @@ Order* creatNode_Order()
 
 void creat_Order_List(int num, char* prd_code)
 {
-	//printf("\ncur->name %s \n", cur->name);
+
 	
-	Order* newNode;
 	int i = 0;
-	{
-		//newNode->D_Day = 0; 
-		//newNode->NUM = 0; 
-		//newNode->O_Day = 0;
-		//newNode->next = 0;
-
-
-		//ACC_CODE* A_head = NULL;
-		//if ((A_head = (ACC_CODE*)malloc(sizeof(ACC_CODE))) == NULL) {
-		//	return -1;
-		//}
-		//A_head->ACC_CODE = NULL;
-		//A_head->next = NULL;
-
-		//ACC_CODE* A_Node = NULL;
-		//if ((A_Node = (ACC_CODE*)malloc(sizeof(ACC_CODE))) == NULL) {
-		//	return -1;
-		//}
-		//A_Node->ACC_CODE = NULL;
-		//A_Node->next = NULL;
-
-
-		//PRD_CODE* P_head = NULL;
-		//if ((P_head = (ACC_CODE*)malloc(sizeof(ACC_CODE))) == NULL) {
-		//	return -1;
-		//}
-		//P_head->PRD_CODE = NULL;
-		//P_head->next = NULL;
-
-
-		//PRD_CODE* P_Node = NULL;
-		//if ((P_Node = (PRD_CODE*)malloc(sizeof(PRD_CODE))) == NULL) {
-		//	return -1;
-		//}
-		//P_Node->PRD_CODE = NULL;
-		//P_Node->next = NULL;
-
-		//printf("       cur->_string_data[num]/%s\n", cur->_string_data[num]);
-	}
-
-	//if (strcmp(cur->name, "ACC_CODE") == 0)
-	//{
-	//	newNode->ACC_CODE = cur->_string_data[num];
-	//	//printf("       newNode->ACC_CODE/%s\n", newNode->ACC_CODE);
-	//	//A_Node->next = A_head->next;
-	//	//A_head->next = A_Node;
-
-	//	
-	//}
-	//else if (strcmp(cur->name, "PRD_CODE") == 0)
-	//{	
-	//	newNode->PRD_CODE = cur->_string_data[num];
-	//	//printf("       newNode->PRD_CODE/%s\n", newNode->PRD_CODE);
-	//	//P_Node->next = P_head->next;
-	//	//P_head->next = P_Node;
-
-	//	
-	//}
-	
 
 	while (i < num)
 	{
 		printf("result_count : %d\n", i);
+		Order* newNode = creatNode_Order();
 		//printf("     ..%s\n", find->_string_data[i]);
 		if (strcmp(find->_string_data[i], prd_code) == 0)
 		{
@@ -274,7 +215,9 @@ char* Request_Order(char* prd_code, int num)
 	}
 
 	 */
-	if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Client") == -1) {
+	//if (initalizing("sample_Client") == -1) 
+	if (initalizing("account") == -1)
+	{
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -286,7 +229,7 @@ char* Request_Order(char* prd_code, int num)
 	strcat(values, prd_code);
 
 	printf("추출한 데이터 확인\n");
-	if (_select(values, "ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -321,7 +264,7 @@ char* Request_Order(char* prd_code, int num)
 
 	//특정 컬럼 추출
 	//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
-	int i = 0;
+	
 	if ((find = find_result(_result, "PRD_CODE")) == -1) {
 		printf("%s\n", err_msg);
 
@@ -329,91 +272,99 @@ char* Request_Order(char* prd_code, int num)
 		result_free(_result, result_count);
 		return -1;
 	}
+
+	//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
+	//
 	creat_Order_List(result_count, prd_code);
-	while (i< result_count)
+
+	
 	{
-		Order* newNode = creatNode_Order();
-		printf("result_count : %d\n", i);
-		//printf("     ..%s\n", find->_string_data[i]);
-		if (strcmp(find->_string_data[i], prd_code) == 0)
-		{
-			//그에 해당하는 구조체 추출하기
-			//printf("prd_code : %s\n", find->_string_data[i]);
+		//int i = 0;
+		//while (i < result_count)
+		//{
+		//	Order* newNode = creatNode_Order();
+		//	printf("result_count : %d\n", i);
+		//	//printf("     ..%s\n", find->_string_data[i]);
+		//	if (strcmp(find->_string_data[i], prd_code) == 0)
+		//	{
+		//		//그에 해당하는 구조체 추출하기
+		//		//printf("prd_code : %s\n", find->_string_data[i]);
 
-			cur = _result;
-			while (1) {
+		//		cur = _result;
+		//		while (1) {
 
-				
-				printf("\t\t\ncur %d\n", i);
-				switch (cur->type) {
-				/*case _INT:
-					if (int_is_null(cur->_int_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %d", cur->_int_data[i]);
-					break;
-				case _FLOAT:
-					if (float_is_null(cur->_float_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %.5f", cur->_float_data[i]);
-					break;
-				case _DOUBLE:
-					if (double_is_null(cur->_double_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %.12lf", cur->_double_data[i]);
-					break;
-				case _CHAR:
-					if (char_is_null(cur->_char_data[i]))
-						printf("     (NULL)");
-					else 
-						printf("     %c", cur->_char_data[i]);
-					break;*/
-				case _VARCHAR:
-					if (string_is_null(cur->_string_data[i]))
-						printf("     (NULL)");
-					else
-					{
-						if (strcmp(cur->name, "ACC_CODE") == 0)
-						{
-							newNode->ACC_CODE = cur->_string_data[i];
-							printf("                    newNode->ACC_CODE : %s\n ", newNode->ACC_CODE);
-						}
-						else if (strcmp(cur->name, "PRD_CODE") == 0)
-						{
-							newNode->PRD_CODE = cur->_string_data[i];
-							printf("                    newNode->PRD_CODE : %s\n ", newNode->PRD_CODE);
-						}
-						//차라리 함수를 새로 선언해서 넘겨주자.
-						
-						//발주 파일에 insert할 구조체 리스트 생성 완료
 
-						printf("       ,%s", cur->_string_data[i]);
-					}
-					break;
-				}
-				if (cur->next == 0)
-					break;
-				else 
-				{
-					//_result = _result->next;
-					cur = cur->next;
-				}
-					
-			}
+		//			printf("\t\t\ncur %d\n", i);
+		//			switch (cur->type) {
+		//				/*case _INT:
+		//					if (int_is_null(cur->_int_data[i]))
+		//						printf("     (NULL)");
+		//					else
+		//						printf("     %d", cur->_int_data[i]);
+		//					break;
+		//				case _FLOAT:
+		//					if (float_is_null(cur->_float_data[i]))
+		//						printf("     (NULL)");
+		//					else
+		//						printf("     %.5f", cur->_float_data[i]);
+		//					break;
+		//				case _DOUBLE:
+		//					if (double_is_null(cur->_double_data[i]))
+		//						printf("     (NULL)");
+		//					else
+		//						printf("     %.12lf", cur->_double_data[i]);
+		//					break;
+		//				case _CHAR:
+		//					if (char_is_null(cur->_char_data[i]))
+		//						printf("     (NULL)");
+		//					else
+		//						printf("     %c", cur->_char_data[i]);
+		//					break;*/
+		//			case _VARCHAR:
+		//				if (string_is_null(cur->_string_data[i]))
+		//					printf("     (NULL)");
+		//				else
+		//				{
+		//					if (strcmp(cur->name, "ACC_CODE") == 0)
+		//					{
+		//						newNode->ACC_CODE = cur->_string_data[i];
+		//						printf("                    newNode->ACC_CODE : %s\n ", newNode->ACC_CODE);
+		//					}
+		//					else if (strcmp(cur->name, "PRD_CODE") == 0)
+		//					{
+		//						newNode->PRD_CODE = cur->_string_data[i];
+		//						printf("                    newNode->PRD_CODE : %s\n ", newNode->PRD_CODE);
+		//					}
+		//					//차라리 함수를 새로 선언해서 넘겨주자.
 
-			printf("\n");
-		}
-		i++;
-		newNode->next = insert_ord->next;
-		insert_ord->next = newNode;
+		//					//발주 파일에 insert할 구조체 리스트 생성 완료
 
+		//					printf("       ,%s", cur->_string_data[i]);
+		//				}
+		//				break;
+		//			}
+		//			if (cur->next == 0)
+		//				break;
+		//			else
+		//			{
+		//				//_result = _result->next;
+		//				cur = cur->next;
+		//			}
+
+		//		}
+
+		//		printf("\n");
+		//	}
+		//	i++;
+		//	newNode->next = insert_ord->next;
+		//	insert_ord->next = newNode;
+
+		//}
 	}
 	printf("\n\n");
 
 	
-	
+	//return ACC_CODE; :: 연결리스트?
 	
 	print_Node();
 	
@@ -424,21 +375,29 @@ char* Request_Order(char* prd_code, int num)
 }
 
 //01 자재 -> 발주 -> 거래처 루트
-char* storage_Order(char* prd_code, char* acc_code, int num)
+char* storage_Order(char* acc_code, int num)
 {
+
+	/*
+		파일에 insert 하기 위해서 넣어야 할 데이터가 한 문장으로 정리가 되어야한다
+		데이터들은 구조체에 정리되어있다.
+
+	*/
 	char* values;
-	while (insert_ord->next != 0)
+	Order* cur = insert_ord->next; //노드의 헤드
+	while (cur != 0)
 	{
 		//구조체 배열을 다 char로 선언, 형변환하여 저장.
 		//구조체배열로 받자. 거래처에서 
 		
 		// !!! 배열명은 주소값을 가리킨다 !!!
-		Order *newOrder;
+		Order *newOrder = creatNode_Order();
+		//형변환 할 함수
 
 		//발주이력을 저장하는 파일
 		//int _update(char* conditional, char* set) {
-		strcpy(newOrder->ACC_CODE, acc_code);
-		strcpy(newOrder->PRD_CODE, prd_code);
+		strcpy(newOrder->ACC_CODE, cur->ACC_CODE);
+		strcpy(newOrder->PRD_CODE, cur->PRD_CODE);
 		newOrder->NUM = num;
 
 		//함수로 빼자
@@ -478,6 +437,7 @@ char* storage_Order(char* prd_code, char* acc_code, int num)
 			file_column_free();
 			return -1;
 		}
+		cur = cur->next;
 	}
 	
 	free(values);
