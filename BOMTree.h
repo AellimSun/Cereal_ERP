@@ -19,7 +19,7 @@ typedef struct _BOM_TREE
 	Element1 M_CODE[6];
 }BOM_TREE;
 
-BOM_TREE* BOM_SEARCH(/*char* conditional*/);
+BOM_TREE* BOM_SEARCH(char* conditional);
 //conditional에 맞는 BOM트리를 생성하여 리턴해주는 함수
 
 BOM_TREE* BOM_CreateNode(Element2 REQ_NUM, Element1* NODE_CODE, Element1* M_CODE);

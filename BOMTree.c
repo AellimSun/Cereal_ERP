@@ -7,10 +7,8 @@
 
 #define FILE_NAME "BOM_SAMPLE_3"
 
-BOM_TREE* BOM_SEARCH()
-
+BOM_TREE* BOM_SEARCH(char* conditional)
 {
-	char* conditional = "ROOT_CODE='A0002'";
 	//BOM_TREE* result_ = BOM_SEARCH(conditional);
 
 	result* _result;
@@ -166,7 +164,7 @@ BOM_TREE* BOM_SEARCH()
 
 	//완성된 트리에서 루트노드 찾기
 	int index = 0;
-	while (strcmp(Node[index]->M_CODE, " NULL") != 0)
+	while (/*strcmp(Node[index]->M_CODE, "(NULL)") != 0*/ strlen(Node[index]->M_CODE) < 1)
 		index++;
 
 	return Node[index];	//해당 루트노드를 리턴
