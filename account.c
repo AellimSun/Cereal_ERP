@@ -23,6 +23,7 @@ void account()
 	printf("2.거래처 수정\n");
 	printf("3.거래처 조회\n");
 	printf("4.거래처 삭제\n");
+	printf("0.메인으로");
 	printf("\n\n");
 	scanf("%d", &menu);
 
@@ -41,6 +42,9 @@ void account()
 		break;
 	case 4:
 		//deleteAccount();
+		break;
+	case 0:
+		main();
 		break;
 	}
 }
@@ -86,12 +90,12 @@ void insertAccount()
 
 	printf("%s\n\n", values);
 
-	if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) M_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
+	/*if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) M_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
 	{
 		printf("%s\n", err_msg);
 
 		return -1;
-	}
+	}*/
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -152,6 +156,7 @@ void readAccount()
 	printf("3. 품목 코드로 조회\n");
 	printf("4. 거래처 구분별 조회\n");
 	printf("5. 전체 조회\n");
+	printf("0. 이전으로\n");
 	scanf("%d", &menu);
 	switch (menu)
 	{
@@ -168,25 +173,30 @@ void readAccount()
 		read_RorD();
 		break;
 	case 5:
-		//read_all();
+		read_all();
+		break;
+	case 6:
+		account();
 		break;
 	}
 }
 
-//void read_all()
-//{
-//	if (initalizing("account") == -1)
-//	{
-//		printf("%s\n", err_msg);
-//
-//		file_column_free();
-//		return -1;
-//	}
-//
-//	print_data();
-//	printf("\n");
-//	file_column_free();
-//}
+void read_all()
+{
+	if (initalizing("account") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	file_column_free();
+
+	account();
+}
 
 void read_ACC_CODE()
 {
@@ -245,6 +255,9 @@ void read_BN_REGI_NUM()
 	char naver[10];
 	char temp[20] = "BN_REGI_NUM='";
 
+	result* _result;
+	int result_count;
+
 	printf("검색할 거래처의 사업자 번호를 입력하세요 : ");
 	scanf("%s", naver);
 
@@ -274,7 +287,16 @@ void read_BN_REGI_NUM()
 		printf("%s\n", select_result_str);
 	}
 
-	print_data();
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
+	printf("\n\n");
+
+	//print_data();
 	printf("\n");
 	file_column_free();
 
@@ -285,6 +307,9 @@ void read_M_CODE()
 {
 	char naver[10];
 	char temp[20] = "M_CODE='";
+
+	result* _result;
+	int result_count;
 
 	printf("검색할 품목의 코드를 입력하세요 : ");
 	scanf("%s", naver);
@@ -315,7 +340,16 @@ void read_M_CODE()
 		printf("%s\n", select_result_str);
 	}
 
-	print_data();
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
+	printf("\n\n");
+
+	//print_data();
 	printf("\n");
 	file_column_free();
 
@@ -326,6 +360,9 @@ void read_RorD()
 {
 	char naver[5];
 	char temp[20] = "RorD='";
+
+	result* _result;
+	int result_count;
 
 	printf("검색할 거래처의 유형을 입력하세요 : \n");
 	printf("원자재 'R' 납품 'D'");
@@ -357,7 +394,16 @@ void read_RorD()
 		printf("%s\n", select_result_str);
 	}
 
-	print_data();
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	result_print(_result, result_count);
+	printf("\n\n");
+
+	//print_data();
 	printf("\n");
 	file_column_free();
 
