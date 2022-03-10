@@ -144,6 +144,7 @@ plan* Input()
 	{
 		char temp[100];
 		gets(temp);
+
 		str[i] = (char*)malloc(strlen(temp) + 1);
 		strcpy(str[i], temp);
 

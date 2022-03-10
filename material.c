@@ -198,6 +198,14 @@ void confirm_Material(plan* p) {
 	int* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
 
 	//BOM 조회
+	//char* con = "ROOT_CODE = 'A0002'";
+	char* con = (char*)malloc(sizeof(char));
+	strcpy(con, "ROOT_CODE='");
+	strcat(con, CODE);
+	strcat(con, "'");
+
+	BOM_TREE* res = BOM_SEARCH(con);
+	BOM_Forward_PrintTree(res, res->NODE_CODE);
 
 	//출력
 	printf("품목명 : ");
