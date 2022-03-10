@@ -71,82 +71,87 @@ void insertAccount()
 	scanf("%s", PRD_CODE);
 	printf("원자재 거래처는 'R' 납품 거래처는 'D'를 입력하세요 : ");
 	scanf("%s", RorD);
-
-	char temp = ("R\n" || "D\n");
-	while (temp == 0)
+	//printf("%s", RorD);
+	//char temp = ("R\n" || "D\n");
+	while(1)
 	{
-		printf("잘못 입력했습니다. 다시 입력하세요		");
-		scanf("%c", RorD);
+		if ((strcmp(RorD, "R") != 0) && (strcmp(RorD, "D") != 0))
+		{
+			printf("잘못 입력했습니다. 다시 입력하세요		");
+			scanf("%s", RorD);
+		}
+		else
+			break;
 	}
+	
+		printf("\n\n");
+		strcpy(values, "'");
+		strcat(values, ACC_CODE);
+		strcat(values, "', '");
+		strcat(values, BN_REGI_NUM);
+		strcat(values, "', '");
+		strcat(values, PRD_CODE);
+		strcat(values, "', '");
+		strcat(values, RorD);
+		strcat(values, "'");
 
-	printf("\n\n");
-	strcpy(values, "'");
-	strcat(values, ACC_CODE);
-	strcat(values, "', '");
-	strcat(values, BN_REGI_NUM);
-	strcat(values, "', '");
-	strcat(values, PRD_CODE);
-	strcat(values, "', '");
-	strcat(values, RorD);
-	strcat(values, "'");
+		printf("%s\n\n", values);
 
-	printf("%s\n\n", values);
+		/*if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) PRD_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
+		{
+			printf("%s\n", err_msg);
 
-	/*if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) PRD_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
-	{
-		printf("%s\n", err_msg);
+			return -1;
+		}*/
+		if (initalizing("account") == -1)
+		{
+			printf("%s\n", err_msg);
 
-		return -1;
-	}*/
-	if (initalizing("account") == -1)
-	{
-		printf("%s\n", err_msg);
+			file_column_free();
+			return -1;
+		}
 
+		char ex1[50] = "'A1001', '18-854-1123', 'C201', 'R'";
+		char ex2[50] = "'A1002', '20-774-4556', 'C202', 'R'";
+		char ex3[50] = "'A1003', '21-814-9563', 'D201', 'D'";
+
+		/*if (_insert(ex1) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		if (_insert(ex2) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		if (_insert(ex3) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}*/
+		if (_insert(values) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+
+		print_data();
+		printf("\n");
 		file_column_free();
-		return -1;
-	}
 
-	char ex1[50] = "'A1001', '18-854-1123', 'C201', 'R'";
-	char ex2[50] = "'A1002', '20-774-4556', 'C202', 'R'";
-	char ex3[50] = "'A1003', '21-814-9563', 'D201', 'D'";
-
-	/*if (_insert(ex1) == -1)
-	{
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}
-	if (_insert(ex2) == -1)
-	{
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}
-	if (_insert(ex3) == -1)
-	{
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}*/
-	if (_insert(values) == -1)
-	{
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}
-
-	print_data();
-	printf("\n");
-	file_column_free();
-
-	printf("새로운 거래처 등록완료. 메인으로 이동합니다.");
-	system("pause");
-	system("cls");
-	main();
+		printf("새로운 거래처 등록완료. 메인으로 이동합니다.");
+		system("pause");
+		system("cls");
+		account();
 }
 
 void readAccount()
@@ -249,7 +254,7 @@ void read_ACC_CODE()
 	printf("\n");
 	file_column_free();
 
-	main();
+	account();
 }
 
 void read_BN_REGI_NUM()
@@ -302,7 +307,7 @@ void read_BN_REGI_NUM()
 	printf("\n");
 	file_column_free();
 
-	main();
+	account();
 }
 
 void read_PRD_CODE()
@@ -355,7 +360,7 @@ void read_PRD_CODE()
 	printf("\n");
 	file_column_free();
 
-	main();
+	account();
 }
 
 void read_RorD()
@@ -409,7 +414,7 @@ void read_RorD()
 	printf("\n");
 	file_column_free();
 
-	main();
+	account();
 }
 
 void deleteAccount()
@@ -426,16 +431,16 @@ void deleteAccount()
 	printf("\n");
 	//file_column_free();
 
-	char naver[10];
-	char temp[20] = "BN_REGI_NUM='";
+	char naver[20];
+	char temp[30] = "BN_REGI_NUM='";
 
 	printf("삭제할 거래처의 사업자 번호를 입력하세요 : ");
-	scanf("%s", &naver);
+	scanf("%s", naver);
 	strcat(temp, naver);
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	_delete(conditional);
+	//_delete(conditional);
 
 	if (_delete(conditional) == -1)
 	{
@@ -445,7 +450,7 @@ void deleteAccount()
 		return -1;
 	}
 
-	//print_data();
+	print_data();
 	printf("\n");
 	file_column_free();
 
@@ -508,4 +513,5 @@ void updateAccount()
 	printf("\n");
 	file_column_free();
 	
+	account();
 }
