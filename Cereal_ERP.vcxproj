@@ -139,30 +139,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="01.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="33.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="01.c" />
+    <ClCompile Include="33.c" />
+    
+    <ClCompile Include="BOMTree.c" />
     <ClCompile Include="client.c" />
-    <ClCompile Include="main.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="material.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="material.c" />
     <ClCompile Include="process.c" />
     <ClCompile Include="Production_Plan.c" />
     <ClCompile Include="server.c" />
-    <ClCompile Include="test.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Test01.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="test.c" />
+    <ClCompile Include="Test01.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BOMTree.h" />
     <ClInclude Include="cereal.h" />
     <ClInclude Include="local.h" />
   </ItemGroup>
