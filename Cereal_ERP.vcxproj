@@ -141,7 +141,6 @@
   <ItemGroup>
     <ClCompile Include="01.c" />
     <ClCompile Include="33.c" />
-    
     <ClCompile Include="BOMTree.c" />
     <ClCompile Include="client.c" />
     <ClCompile Include="main.c" />
@@ -158,7 +157,10 @@
     <ClInclude Include="local.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BOM_SAMPLE_3.dat" />
+    <None Include="material.dat" />
     <None Include="process.dat" />
+    <None Include="test_pro_material.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
