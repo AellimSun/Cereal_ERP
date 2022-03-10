@@ -198,13 +198,12 @@ void confirm_Material(plan* p) {
 
 	//BOM 조회
 	//char* con = "ROOT_CODE = 'A0002'";
-	char* con = (char*)malloc(sizeof(char));
-
-	BOM_TREE* res = BOM_SEARCH(p->CODE);
-	BOM_Forward_PrintTree(res, p->CODE);
+	char* code = p->CODE;
+	BOM_TREE* res = BOM_SEARCH(code);
+	BOM_Forward_PrintTree(res, res->NODE_CODE);
 
 	//출력
-	printf("품목명 : ");
+	/*printf("품목명 : ");
 	printf("\t필요\t\t\t현황\n\n");
-	printf("옥수수 : 3개\t\t\t옥수수 : 1개");
+	printf("옥수수 : 3개\t\t\t옥수수 : 1개");*/
 }
