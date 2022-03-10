@@ -15,12 +15,25 @@ void material_create();
 void stock()
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1. 전품목 조회\n");
-	printf("2. 품목코드로 조회\n");
-	printf("3. create\n");
-	printf("0. 이전으로\n");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     1. 전품목 조회        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     2. 품목코드로 조회    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     3. create             |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|     0. 이전으로           |\n");
+	printf("\t\t\t-----------------------------\n\n");
 
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -58,7 +71,7 @@ void all_read() {
 	}
 
 	if (_select(conditional, select_column, &select_result_str) == -1) {
-		printf("조회할 데이터가 없습니다.\n");
+		printf("\n\t\t\t < 조회할 데이터가 없습니다. >\n");
 
 		file_column_free();
 		system("pause");
@@ -89,7 +102,7 @@ void code_read() {
 	char tmpCondition[30] = "PRD_CODE='";
 
 	getchar();
-	printf("검색할 품목코드를 입력해 주세요 : ");
+	printf("\n\t\t\t검색할 품목코드를 입력해 주세요 : ");
 	scanf("%s", search);
 
 	strcat(tmpCondition, search);
