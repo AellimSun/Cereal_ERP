@@ -39,30 +39,35 @@ void updateMaterials();
 void readMaterials();
 void deleteMaterials();
 
+void read_CODE();
+void read_NAME();
+void read_Code_Name_Backup();
+
+
 void product_list()
 {
 	//_create("list", "CODE VARCHAR(6) NAME VARCHAR(30) BACKUP INT");
 	//print_data();
 	
-		if (initalizing("list") == -1)
-		{
-		printf("%s\n", err_msg);
+		//if (initalizing("list") == -1)
+		//{
+		//printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-		}
+		//file_column_free();
+		//return -1;
+		//}
 	
-		_insert("'A0000', '바나나', 10");
-		
-		print_data();
+		//_insert("'A0000', '바나나', 10");
+		//
+		//print_data();
 
-		file_column_free();
+		//file_column_free();
 
 	int menu;
-	printf("자재품목 등록\n");
-	printf("자재품목 수정\n");
-	printf("자재품목 조회\n");
-	printf("자재품목 삭제\n");
+	printf("1.자재품목 등록\n");
+	printf("2.자재품목 수정\n");
+	printf("3.자재품목 조회\n");
+	printf("4.자재품목 삭제\n");
 	scanf("%d", &menu);
 
 	switch (menu)
@@ -88,19 +93,22 @@ void insertMaterials()
 	char value[50];
 	char CODE[5];
 	char NAME[30];
-	int BACKUP;
+	int BACKUP=0;
 
 	printf("==================\n");
 	printf("자재를 등록합니다.\n");
 	printf("==================\n\n");
 
-	printf("자재품목 코드 등록 : \n");
+	printf("자재품목 코드 등록 : ");
 	//printf("현재 사용 중인 코드 : ****");
 	scanf("%s", CODE);
 	printf("자재품목 이름 등록 : ");
 	scanf("%s", NAME);
-	printf("안전 재고 등록 :(g) ");
-	scanf("%d", BACKUP);
+	printf("안전 재고 등록(g) :  ");
+	scanf("%d", &BACKUP);
+
+	char BACKUP_S[30];
+	itoa(BACKUP, BACKUP_S, 10);
 
 	//Matls* newNode = (Matls*)malloc(sizeof(Matls));
 	//if (newNode == NULL)
@@ -114,12 +122,12 @@ void insertMaterials()
 	strcat(value, "','");
 	strcat(value, NAME);
 	strcat(value, "','");
-	strcat(value, BACKUP);
+	strcat(value, BACKUP_S);
 	strcat(value, "'");
 
 	printf("%s\n", value);
 
-	if (initalizing("product_list") == -1)
+	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -167,7 +175,7 @@ void insertMaterials()
 	printf("\n");
 	file_column_free();
 
-	printf("새로운 자재품목 등록완료. 메인으로 이동합니다.");
+	printf("새로운 자재품목 등록완료. 메인으로 이동합니다.\n\n");
 	system("pause");
 	system("cls");
 	main();
@@ -175,7 +183,27 @@ void insertMaterials()
 
 void updateMaterials()
 {
+	//result* _result;
+	//int result_count;
 
+	//char *conditional = temp;
+	//char *set = 
+
+	//if (initalizing("product_list") == -1)
+	//{
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
+
+	//if (_update(conditional, set) == -1)
+	//{
+	//	printf("%s\n", err_msg);
+
+	//	file_column_free();
+	//	return -1;
+	//}
 }
 
 void readMaterials()
@@ -227,14 +255,14 @@ void read_CODE()
 	char* conditional = temp;
 	char* select_column = "CODE, NAME, BACKUP";
 
-	if (initalizing("product_list") == -1)
+	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
-	printf("%s", conditional);
+	//printf("%s", conditional);
 
 	if (_select(conditional, select_column, &select_result_str) == -1)
 	{
@@ -281,7 +309,7 @@ void read_NAME()
 	char* conditional = temp;
 	char* select_column = "CODE, NAME, BACKUP";
 
-	if (initalizing("product_list") == -1)
+	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -322,7 +350,7 @@ void read_NAME()
 
 void read_Code_Name_Backup()
 {
-	if (initalizing("product_list") == -1)
+	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
 
