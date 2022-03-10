@@ -1,19 +1,155 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "cereal.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <windows.h>
+#pragma warning (disable : 6031)
+#pragma warning (disable : 6385)
+#pragma warning (disable : 6386)
 
 #define FILE_NAME "BOM_SAMPLE_3"
+
+
+void BOM_search_main()
+{
+	system("cls");
+
+	int input;
+	printf("메뉴를 선택하세요.\n");
+	printf("1.BOM 정전개\n");
+	printf("2.BOM 역전개\n");
+	printf("0.이전으로\n");
+
+	scanf("%d", &input);
+
+	while (input <0||input>2)
+	{
+		printf("잘못된 입력입니다. 다시 입력해주세요");
+		Sleep(1000);
+		system("cls");
+
+		printf("메뉴를 선택하세요.\n");
+		printf("1.BOM 정전개\n");
+		printf("2.BOM 역전개\n");
+		printf("0.이전으로\n");
+
+		scanf("%d", &input);
+	}
+
+	switch (input)
+	{
+	case 1:
+	{
+		//1.BOM 정전개
+		system("cls");
+		char input_temp[100] = "";
+
+		if (!Show_BOM_ROOT_CODE_list())
+			return;
+		printf("BOM 정전개 할 품명코드를 입력하세요. ");
+		scanf("%s", &input_temp);
+
+		char* search_code = (char*)malloc(sizeof(input_temp));
+		if (search_code == NULL)
+		{
+			printf("메모리 부족");
+			return;
+		}
+		strcpy(search_code, input_temp);
+		system("cls");
+
+		BOM_TREE* result = BOM_SEARCH(search_code);
+		BOM_Forward_PrintTree(result, search_code);
+
+		free(search_code);
+		system("pause");
+		BOM_search_main();
+	}
+		break;
+	case 2:
+	{
+		//2.BOM 역전개
+	}
+		break;
+	case 0:
+	{
+		//이전으로
+		system("cls");
+		base_information();
+	}
+		break;
+	}
+}
+
+int Show_BOM_ROOT_CODE_list()	//BOM 파일에서 ROOT코드 리스트를 뽑아오세요
+{
+	result* _result;
+	int result_count;
+	char* select_column = "ROOT_CODE";
+
+	//BOM 파일 열기
+	if (initalizing(FILE_NAME) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	//모든 컬럼 구하기
+	if (_select("*", select_column, &select_result_str) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+	//모든 컬럼을 가공하여 ROOT_CODE 컬럼 구하기
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	if (result_count > 0)
+	{
+		printf("BOM에 등록된 리스트는 다음과 같습니다\n\n");
+		printf("품목코드\t품명\n");
+		printf("===================================\n");
+		result* cur = _result;
+		char* temp = "";
+		for (int i = 0; i < result_count - 1; i++)
+		{
+			if (strcmp(temp, cur->_string_data[i]) != 0)
+				printf("%8s\n", cur->_string_data[i]);
+			temp = cur->_string_data[i];
+		}
+		printf("\n");
+	}
+	else
+	{
+		printf("등록된 BOM 리스트가 없습니다.\n");
+		return 0;
+	}
+
+	file_column_free();
+	result_free(_result, result_count);
+	return 1;
+}
+
+
 
 BOM_TREE* BOM_SEARCH(char* _conditional)
 {
 	char* text1 = "ROOT_CODE = '";
-
 	char* text2 = "'";
-	char* conditional = (char*)malloc(sizeof(text1) + sizeof(_conditional) + sizeof(text2));
-
+	char* conditional = (char*)malloc( sizeof(text1) + sizeof(_conditional) + sizeof(text2) );
+	if (conditional == NULL)
+	{
+		printf("메모리 부족");
+		exit(1);
+	}
 	strcpy(conditional, text1);
 	strcat(conditional, _conditional);
 	strcat(conditional, text2);
@@ -48,10 +184,16 @@ BOM_TREE* BOM_SEARCH(char* _conditional)
 		exit(1);
 	}
 
+	free(conditional);
 	//result_print(_result, result_count);
 
 	//result_count 개수 만큼의 구조체 포인터를 가지는 이중 포인터 Node를 동적 할당으로 정의
 	BOM_TREE** Node = (BOM_TREE**)malloc(sizeof(BOM_TREE*) * result_count);
+	if (Node == NULL)
+	{
+		printf("메모리 부족");
+		exit(1);
+	}
 
 	Element2 REQ_NUM;
 	Element1 NODE_CODE[6];
@@ -169,12 +311,12 @@ BOM_TREE* BOM_SEARCH(char* _conditional)
 
 	result_free(_result, result_count);
 
-	//완성된 트리에서 루트노드 찾기
-	int index = 0;
-	while (char_is_null(Node[index]->M_CODE))
-		index++;
+	////완성된 트리에서 루트노드 찾기
+	//int index = 0;
+	//while (!string_is_null(Node[index]->M_CODE))
+	//	index++;
 
-	return Node[index];	//해당 루트노드를 리턴
+	return Node[0];	//해당 루트노드를 리턴
 }
 
 
