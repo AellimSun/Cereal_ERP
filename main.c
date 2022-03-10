@@ -1,4 +1,6 @@
+#include "local.h"
 #include "cereal.h"
+
 
 void production_management(void);
 void material_management(void);
@@ -66,7 +68,7 @@ void material_management(void)
 		break;
 
 	case 4:
-		account();
+		//account();
 		break;
 
 	case 0:
@@ -131,6 +133,12 @@ void base_information(void)
 	switch (input)
 	{
 	case 1:
+	{
+		char* con = "ROOT_CODE = 'A0002'";
+		BOM_TREE* res = BOM_SEARCH(con);
+		BOM_Forward_PrintTree(res, res->NODE_CODE);
+
+	}
 	case 2:
 	case 3:
 		product_list();
@@ -139,9 +147,8 @@ void base_information(void)
 	}
 	
 }
-void production_plan(void)
-{
 
+}
 }
 
 void product_list(void)
