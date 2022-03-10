@@ -79,7 +79,7 @@
     <None Include="material.dat">
       <Filter>리소스 파일</Filter>
     </None>
-    <None Include="MAT_FILE_NAME.dat">
+    <None Include="test_pro_material.dat">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>

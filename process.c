@@ -17,14 +17,14 @@ typedef struct _req_code {
 	struct _req_code* next;
 }req_code;
 
-void init(void);
+void init(BOM_TREE* bom_res);
 void bg_process(void);
 
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
-int parts_produce(int num, char* bom_res, char* code);		// 부족한 부품 생성/ 자재에 자품목 수량 업로드
+//int parts_produce(int num, char* bom_res, char* code);		// 부족한 부품 생성/ 자재에 자품목 수량 업로드
 //give_LOT();		// 생산품 LOT번호 생성
 //produce_product();		//생산계획 품목 자재에 생산 수량 업로드
-void pro_material_use(char* p_code);
+void pro_material_use(char* p_code, int p_num);
 void pro_material_create(char* p_code);
 
 req_code* New(req_code* head, int num, char* code);
@@ -43,8 +43,9 @@ void process(void)
 
 void bg_process(void)
 {
-	char* con = "*";
+	char* con = "A0001";
 	BOM_TREE* bom_res = BOM_SEARCH(con);
+	init(bom_res);
 	BOM_Forward_PrintTree(bom_res, bom_res->NODE_CODE);
 
 	req_code* head = (req_code*)malloc(sizeof(req_code));
@@ -56,16 +57,90 @@ void bg_process(void)
 	//produce_product();		//생산계획 품목 생산 및 등록
 	//material_upload();		//생산자제 등록
 }
-void init(void)
+
+void init(BOM_TREE* bom_res)
 {
 	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
-	initalizing(MAT_FILE_NAME);
-	char* val[30] =
-	{ "",
+	if(initalizing(MAT_FILE_NAME) == -1)
+	{
+		printf("%s\n", err_msg);
 
+		file_column_free();
+		return -1;
+
+	}
+
+	/*char* value[30] =
+	{
+		"B0001,store,22031001,00000",
+		"'B0001','store',22031002,'00000'",
+		"'B0001','store',22031003,'00000'",
+		"'B0001','store',22031004,'00000'",
+		"'B0001','store',22031005,'00000'",
+		"'B0002','store',22031001,'00000'",
+		"'B0002','store',22031002,'00000'",
+		"'B0002','store',22031003,'00000'",
+		"'B0003','store',22031001,'00000'",
+		"'B0003','store',22031002,'00000'",
+		"'C0001','store',22031001,'00000'",
+		"'C0001','store',22031002,'00000'",
+		"'C0002','store',22031001,'00000'",
+		"'C0003','store',22031001,'00000'",
+		"'C0003','store',22031002,'00000'",
+		"'C0003','store',22031003,'00000'",
+		"'C0004','store',22031001,'00000'",
+		"'C0005','store',22031001,'00000'",
+		"'C0005','store',22031002,'00000'",
+		"'C0006','store',22031001,'00000'",
+		"'C0006','store',22031002,'00000'",
+		"'D0001','store',22031001,'00000'",
 	};
-	for(int i =0;i<30;i++)	_insert(val[i]);
 
+	for (int i = 0; i < 23; i++)
+	{
+		if (_insert(value[i]) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+
+		}
+	}*/
+
+	//char* val = "";
+	//char* tmp[2];
+	//BOM_TREE* cur = bom_res;
+
+	//while(cur->LeftChild !=NULL || cur->RightSibling !=NULL)
+	//{
+	//	int num = cur->REQ_NUM;
+	//	for (int j = 1; j <= num; j++)
+	//	{
+	//		val = cur->NODE_CODE;
+	//		strcat(val, ",store,");
+	//		strcat(val, "2203010");
+	//		strcat(val, ltoa(j, tmp, 10));
+	//		strcat(val, ",");
+	//		strcat(val, "00000");
+
+	//		if (_insert(val) == -1)
+	//		{
+	//			printf("%s\n", err_msg);
+
+	//			file_column_free();
+	//			return -1;
+
+	//		}
+	//	}
+
+	//	if (cur->LeftChild != NULL)
+	//		cur = cur->LeftChild;
+	//	if (cur->RightSibling != NULL)
+	//		cur = cur->RightSibling;
+	//}
+	print_data();
+	printf("\n");
 	file_column_free();
 }
 void check_parts(int num, char* bom_res, req_code* head)
@@ -76,7 +151,6 @@ void check_parts(int num, char* bom_res, req_code* head)
 	New(head, 30,"A6000");
 	New(head, 40,"A7000");
 	New(head, 50,"A8000");
-
 
 	while (0);
 }
@@ -89,14 +163,11 @@ int produce_parts(req_code* head)
 
 	while (cur != NULL)
 	{
-		int cnt = 0;
 		p_num = cur->num;
 		p_code = cur->code;
-		while (cnt < p_num)
-		{
-			pro_material_use(p_code);
-			cnt++;
-		}
+		
+		pro_material_use(p_code,p_num);
+		
 		cur = cur->next;
 	}
 }
@@ -104,6 +175,7 @@ int produce_parts(req_code* head)
 req_code* New(req_code* head, int num, char* code)
 {
 	req_code* NewNode = (req_code*)malloc(sizeof(req_code));
+	if (NewNode == NULL) exit(1);
 	NewNode->num = num;
 	NewNode->code = code;
 	NewNode->next = head->next;
@@ -132,9 +204,15 @@ void pro_material_create(char* p_code) {
 
 	system("pause");
 	system("cls");
-	stock();
 }
-void pro_material_use(char* p_code) {
+void pro_material_use(char* p_code, int p_num)
+{
+	result* _result;
+	int result_count;
+	char* select_column = "PRD_CODE,STATUS,DATE";
+	char* conditional = p_code;
+	char* set = "STATUS=store";
+	int num = p_num;
 
 	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
@@ -143,18 +221,34 @@ void pro_material_use(char* p_code) {
 		return -1;
 	}
 
-	if (_select() == -1) {
+	if (_select(conditional, select_column, &select_result_str) == -1)
+	{
 		printf("%s\n", err_msg);
 
 		file_column_free();
-		return -1;
+		exit(1);
+	}
+	if ((result_count = recv_result(&_result, select_result_str)) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+	if (_update_N(conditional, set, num) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
 	}
 
 	print_data();
 	printf("\n");
+
+	result_free(_result, result_count);
 	file_column_free();
 
 	system("pause");
 	system("cls");
-	stock();
 }

@@ -159,8 +159,8 @@
   <ItemGroup>
     <None Include="BOM_SAMPLE_3.dat" />
     <None Include="material.dat" />
-    <None Include="MAT_FILE_NAME.dat" />
     <None Include="process.dat" />
+    <None Include="test_pro_material.dat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

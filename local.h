@@ -70,6 +70,8 @@ int print_data();
 void sdts_free(sdts* node);
 void file_column_free();
 
+int _update_N(char* conditional, char* set,int num);
+
 //¼­¹ö
 
 int recv_result(result** result_head, char* receive);
