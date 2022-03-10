@@ -3,4 +3,9 @@
 //#include <Windows.h>
 #include "local.h"
 
-char* storage_Order(char* prd_code, char* acc_code, int num);
+typedef struct Plan
+{
+	int PLAN_PRODUCTION;
+	char CODE[5];
+	char values[30];
+} plan;

@@ -1,4 +1,6 @@
+#include "local.h"
 #include "cereal.h"
+
 
 void production_management(void);
 void material_management(void);
@@ -140,7 +142,7 @@ void base_information(void)
 	printf("메뉴를 선택하세요.\n");
 	printf("1.BOM 등록\n");
 	printf("2.BOM 조회\n");
-	printf("3.생산품목 리스트\n");
+	printf("3.자재품목 리스트\n");
 	printf("0.이전으로\n");
 
 	scanf("%d", &input);
@@ -156,16 +158,8 @@ void base_information(void)
 	}
 	
 }
-void production_plan(void)
-{
 
-}
 void process(void)
-{
-
-}
-
-void product_list(void)
 {
 
 }

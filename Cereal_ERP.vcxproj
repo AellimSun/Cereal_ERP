@@ -147,6 +147,7 @@
     <ClCompile Include="material.c" />
     <ClCompile Include="Order.c" />
     <ClCompile Include="process.c" />
+    <ClCompile Include="Production_Plan.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="Test01.c" />
