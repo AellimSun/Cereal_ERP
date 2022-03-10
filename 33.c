@@ -125,30 +125,6 @@ void deleteMaterials()
 
 }
 
-//void Materials()
-//{
-//	int menu;
-//	printf("자재품목 등록\n");
-//	printf("자재품목 수정\n");
-//	printf("자재품목 조회\n");
-//	printf("자재품목 삭제\n");
-//	scanf("%d", &menu);
-//
-//	switch (menu)
-//	{
-//	case 1:
-//		insertMaterials();
-//		break;
-//	case 2:
-//		updateMaterials();
-//		break;
-//	case 3:
-//		readMaterials();
-//		break;
-//	case 4:
-//		deleteMaterials();
-//		break;
-//	}
-//}
+
 
 
