@@ -149,7 +149,9 @@
     <ClCompile Include="process.c" />
     <ClCompile Include="Production_Plan.c" />
     <ClCompile Include="server.c" />
-    <ClCompile Include="test.c" />
+    <ClCompile Include="test.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Test01.c" />
     <ClCompile Include="UI.c" />
   </ItemGroup>
