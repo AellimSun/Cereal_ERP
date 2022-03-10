@@ -3,7 +3,7 @@
 typedef struct Accontnode {
 	char ACC_CODE[10];
 	char BN_REGI_NUM[10];
-	char M_CODE[30];
+	char PRD_CODE[30];
 	char RorD[5];
 	struct Accountnode* next;
 }Anode;
@@ -13,7 +13,7 @@ void readAccount();
 void read_all();
 void read_ACC_CODE();
 void read_BN_REGI_NUM();
-void read_M_CODE();
+void read_PRD_CODE();
 void read_RorD();
 
 void account()
@@ -54,7 +54,7 @@ void insertAccount()
 	char values[50];
 	char ACC_CODE[5];		//거래처 코드
 	char BN_REGI_NUM[20];	//사업자 등록 번호
-	char M_CODE[5];			//취급 품목 코드
+	char PRD_CODE[5];			//취급 품목 코드
 	char RorD[2];			//R:원자재 D:납품
 
 	printf("==========================\n");
@@ -66,7 +66,7 @@ void insertAccount()
 	printf("거래처의 사업자 등록 번호를 입력하세요 : ");
 	scanf("%s", BN_REGI_NUM);
 	printf("취급 품목 코드를 입력하세요 : ");
-	scanf("%s", M_CODE);
+	scanf("%s", PRD_CODE);
 	printf("원자재 거래처는 'R' 납품 거래처는 'D'를 입력하세요 : ");
 	scanf("%s", RorD);
 
@@ -83,14 +83,14 @@ void insertAccount()
 	strcat(values, "', '");
 	strcat(values, BN_REGI_NUM);
 	strcat(values, "', '");
-	strcat(values, M_CODE);
+	strcat(values, PRD_CODE);
 	strcat(values, "', '");
 	strcat(values, RorD);
 	strcat(values, "'");
 
 	printf("%s\n\n", values);
 
-	/*if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) M_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
+	/*if (_create("account", "ACC_CODE VARCHAR(10) BN_REGI_NUM VARCHAR(30) PRD_CODE VARCHAR(10) RorD VARCHAR(2)") == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -108,7 +108,7 @@ void insertAccount()
 	char ex2[50] = "'A1002', '20-774-4556', 'C202', 'R'";
 	char ex3[50] = "'A1003', '21-814-9563', 'D201', 'D'";
 
-	if (_insert(ex1) == -1)
+	/*if (_insert(ex1) == -1)
 	{
 		printf("%s\n", err_msg);
 
@@ -128,7 +128,7 @@ void insertAccount()
 
 		file_column_free();
 		return -1;
-	}
+	}*/
 	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -167,7 +167,7 @@ void readAccount()
 		read_BN_REGI_NUM();
 		break;
 	case 3:
-		read_M_CODE();
+		read_PRD_CODE();
 		break;
 	case 4:
 		read_RorD();
@@ -213,7 +213,7 @@ void read_ACC_CODE()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
+	char* select_column = "ACC_CODE, BN_REGI_NUM, PRD_CODE";
 
 	if (initalizing("account") == -1)
 	{
@@ -265,7 +265,7 @@ void read_BN_REGI_NUM()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
+	char* select_column = "ACC_CODE, BN_REGI_NUM, PRD_CODE";
 
 	if (initalizing("account") == -1)
 	{
@@ -303,10 +303,10 @@ void read_BN_REGI_NUM()
 	main();
 }
 
-void read_M_CODE()
+void read_PRD_CODE()
 {
 	char naver[10];
-	char temp[20] = "M_CODE='";
+	char temp[20] = "PRD_CODE='";
 
 	result* _result;
 	int result_count;
@@ -318,7 +318,7 @@ void read_M_CODE()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
+	char* select_column = "ACC_CODE, BN_REGI_NUM, PRD_CODE";
 
 	if (initalizing("account") == -1)
 	{
@@ -372,7 +372,7 @@ void read_RorD()
 	strcat(temp, "'");
 
 	char* conditional = temp;
-	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
+	char* select_column = "ACC_CODE, BN_REGI_NUM, PRD_CODE";
 
 	if (initalizing("account") == -1)
 	{
