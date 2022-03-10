@@ -165,9 +165,9 @@ plan* production_new_plan()
 	free(str[2]);*/
 
 	plan* newPlan = (plan*) malloc(sizeof(plan));
-	strcpy(newPlan->CODE, code);
-	strcpy(newPlan->PLAN_PRODUCTION, product);
-	strcpy(newPlan->values, year);
+	newPlan->CODE = code;
+	newPlan->PLAN_PRODUCTION = product;
+	newPlan->values = year;
 	/*newPlan->PLAN_PRODUCTION = product;*/
 
 	return newPlan;
