@@ -102,7 +102,9 @@ void code_read() {
 	char tmpCondition[30] = "PRD_CODE='";
 
 	getchar();
-	printf("\n\t\t\t검색할 품목코드를 입력해 주세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> 품목코드조회\n");
+	printf("\n\t\t< 검색할 품목코드를 입력해 주세요 :               >");
+	gotoxy(52, 2);
 	scanf("%s", search);
 
 	strcat(tmpCondition, search);
@@ -154,14 +156,26 @@ void material_create() {
 	char DATE[8];
 	char ACC_CODE[5];
 
-	printf("등록하려는 자재의 코드를 입력해 주세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> create\n\n");
+
+	printf("\t       =============================================\n\n");
+	printf("\t\t등록하려는 자재의 코드를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t등록하려는 자재의 상태를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 입고일자를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	printf("\n\t\t자재의 거래처를 입력해 주세요 :   \n\n");
+	printf("\t       =============================================\n");
+	gotoxy(57, 4);
 	scanf("%s", PRD_CODE);
-	printf("등록하려는 자재의 상태를 입력해 주세요 : ");
+	gotoxy(57, 8);
 	scanf("%s", STATUS);
-	printf("자재의 입고일자를 입력해 주세요 : ");
+	gotoxy(50, 12);
 	scanf("%s", DATE);
-	printf("자재의 거래처를 입력해 주세요 : ");
+	gotoxy(48, 16);
 	scanf("%s", ACC_CODE);
+	printf("\n\n");
 
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
