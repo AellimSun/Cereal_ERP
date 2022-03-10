@@ -53,7 +53,7 @@ void production_plan(void)
 	//print_data();
 
 
-	//confirm_Material(values);
+	confirm_Material(values);
 
 	printf("\n");
 
