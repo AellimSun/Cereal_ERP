@@ -1,6 +1,10 @@
 #include "cereal.h"
 
-plan* Input();
+plan* production_new_plan();
+plan* production_menu();
+void plan_reading();
+
+
 
 void production_plan(void)
 {
@@ -13,7 +17,7 @@ void production_plan(void)
 	result* find;
 	int result_count;
 
-	values = Input();
+	values = production_menu();
 
 	// 파일 생성
 	if (_create("Product_Plan", "PLAN_YEAR INT PLAN_PRODUCTION INT CODE VARCHAR(20)") == -1) {
@@ -124,13 +128,10 @@ void production_plan(void)
 	result_free(_result, result_count);*/
 
 
-
-
 	free(values);
 }
 
-
-plan* Input()
+plan* production_new_plan()
 {
 	char* str[3] = { 0 };
 	char* year;
@@ -152,6 +153,7 @@ plan* Input()
 	product = str[1];
 	code = str[2];
 
+
 	year = (char*)realloc(year, _msize(year) + _msize(product) + _msize(code) + 2);
 
 	strcat(year, ",");
@@ -159,12 +161,46 @@ plan* Input()
 	strcat(year, ",");
 	strcat(year, code);
 
-	free(str[1]);
-	free(str[2]);
+	/*free(str[1]);
+	free(str[2]);*/
 
 	plan* newPlan = (plan*) malloc(sizeof(plan));
 	strcpy(newPlan->CODE, code);
-	newPlan->PLAN_PRODUCTION = product;
+	strcpy(newPlan->PLAN_PRODUCTION, product);
+	strcpy(newPlan->values, year);
+	/*newPlan->PLAN_PRODUCTION = product;*/
 
 	return newPlan;
 }
+
+plan* production_menu()
+{
+	int key;
+	plan* values;
+	while(1)
+	{
+		printf("1. 새 계획 수립\n");
+		printf("2. 기존 계획 목록 열람\n");
+		scanf("%d", &key);
+
+		if (key == 1) 
+		{
+			values = production_new_plan();
+			return values;
+		}
+		else if (key == 2)
+		{
+			plan_reading();
+			break;
+		}
+		else printf("잘못된 입력값입니다.\n\n"); // 메뉴 상단으로 돌아갸야하는데;
+	}	
+}
+
+void plan_reading()		//기존 계획 열람 함수, 정보 받아야되는데에에ㅔㅔ 어케받지이이이이니임,ㅊ;닌ㄴㅇ
+{
+	
+}
+
+
+// 어려웠던점 : 메인에서 작업하던걸 싹다 함수로 만들어서 하려니 평소에 생각 못한 에러사항이 많이 발생함
