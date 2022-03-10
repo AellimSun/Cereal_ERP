@@ -52,7 +52,7 @@
       <Filter>소스 파일\123</Filter>
     </ClCompile>
     <ClCompile Include="account.c">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

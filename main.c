@@ -68,7 +68,7 @@ void material_management(void)
 		break;
 
 	case 4:
-		//account();
+		account();
 		break;
 
 	case 0:

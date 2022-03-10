@@ -86,12 +86,12 @@ void insertAccount()
 
 	printf("%s\n\n", values);
 
-	if (_create("account", "ACC_CODE VARCHAR(5) BN_REGI_NUM VARCHAR(20) M_CODE VARCHAR(5) RorD VARCHAR(2)") == -1)
+	/*if (_create("account", "ACC_CODE VARCHAR(5) BN_REGI_NUM VARCHAR(20) M_CODE VARCHAR(5) RorD VARCHAR(2)") == -1)
 	{
 		printf("%s\n", err_msg);
 
 		return -1;
-	}
+	}*/
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -99,6 +99,10 @@ void insertAccount()
 		file_column_free();
 		return -1;
 	}
+
+	char ex1[50] = "'A1001', '18-854-1123', 'C201', 'R'";
+	char ex2[50] = "'A1002', '18-854-1123', 'C201', 'R'";
+	char ex3[50] = "'A1003', '18-854-1123', 'C201', 'R'";
 
 	if (_insert(values) == -1)
 	{
@@ -174,7 +178,7 @@ void read_ACC_CODE()
 	strcat(temp, naver);
 	strcat(temp, "'");
 
-	char* conditional = temp;
+	char* conditional = "ACC_CODE='A1001'";
 	char* select_column = "ACC_CODE, BN_REGI_NUM, M_CODE";
 
 	if (initalizing("account") == -1)
@@ -184,7 +188,7 @@ void read_ACC_CODE()
 		file_column_free();
 		return -1;
 	}
-
+	printf("%s", conditional);
 
 	if (_select(conditional, select_column, &select_result_str) == -1)
 	{
