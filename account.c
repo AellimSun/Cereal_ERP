@@ -21,12 +21,21 @@ void updateAccount();
 void account()
 {
 	int menu;
-	printf("1.거래처 등록\n");
-	printf("2.거래처 수정\n");
-	printf("3.거래처 조회\n");
-	printf("4.거래처 삭제\n");
-	printf("0.메인으로");
-	printf("\n\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      1. 거래처 등록       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2. 거래처 수정       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3. 거래처 조회       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      4. 거래처 삭제       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      0. 메인으로          |\n");
+	printf("\t\t\t-----------------------------\n");
 	scanf("%d", &menu);
 
 
@@ -46,7 +55,7 @@ void account()
 		deleteAccount();
 		break;
 	case 0:
-		main();
+		main_manu();
 		break;
 	}
 }
