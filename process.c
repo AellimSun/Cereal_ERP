@@ -34,7 +34,7 @@ req_code* New(req_code* head, int num, char* code);
 
 void process(void)
 {
-	//init();
+	init();
 	//initalizing("FILE_NAME");
 	int input;
 
@@ -58,13 +58,12 @@ void bg_process(void)
 
 	PRO_all_read();
 
-	//pro_material_create();
-
 	check_parts(PLAN_NUM, bom_res,head);			//부족한 제작부품 개수 파악
 	produce_parts(head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();	//작업지시 확정 - 위에 있는지 확인
 	//give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
 	//produce_product();		//생산계획 품목 생산 및 등록
+	//pro_material_create();
 	//material_upload();		//생산자제 등록
 
 	PRO_all_read();
@@ -76,14 +75,14 @@ void bg_process(void)
 void check_parts(int num, char* bom_res, req_code* head)
 {
 	//_BOM_Backward_PrintTree();
-	New(head, 2,"B0001");
-	New(head, 3,"B0002");
-	New(head, 4,"B0003");
-	New(head, 5,"B0004");
-	New(head, 4,"C0001");
-	New(head, 3,"C0002");
-	New(head, 2,"C0003");
-	New(head, 5,"D0001");
+	New(head, 1,"B0001");//2
+	New(head, 2,"B0002");//3
+	New(head, 2,"B0003");//4
+	New(head, 3,"B0004");//5
+	New(head, 2,"C0001");//4
+	New(head, 2,"C0002");//3
+	New(head, 2,"C0003");//2
+	New(head, 1,"D0001");//5
 
 }
 
@@ -92,18 +91,15 @@ int produce_parts(req_code* head)
 	req_code* cur = head->next;
 	int p_num;
 	char* p_code;
+	int cnt = 0;
 
 	while (cur != NULL)
 	{
-		int cnt = 0;
 		p_num = cur->num;
 		p_code = cur->code;
-		while (cnt < p_num)
-		{
-			pro_material_use(p_code, p_num);
-			cnt++;
-			printf("while문 : %d\n", cnt);
-		}
+		pro_material_use(p_code, p_num);
+		printf("pro_material_use 실행 %d번\n",cnt+1);
+		cnt++;
 		cur = cur->next;
 	}
 }
@@ -131,17 +127,18 @@ void pro_material_use(char* p_code, int p_num) {
 	char* text2 = "'";
 	char* conditional = (char*)malloc(sizeof(text1) + sizeof(p_code) + sizeof(text2));
 	if (conditional == 0) exit(1);
+
 	char* select_column = "PRD_CODE,STATUS,LOT";
 	char* set = "STATUS='uesed'";
 	char* CODE = p_code;
 	result* find;
 	result* _result;
 	int result_count;
+	int cnt=0;
 
 	strcpy(conditional, text1);
 	strcat(conditional, CODE);
 	strcat(conditional, text2);
-
 
 	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
@@ -157,6 +154,8 @@ void pro_material_use(char* p_code, int p_num) {
 		return -1;
 	}
 	else {
+		int i=0;
+
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 			printf("%s\n", err_msg);
 
@@ -165,50 +164,44 @@ void pro_material_use(char* p_code, int p_num) {
 			return -1;
 		}
 		//update 하기
-		while (_result->next != NULL) {
+		while (_result != NULL && cnt != p_num) {
 			//현재 노드의 컬럼명이 STATUS일 경우
 			if (strcmp(_result->name, "STATUS") == 0) {
 				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
 				if (strcmp(*(_result->_string_data), "store") == 0) {
-					while (strcmp(_result->name,"LOT")!=0)
+					while (strcmp(_result->name, "LOT") != 0)
 					{
-						_result = _result->next;
+							_result = _result->next;
 					}				//LOT까지 가기
-					char* lot = (char*)malloc(sizeof(_result->_string_data));
+					char* lot = (char*)malloc(sizeof(*(_result->_string_data)));
 					char* txt1 = "LOT='";
 					char* txt2 = "'";
-					char* conditional1 = (char*)malloc(sizeof(txt1)+sizeof(lot)+sizeof(txt2));
-					char* set = "STATUS = 'used_'";
+					char* conditional1 = (char*)malloc(sizeof(txt1) + sizeof(lot) + sizeof(txt2));
+					char* set = "STATUS = '_used'";
 					if (conditional1 == 0) exit(1);
-					
+
 					strcpy(lot, *(_result->_string_data));
 
 					strcpy(conditional1, txt1);
 					strcat(conditional1, lot);
-
 					strcat(conditional1, txt2);
 
-					if (_update(conditional1,set) == -1){
+					if (_update(conditional1, set) == -1) {
 						printf("%s\n", err_msg);
 
 						file_column_free();
 						return -1;
 					}
-
-					printf("자재수정 : %s",conditional1 );
+					printf("자재수정 : %s\n", conditional1);
+					cnt++;
+					free(conditional1);
 				}
 			}
 			_result = _result->next;
 		}
+		if (cnt < p_num) printf("자재가 부족합니다.\n");
 	}
 
-	//if ((find = find_result(_result, "DATE")) == -1)
-	//{
-	//	printf("%s\n", err_msg);
-
-	//	result_free(_result, result_count);
-	//	return -1;
-	//}
 	file_column_free();
 
 	//print_data();
