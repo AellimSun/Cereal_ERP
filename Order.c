@@ -45,13 +45,13 @@ Order* creatNode_Order()
 	return newNode;
 }
 
-void creat_Order_List(Order* head, result* result_head, int num)
+void creat_Order_List(Order* head, result* result_head, int num, bomRes* met)
 {
 
 	
 	int i = 0;
 	
-	printf("출력 외안대\n");
+	//printf("출력 외안대\n");
 	//printf("prd_code : %s\n", prd_code);
 	result* cur;
 	
@@ -78,7 +78,7 @@ void creat_Order_List(Order* head, result* result_head, int num)
 					{
 						//newNode->ACC_CODE = cur->_string_data[i];
 						head->ACC_CODE = cur->_string_data[i];
-
+						
 						//printf("                    ACC_CODE : %s\n ", head->ACC_CODE);
 					}
 					else if (strcmp(cur->name, "PRD_CODE") == 0)
@@ -147,6 +147,7 @@ void print_Node_process(plan* head)
 
 		cur = cur->next;
 	}
+
 }
 
 
@@ -177,7 +178,7 @@ void material_to_prosess(plan* head, bomRes* met)
 
 
 //plan구조체로 넘겨줘야한다.
-void Request_Order(bomRes* met_ord)
+bomRes* Request_Order(bomRes* met_ord)
 {
 
 	
@@ -325,7 +326,7 @@ void Request_Order(bomRes* met_ord)
 
 		Sleep(1000);
 
-		creat_Order_List(insert_ord, _result, result_count);
+		creat_Order_List(insert_ord, _result, result_count, met);
 
 
 		//특정 컬럼 추출
@@ -472,7 +473,7 @@ int storage_Order(Order* head, int num)
 	}
 
 
-	printf("종료...\n");
+	printf("데이터 입력을 종료합니다..\n");
 }
 
 //02. 메인 -> 발주 -> 발주입력(품목코드) -> 거래처 목록 -> 발주!
