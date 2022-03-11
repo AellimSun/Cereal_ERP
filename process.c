@@ -4,6 +4,7 @@
 
 #define PRO_FILE_NAME "process"
 #define MAT_FILE_NAME "test_pro_material"
+#define BOM_FILE_NAME "BOM_SAMPLE_3"
 
 #define PLAN_NUM 100
 #define PLAN_CODE "A1001"
@@ -33,6 +34,8 @@ void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
 char give_LOT();		// 생산품 LOT번호 생성
 
+void BOM_read();
+
 req_code* New(req_code* head, int num, char* code);
 void Head(req_code* head)
 {
@@ -57,6 +60,10 @@ void bg_process(void)
 	char* con = "A0001";
 	bom_res = BOM_SEARCH(con);
 	BOM_Forward_PrintTree(bom_res,con);
+	system("pause");
+
+	BOM_read();
+	system("pause");
 
 	req_code* mat_head = (req_code*)malloc(sizeof(req_code));
 	if (mat_head == NULL) exit(1);
@@ -233,7 +240,6 @@ void produce_product(req_code* head)
 {
 
 
-
 }
 
 char give_LOT(void)
@@ -273,6 +279,8 @@ void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth)
 	//   printf("   ");
 
 	//printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
+
+
 
 	if (CurNode->LeftChild != NULL) // 차일드 존재시
 		_BOM_Forward_PrintTree(CurNode->LeftChild, Depth + 1); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
@@ -375,4 +383,37 @@ void PRO_all_read() {
 
 	system("pause");
 	system("cls");
+}
+
+void BOM_read()
+{
+	result* _result;
+	int result_count;
+	char* select_column = "ROOT_CODE";
+
+	//BOM 파일 열기
+	if (initalizing(BOM_FILE_NAME) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	//모든 컬럼 구하기
+	if (_select("*", select_column, &select_result_str) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+	//모든 컬럼을 가공하여 ROOT_CODE 컬럼 구하기
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	print_data();
+	file_column_free();
 }

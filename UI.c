@@ -7,7 +7,7 @@ void gotoxy(int x, int y);
 void main_ui() {
 
 	system("color f0");
-	system("mode con:cols=86lines=25");
+	system("mode con:cols=86lines=40");//lines=25
 
 	system("title 시리얼 공장 관리 ERP");
 	printf("\n");
