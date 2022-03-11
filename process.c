@@ -70,6 +70,7 @@ void bg_process(void)
 	mat_head->num = NULL;
 	mat_head->code = NULL;
 	mat_head->next = NULL;
+
 	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
 
 	PRO_all_read();
