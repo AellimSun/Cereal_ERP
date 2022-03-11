@@ -45,7 +45,7 @@ Order* creatNode_Order()
 	return newNode;
 }
 
-void creat_Order_List(Order* head, result* result_head, int num, bomRes* met)
+void creat_Order_List(Order* head, result* result_head, int num)
 {
 
 	
@@ -78,8 +78,8 @@ void creat_Order_List(Order* head, result* result_head, int num, bomRes* met)
 					{
 						//newNode->ACC_CODE = cur->_string_data[i];
 						head->ACC_CODE = cur->_string_data[i];
-						
-						//printf("                    ACC_CODE : %s\n ", head->ACC_CODE);
+						//strcpy(met->ACC_CODE,cur->_string_data[i]);
+						//printf("                    ACC_CODE : %s\n ", met->ACC_CODE);
 					}
 					else if (strcmp(cur->name, "PRD_CODE") == 0)
 					{
@@ -134,16 +134,17 @@ void print_Node(Order* head)
 	}
 }
 
-void print_Node_process(plan* head)
+void print_Node_process(bomRes* head)
 {
-	plan* cur;
+	bomRes* cur;
 	cur = head->next;
 
 	printf("~~~print_Node_process~~~\n");
 	while (cur != NULL)
 	{
-		printf("PRD_COD : %s,  ", cur->CODE);
-		printf("PRD_VAL : %d\n", cur->values);
+		printf("PRD_COD : %s\n", cur->CODE);
+		printf("PRD_VAL : %d\n", cur->AMOUNT);
+		printf("ACC_CODE : %s\n\n", cur->ACC_CODE);
 
 		cur = cur->next;
 	}
@@ -178,7 +179,7 @@ void material_to_prosess(plan* head, bomRes* met)
 
 
 //plan구조체로 넘겨줘야한다.
-bomRes* Request_Order(bomRes* met_ord)
+void Request_Order(bomRes* met_ord)
 {
 
 	
@@ -220,17 +221,24 @@ bomRes* Request_Order(bomRes* met_ord)
 
 
 	
-		//자재구조체
+	//자재구조체
 		
-	bomRes* met = met_ord->next;
+	//bomRes* met = met_ord->next;
 
-
+	bomRes* met = malloc(sizeof(bomRes));
+	if (met == NULL)
+		return -1;
+	met = met_ord->next;
+	met->ACC_CODE = NULL;
+	//met->AMOUNT = NULL;
+	//met->CODE = NULL;
+	//met->next = NULL;
 
 
 	while (met != NULL)
 	{
 
-		material_to_prosess(head_Cod_n_Num,met);
+		//material_to_prosess(head_Cod_n_Num,met);
 
 		//printf("======================================\n");
 
@@ -239,46 +247,7 @@ bomRes* Request_Order(bomRes* met_ord)
 		printf("prd_code : %s\n", prd_code);
 		int amount = met->AMOUNT;
 
-		/*
-				자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
-				거래처 파일로 이 품목코드를 넘겨줌
-
-			while(1)
-			{
-
-				if(거래처파일.품목코드 == 자재.품목코드)
-				if(strcmp(거래처파일.품목코드, 자재.품목코드) == 0)
-				{
-
-					//서칭할 구조체 필요한가?
-
-					_select("PRD_CODE = prd_code", *,&select_result_str)
-
-					해당 품목코드를 포함하는 거래처 컬럼 전체 출력
-
-					printf("%s\n\n", select_result_str);
-
-
-					발주파일에 변동사항 업데이트
-
-					발주일   납기일    품목코드   거래처코드   수량
-					================================================
-					NULL     NULL       NULL       NULL        NULL
-
-					return 자재함수로 리턴, 거래처 코드만 리턴? :: 자재팀과 상의 필요
-				}
-				else
-				{
-					해당 품목을 취급하는 거래처가 존재하지 않습니다.
-					( 홈 ) 화면으로 돌아갑니다.
-				}
-
-
-		}
-
-			*/
-		//if (initalizing("sample_Client") == -1) 
-
+	
 
 
 		//print_data();
@@ -326,7 +295,7 @@ bomRes* Request_Order(bomRes* met_ord)
 
 		Sleep(1000);
 
-		creat_Order_List(insert_ord, _result, result_count, met);
+		creat_Order_List(insert_ord, _result, result_count);
 
 
 		//특정 컬럼 추출
@@ -354,10 +323,10 @@ bomRes* Request_Order(bomRes* met_ord)
 
 	}
 	
-	print_Node_process(head_Cod_n_Num);
+	//print_Node_process(met_ord);
 
 
-	printf("발주를 종료합니다. 메인으로 돌아갑니다");
+	printf("발주를 종료합니다.");
 	Sleep(500);
 	printf(".");
 	Sleep(500);
@@ -365,7 +334,7 @@ bomRes* Request_Order(bomRes* met_ord)
 	Sleep(500);
 	printf(".");
 
-	//return main();
+	//return;
 	
 	
 }
