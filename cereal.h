@@ -25,8 +25,7 @@ typedef struct Material {
 	char STATUS[5];
 	int DATE;
 	char ACC_CODE[5];
-	char LOT[5];
-};
+
 };
 
 //惯林前格 历厘 备炼眉
@@ -41,3 +40,5 @@ typedef struct _order
 	struct _order* next;
 
 }Order;
+char LOT[5];
+
