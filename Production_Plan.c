@@ -1,11 +1,134 @@
+#include <stdio.h>
+#include <Windows.h>
 #include "cereal.h"
-#include "stdbool.h"
+#include <stdbool.h>
+#include <string.h>
+
+#define SIZE 30
 
 plan* production_new_plan();
 plan* production_menu();
-void plan_reading();
+typedef char* element;
+typedef struct node
+{
+	element que[SIZE];
+	struct node* link;
+	
+} Node;
 
+typedef struct
+{
+	Node* rear;
+	Node* front;
 
+} Qlink;
+
+void gotoxy(int x, int y)
+{
+	COORD pos = { x,y };
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+Qlink* Create()
+{
+	Qlink* ql = (Qlink*)malloc(sizeof(Qlink));
+	if (ql == NULL) exit(1);
+
+	ql->front = NULL;
+	ql->rear = NULL;
+	return ql;
+}
+
+bool isEmpty(Qlink* aql)
+{
+	if (aql->front == NULL)
+	{
+		/*printf("Queue is empty");*/
+		return true;
+	}
+	else return false;
+}
+
+bool isFull(Qlink* aql)
+{
+	if (aql->rear >= 3)
+	{
+		printf("Queue is full");
+		return true;
+	}
+	else return false;
+}
+
+void enQueue(Qlink* aql, element adata)
+{
+	Node* newNode = (Node*)malloc(sizeof(Node));
+	if (newNode == NULL) exit(1);
+	strcpy(newNode->que, adata);
+	newNode->link = NULL;
+
+	if (isEmpty(aql))
+	{
+		aql->front = newNode;
+		aql->rear = newNode;
+	}
+	else
+	{
+		aql->rear->link = newNode;
+		aql->rear = newNode;
+	}
+}
+
+void deQueue(Qlink* aql)
+{
+	if (isEmpty(aql))
+	{
+		printf("Empty");
+		exit(1);
+	}
+	else
+	{
+		Node* curr = aql->front;
+		char* D[30] = { NULL };
+		strcpy(D, curr->que);
+		aql->front = aql->front->link;
+		if (aql->front == NULL) aql->rear = NULL;
+		free(curr);
+	}
+}
+
+void printQ(Qlink* aql)
+{
+	Node* curr = aql->front;
+	
+	
+	if (curr->que == NULL)
+	{
+		printf("저장된 계획이 없습니다.\n");
+		return 0;
+	}
+	
+	printf("계획연도\t계획량\t품목 코드\n");
+	printf("-----------------------------------------\n");
+	while (curr)
+	{
+		char temp[30];
+
+		strcpy(temp, curr->que);
+
+		char* ptr = strtok(temp, ",");
+		char* sArr[10] = { NULL };
+		int i = 0;
+
+		while (ptr != NULL)
+		{
+			printf("%s\t", ptr);
+			ptr = strtok(NULL, ",");
+		}
+
+		curr = curr->link;
+		printf("\n");
+	}
+}
 
 void production_plan(void)
 {
@@ -14,9 +137,9 @@ void production_plan(void)
 	//char* set = "TP='c'";
 	char* select_column = "PLAN_YEAR, PLAN_PRODUCTION, CODE";
 
-	result* _result;
+	/*result* _result;
 	result* find;
-	int result_count;
+	int result_count;*/
 
 	values = production_menu();
 
@@ -128,7 +251,6 @@ void production_plan(void)
 	file_column_free();
 	result_free(_result, result_count);*/
 
-
 	free(values);
 }
 
@@ -140,7 +262,7 @@ plan* production_new_plan()
 	char* code;
 
 	getchar();
-
+	
 	printf("계획연도, 연간계획량, 품목 코드 입력 : ");
 	for (int i = 0; i < 3; i++)
 	{
@@ -148,12 +270,11 @@ plan* production_new_plan()
 		gets(temp);
 		str[i] = (char*)malloc(strlen(temp) + 1);
 		strcpy(str[i], temp);
-
 	}
+
 	year = str[0];
 	product = str[1];
 	code = str[2];
-
 
 	year = (char*)realloc(year, _msize(year) + _msize(product) + _msize(code) + 2);
 
@@ -169,7 +290,7 @@ plan* production_new_plan()
 	newPlan->CODE = code;
 	newPlan->PLAN_PRODUCTION = product;
 	newPlan->values = year;
-	/*newPlan->PLAN_PRODUCTION = product;*/
+
 
 	return newPlan;
 }
@@ -177,28 +298,87 @@ plan* production_new_plan()
 plan* production_menu()
 {
 	int key;
+	char str;
+	int cnt = 0;
 	plan* values;
+	Qlink* HistoryQ = Create();
+
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리\n\n");
 	while(1)
 	{
-		printf("1. 새 계획 수립\n");
-		printf("2. 계획 목록 열람\n");
-		scanf("%d", &key);
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|      1. 새 계획 수립      |\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|     2. 계획 목록 열람     |\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|       3. 뒤로 가기        |\n");
+		printf("\t\t\t-----------------------------\n\n");
 
-		if (key == 1) 
+		printf("\t\t\t\t 입력 :\n");
+		printf("\t\t\t\t        ^");
+		gotoxy(40, 12);
+		scanf("%d", &key);
+		system("cls");
+
+		/*printf("1. 새 계획 수립\n");
+		printf("2. 계획 목록 열람\n");
+		printf("3. 뒤로가기");
+		scanf(" %d", &key);
+		system("cls");*/
+
+		if (key == 1)
 		{
 			values = production_new_plan();
-			return values;
+			enQueue(HistoryQ, values->values);
+	
+			cnt++;
+
+			while (1)
+			{
+				printf("입력한 계획을 실행하시겠습니까? (Y/N)");
+				scanf(" %c", &str);
+				if (str == 'Y' || str == 'y')
+				{
+					return values;
+				}
+				else if (str == 'N' || str == 'n')
+				{
+					system("cls");
+					break;
+				}
+				else printf("잘못된 입력입니다.\n");
+			}
+
+			if (cnt >= 11)
+			{
+				deQueue(HistoryQ);
+			}
 		}
 		else if (key == 2)
 		{
-			plan_reading();
+			printQ(HistoryQ);
+			while (1)
+			{
+				printf("열람을 종료하고 초기화면으로 돌아가시려면 Q키를 입력하세요.");
+				scanf(" %c", &str);
+				if (str == 'Q' || str == 'q')
+				{
+					system("cls");
+					break;
+				}
+				else
+				{
+					printf("잘못된 입력입니다.\n");
+				}
+			}
 		}
-		else printf("잘못된 입력값입니다.\n\n");
-	}	
+		else if (key == 3)
+		{
+			production_management();
+		}
+	}
 }
-
-void plan_reading()		//기존 계획 열람 함수
-{
-
-}
-
