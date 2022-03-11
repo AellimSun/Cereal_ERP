@@ -133,6 +133,32 @@ int main(void)
 	result_print(_result, result_count);
 	printf("\n\n");
 
+	if (_select("PRD_CODE = 'B0001'", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+		//if (_select("*", "O_DATE, D_DATE , ACC_CODE , ORDER_NUM , PRD_CODE , NUM INT", &select_result_str) == -1) {
+
+
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	else {
+		//printf("%s\n\n", select_result_str);
+		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
+	}
+	//print_data();
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	
+
+	result_print(_result, result_count);
+	printf("\n\n");
+
 	//if ((find = find_result(_result, "FLdf")) == -1) {
 	//	printf("%s\n", err_msg);
 
@@ -143,5 +169,36 @@ int main(void)
 
 
 	file_column_free();
+
+	if (initalizing("sample_Order") == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	//if (_select("PRD_CODE = 'B0001'", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+	if (_select("*", "O_DATE, D_DATE , ACC_CODE , ORDER_NUM , PRD_CODE , NUM INT", &select_result_str) == -1) {
+
+
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	
+	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+
+
+	result_print(_result, result_count);
+	printf("\n\n");
+
+
+
 	return 0;
 }
