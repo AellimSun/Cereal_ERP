@@ -102,7 +102,7 @@ void material_management(void)
 		break;
 
 	case 4:
-		//account();
+		account();
 		break;
 
 	case 0:
@@ -151,9 +151,30 @@ void production_management(void)
 		main_manu();
 	}
 }
+
 void order(void)
 {
+	// 파일 위치 :: 초기화한다. 저장소 지정
+	//if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Order") == -1) {
+	//if (initalizing("account") == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
+	//	file_column_free();
+	//	return -1;
+	//}
+
+
+	Request_Order("Q666", 3);
+
+	//printf("1\n");
+	//storage_Order("003", 5);
+	//printf("return\n");
+	//print_data();
+
+	//file_column_free();
+
+	
 }
 void delivery(void)
 {
