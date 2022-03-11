@@ -434,7 +434,7 @@ void deleteAccount()
 	char naver[20];
 	char temp[30] = "BN_REGI_NUM='";
 
-	printf("삭제할 거래처의 사업자 번호를 입력하세요 : ");
+	printf("삭제할 거래처의 사업자 번호(BN_REGI_NUM)를 입력하세요 : ");
 	scanf("%s", naver);
 	strcat(temp, naver);
 	strcat(temp, "'");
@@ -484,7 +484,7 @@ void updateAccount()
 	//result* _result;
 	//int result_count;
 
-	printf("수정할 거래처의 코드를 입력하세요 : ");
+	printf("수정할 거래처의 코드(ACC_CODE)를 입력하세요 : ");
 	scanf("%s", naver1);
 
 	strcat(temp, naver1);
