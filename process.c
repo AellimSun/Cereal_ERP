@@ -1,5 +1,6 @@
 #include "cereal.h"
 #include <string.h>
+#include <time.h>
 
 
 #define PRO_FILE_NAME "process"
@@ -28,7 +29,7 @@ int produce_parts(req_code* head);		// 부족한 부품 생성/ 자재에서 사용함으로 바�
 
 void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
-//give_LOT();		// 생산품 LOT번호 생성
+char give_LOT();		// 생산품 LOT번호 생성
 //produce_product();		//생산계획 품목 자재에 생산 수량 업로드
 req_code* New(req_code* head, int num, char* code);
 
@@ -49,6 +50,7 @@ void bg_process(void)
 	BOM_TREE* bom_res;
 	char* con = "A0001";
 	bom_res = BOM_SEARCH(con);
+	BOM_Forward_PrintTree(con,);
 
 	req_code* head = (req_code*)malloc(sizeof(req_code));
 	if (head == NULL) exit(1);
@@ -170,11 +172,6 @@ void pro_material_use(char* p_code, int p_num) {
 			cur = _result;
 			while (1) {
 				//현재 노드의 컬럼명이 STATUS일 경우
-				//if (cur == NULL)
-				//{
-				//	printf("result NULL\n");
-				//	break;
-				//}
 				if (strcmp(cur->name, "STATUS") == 0) {
 					//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
 					if (strcmp(cur->_string_data[i], "store") == 0) {
@@ -206,7 +203,7 @@ void pro_material_use(char* p_code, int p_num) {
 						free(conditional1);
 					}
 				}
-				//cur = cur->next;
+				
 				if (cur->next== NULL)
 					break;
 				else
@@ -217,19 +214,26 @@ void pro_material_use(char* p_code, int p_num) {
 		if (cnt < p_num) printf("자재가 부족합니다.\n");
 		printf("\n");
 	}
-	//	while (_result != NULL && cnt != p_num) {
-	//		
-	//}
-
 	file_column_free();
-
-	//print_data();
-
 	result_free(_result, result_count);
 	free(conditional);
 
 	//system("pause");
 	//system("cls");
+}
+
+char give_LOT(void)
+{
+	char LOT[5];
+	int random = 0;
+	char tmpRand[4];
+
+	srand(time(NULL));
+	random = (rand() % 10000);
+	strcpy(LOT, "L");
+	strcat(LOT, itoa(random, tmpRand, 10));
+
+	return LOT;
 }
 
 void init(void)
