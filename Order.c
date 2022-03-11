@@ -231,7 +231,7 @@ void Request_Order(bomRes* met_ord)
 	{
 		system("cls");
 		//material_to_prosess(head_Cod_n_Num,met);
-
+		printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 발주요청\n\n");
 		//printf("======================================\n");
 
 		char* prd_code = met->CODE;
@@ -296,11 +296,6 @@ void Request_Order(bomRes* met_ord)
 		//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
 		//메모리 핸들링이 넘 심함 수정요망 => 대충 수정함
 		//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
-		
-
-		printf("\n");
-
-		Sleep(1000);
 
 		//발주내역 저장
 		printf("발주내역을 저장합니다..\n");
@@ -428,11 +423,8 @@ int storage_Order(Order* head, int num)
 		file_column_free();
 		return -1;
 	}
-
-	//filefree();
-	print_data();
-
-	printf("데이터 입력을 종료합니다..\n");
+	/*file_column_free();*/
+	
 
 }
 
@@ -451,17 +443,21 @@ void all_Order_List()
 
 	print_data();
 
+	//return;
+} 
+void serch_Order_list()
+{
+
 	/*
 		0. 큐에 저장된 순서대로 발주이력 조회 :: 노드생성
 			- > 서버측을 통해 저장한 파일을 연결리스트로 전송.
-			연결리스트를 큐로 재가공? 연결리스트라면 LIFO 형식으로 
+			연결리스트를 큐로 재가공? 연결리스트라면 LIFO 형식으로
 		1. 발주코드로 발주이력 조회
 		2. 거래처 코드별 발주이력 조회
 		검색기능...
 	*/
 
-	return;
-} 
+}
 
 
 
