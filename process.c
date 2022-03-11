@@ -1,6 +1,7 @@
 #include "cereal.h"
 #include <string.h>
 #include <time.h>
+#include <string>
 
 #define PRO_FILE_NAME "process"
 #define MAT_FILE_NAME "test_pro_material"
@@ -36,7 +37,7 @@ char give_LOT();		// 생산품 LOT번호 생성
 void BOM_read();
 
 req_code* New(req_code* head, int num, char* code);
-void Head(req_code* head)
+void free_Head(req_code* head)
 {
 
 }
@@ -77,14 +78,13 @@ void bg_process(void)
 	check_parts(PLAN_NUM, bom_res,mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();		//작업지시 확정 - 위에 있는지 확인
-	//give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
-	//produce_product();		//생산계획 품목 생산 및 등록
+	produce_product(mat_head);		//생산계획 품목 생산 및 등록
 	//pro_material_create();
 	//material_upload();		//생산자제 등록
 
 	PRO_all_read();
 
-	free(mat_head);
+	free_Head(mat_head);
 }
 
 void check_parts(int num, char* bom_res, req_code* head)
@@ -129,12 +129,71 @@ req_code* New(req_code* head, int num, char* code)
 	head->next = NewNode;
 }
 
-void pro_material_create(char* p_code) {
+void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
+	char values[50];
+	char PRD_CODE[5] = p_code;									//수정!!!!!!!!!!
+	char STATUS[5] = "store";
+	char DATE[8];
+	char tmp[4];
+	char ACC_CODE[5]="0000";									//수정!!!!!!!!!!-어디서 받을건지
+	char LOT[5] = give_LOT();
 
-	system("pause");
-	system("cls");
+	//날짜 입력
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	sprintf(tmp, "%d", tm.tm_year);
+	strcpy(DATE, tmp);
+	sprintf(tmp, "%d", tm.tm_mon);
+	strcat(DATE, tmp);
+	sprintf(tmp, "%d", tm.tm_mday);
+	strcat(DATE, tmp);
+
+	strcpy(values, "'");
+	strcat(values, PRD_CODE);
+	strcat(values, "', '");
+	strcat(values, STATUS);
+	strcat(values, "', ");
+	strcat(values, DATE);
+	strcat(values, ", '");
+	strcat(values, ACC_CODE);
+	strcat(values, "', '");
+	strcat(values, LOT);
+	strcat(values, "'");
+	printf("\n");
+
+	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
+
+	if (initalizing("material") == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_insert(values) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	print_data();
+	printf("\n");
+	file_column_free();
 }
+char give_LOT(void)
+{
+	char LOT[5];
+	int random = 0;
+	char tmpRand[4];
 
+	srand(time(NULL));
+	random = (rand() % 10000);
+	strcpy(LOT, "L");
+	strcat(LOT, itoa(random, tmpRand, 10));
+
+	return LOT;
+}
 void pro_material_use(char* p_code, int p_num) {
 
 	char* text1 = "PRD_CODE = '";
@@ -238,23 +297,10 @@ void pro_material_use(char* p_code, int p_num) {
 
 void produce_product(req_code* head)
 {
-
-
+	pro_material_create("A0001");
 }
 
-char give_LOT(void)
-{
-	char LOT[5];
-	int random = 0;
-	char tmpRand[4];
 
-	srand(time(NULL));
-	random = (rand() % 10000);
-	strcpy(LOT, "L");
-	strcat(LOT, itoa(random, tmpRand, 10));
-
-	return LOT;
-}
 
 void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE)
 {
