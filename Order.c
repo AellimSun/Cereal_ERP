@@ -19,7 +19,6 @@
 
 
 
-result* _result;
 
 int result_count;
 
@@ -28,7 +27,7 @@ Order* insert_ord;
 
 //공정으로 넘길 구조체 head노드
 plan* head_Cod_n_Num;
-
+result* _result;
 
 int col = 1;
 
@@ -47,23 +46,18 @@ Order* creatNode_Order()
 
 void creat_Order_List(Order* head, result* result_head, int num)
 {
-
 	
-	int i = 0;
-	
-	//printf("출력 외안대\n");
-	//printf("prd_code : %s\n", prd_code);
 	result* cur;
+	cur = result_head;
 	
+	for (int i = 0; i < num; i++) {
 
-	for (int i = 0; i < num; i++)
-	{
 		//Order* newNode = creatNode_Order();
 		//printf("     ..%s\n", find->_string_data[i]);
-	/*	if (strcmp(find->_string_data[i], prd_code) == 0)
+		/*	if (strcmp(find->_string_data[i], prd_code) == 0)
 		{*/
-			//그에 해당하는 구조체 추출하기
-			//printf("prd_code : %s\n", find->_string_data[i]);
+		//그에 해당하는 구조체 추출하기
+		//printf("prd_code : %s\n", find->_string_data[i]);
 
 		cur = result_head;
 		while (1) {
@@ -86,7 +80,7 @@ void creat_Order_List(Order* head, result* result_head, int num)
 						head->PRD_CODE = cur->_string_data[i];
 						//printf("                    PRD_CODE : %s\n ", head->PRD_CODE);
 					}
-					
+
 					//발주 파일에 insert할 구조체 리스트 생성 완료..실패!
 					//printf("       ,%s", cur->_string_data[i]);
 				}
@@ -109,11 +103,11 @@ void creat_Order_List(Order* head, result* result_head, int num)
 		//newNode->next = head->next;
 		//printf("newNode%s\n", newNode->next->PRD_CODE);
 		//head->next = newNode;
-		
+
 		//printf("PRD_CODE->%s", newNode->PRD_CODE);
 		//printf("ACC_CODE->%s\n", newNode->ACC_CODE);
+		printf("\n");
 	}
-
 
 
 }
@@ -189,6 +183,7 @@ void Request_Order(bomRes* met_ord)
 	char values[30];
 	
 	plan* Cod_n_Num;
+
 	//initialization 구조체
 	
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
@@ -273,15 +268,13 @@ void Request_Order(bomRes* met_ord)
 			printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 		}
 
-
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 			printf("%s\n", err_msg);
 
 			file_column_free();
 			return -1;
 		}
-
-
+		
 		result_print(_result, result_count);
 		printf("\n");
 		//free(values);
