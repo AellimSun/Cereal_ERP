@@ -27,7 +27,7 @@ void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파
 int produce_parts(req_code* head);		// 부족한 부품 생성/ 자재에서 사용함으로 바꿈
 
 void pro_material_create(char* p_code);
-void pro_material_use(char* p_code);
+void pro_material_use(char* p_code, int num);
 //give_LOT();		// 생산품 LOT번호 생성
 //produce_product();		//생산계획 품목 자재에 생산 수량 업로드
 req_code* New(req_code* head, int num, char* code);
@@ -58,7 +58,7 @@ void bg_process(void)
 
 	PRO_all_read();
 
-	//3pro_material_create();
+	//pro_material_create();
 
 	check_parts(PLAN_NUM, bom_res,head);			//부족한 제작부품 개수 파악
 	produce_parts(head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
@@ -66,6 +66,9 @@ void bg_process(void)
 	//give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
 	//produce_product();		//생산계획 품목 생산 및 등록
 	//material_upload();		//생산자제 등록
+
+	PRO_all_read();
+
 
 	free(head);
 }
@@ -97,10 +100,10 @@ int produce_parts(req_code* head)
 		p_code = cur->code;
 		while (cnt < p_num)
 		{
-			pro_material_use(p_code);
+			pro_material_use(p_code, p_num);
 			cnt++;
+			printf("while문 : %d\n", cnt);
 		}
-		printf("%d\n", cnt);
 		cur = cur->next;
 	}
 }
@@ -117,20 +120,19 @@ req_code* New(req_code* head, int num, char* code)
 }
 
 void pro_material_create() {
-	
-
 
 	system("pause");
 	system("cls");
 }
-void pro_material_use(char* p_code) {
+
+void pro_material_use(char* p_code, int p_num) {
 
 	char* text1 = "PRD_CODE = '";
 	char* text2 = "'";
 	char* conditional = (char*)malloc(sizeof(text1) + sizeof(p_code) + sizeof(text2));
 	if (conditional == 0) exit(1);
-
-	char* select_column = "STATUS, DATE";
+	char* select_column = "PRD_CODE,STATUS,DATE";
+	char* set = "STATUS='uesed'";
 	char* CODE = p_code;
 	result* find;
 	result* _result;
@@ -147,37 +149,55 @@ void pro_material_use(char* p_code) {
 		file_column_free();
 		return -1;
 	}
-	if (_select(conditional,select_column,&select_result_str) == -1) {
+	/*if (_update_N(conditional,set,p_num) == -1) {
 		printf("%s\n", err_msg);
 		
 		file_column_free();
 		return -1;
+	}*/
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		file_column_free();
+		return 0;
 	}
-	else
-	{
-		if ((result_count = recv_result(&_result, select_result_str)) == -1);
-		{
-			printf("%s\n", err_msg);
-
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			file_column_free();
 			result_free(_result, result_count);
-			return -1;
+			return 0;
+		}
+		//update 하기
+		while (_result->next != NULL) {
+			//현재 노드의 컬럼명이 STATUS일 경우
+			if (strcmp(_result->name, "STATUS") == 0) {
+				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
+				if (strcmp(*(_result->_string_data), "store") == 0) {
+					
+					char* txt1 = "DATE=";
+					char* conditional1 = (char*)malloc(sizeof(txt1)+sizeof(int));
+					strcpy(conditional1, txt1);
+					strcat(conditional1, );
+					if (_update(conditional1, "SATATUS = 'used'") == -1{
+						file_column_free();
+						return 0;
+					}
+				}
+			}
+			_result = _result->next;
 		}
 	}
-	result_print(_result, result_count);
-	printf("\n\n");
 
-	if ((find = find_result(_result, "DATE")) == -1)
-	{
-		printf("%s\n", err_msg);
+	//if ((find = find_result(_result, "DATE")) == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
-		result_free(_result, result_count);
-		return -1;
-	}
-
+	//	result_free(_result, result_count);
+	//	return -1;
+	//}
 	file_column_free();
-	result_free(_result, result_count);
-	print_data();
 
+	//print_data();
+
+	result_free(_result, result_count);
 	free(conditional);
 
 	system("pause");
@@ -190,30 +210,30 @@ void init(void)
 
 	char* value[30];
 
-	value[0] = "B0001,store,22031001,0000";
-	value[1] = "B0001,store,22031002,0000";
-	value[2] = "B0002,store,22031001,0000";
-	value[3] = "B0002,store,22031002,0000";
-	value[4] = "B0002,store,22031003,0000";
-	value[5] = "B0003,store,22031001,0000";
-	value[6] = "B0003,store,22031002,0000";
-	value[7] = "B0003,store,22031003,0000";
-	value[8] = "B0003,store,22031004,0000";
-	value[9] = "B0004,store,22031001,0000";
-	value[10] = "B0004,store,22031002,0000";
-	value[11] = "B0004,store,22031003,0000";
-	value[12] = "B0004,store,22031004,0000";
-	value[13] = "B0004,store,22031005,0000";
-	value[14] = "C0001,store,22031001,0000";
-	value[15] = "C0001,store,22031002,0000";
-	value[16] = "C0001,store,22031003,0000";
-	value[17] = "C0001,store,22031004,0000";
-	value[18] = "C0002,store,22031001,0000";
-	value[19] = "C0002,store,22031002,0000";
-	value[20] = "C0002,store,22031003,0000";
-	value[21] = "C0003,store,22031001,0000";
-	value[22] = "C0003,store,22031002,0000";
-	value[23] = "D0001,store,22031001,0000";
+	value[0] = "'B0001','store',22031001,'0000'";
+	value[1] = "'B0001','store',22031002,'0000'";
+	value[2] = "'B0002','store',22031001,'0000'";
+	value[3] = "'B0002','store',22031002,'0000'";
+	value[4] = "'B0002','store',22031003,'0000'";
+	value[5] = "'B0003','store',22031001,'0000'";
+	value[6] = "'B0003','store',22031002,'0000'";
+	value[7] = "'B0003','store',22031003,'0000'";
+	value[8] = "'B0003','store',22031004,'0000'";
+	value[9] = "'B0004','store',22031001,'0000'";
+	value[10] = "'B0004','store',22031002,'0000'";
+	value[11] = "'B0004','store',22031003,'0000'";
+	value[12] = "'B0004','store',22031004,'0000'";
+	value[13] = "'B0004','store',22031005,'0000'";
+	value[14] = "'C0001','store',22031001,'0000'";
+	value[15] = "'C0001','store',22031002,'0000'";
+	value[16] = "'C0001','store',22031003,'0000'";
+	value[17] = "'C0001','store',22031004,'0000'";
+	value[18] = "'C0002','store',22031001,'0000'";
+	value[19] = "'C0002','store',22031002,'0000'";
+	value[20] = "'C0002','store',22031003,'0000'";
+	value[21] = "'C0003','store',22031001,'0000'";
+	value[22] = "'C0003','store',22031002,'0000'";
+	value[23] = "'D0001','store',22031001,'0000'";
 
 
 	if (initalizing("test_pro_material") == -1) {
@@ -280,5 +300,4 @@ void PRO_all_read() {
 
 	system("pause");
 	system("cls");
-	stock();
 }

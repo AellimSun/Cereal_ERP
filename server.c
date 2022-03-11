@@ -1530,3 +1530,243 @@ void file_column_free() {
 	data_line_length = 0;
 	select_result_str = 0;
 }
+int _update_N(char* conditional, char* set, int num) {
+	char* _conditional = (char*)malloc(strlen(conditional) + 1);
+	char* conditional_name, * conditional_value;
+	column* conditional_column = 0;
+	char* _set = (char*)malloc(strlen(set) + 1);
+	char* set_name, * set_value;
+	column* set_column = 0;
+
+	int padding = 0;
+	int search_start_index;
+	int conditional_search_success = -1;
+
+	column* cur;
+	strcpy(_conditional, conditional);
+	strcpy(_set, set);
+
+	conditional_name = strtok(_conditional, "= ");
+	conditional_value = strtok(NULL, "= \0");
+	set_name = strtok(_set, "= ");
+	set_value = strtok(NULL, "= \0");
+
+	cur = head->next;
+	while (1) {
+		if (!strcmp(cur->name, conditional_name)) {
+			if (cur->type == _CHAR || cur->type == _VARCHAR) {
+				if (cur->length < strlen(conditional_value) - 2 && strcmp(conditional_value, "NULL")) {
+					strcpy(err_msg, "Conditional Length Over");
+					free(_conditional);
+					free(_set);
+					return -1;
+				}
+			}
+			if (strcmp(conditional_value, "NULL"))
+				conditional_value = strtok(conditional_value, "'");
+			conditional_column = cur;
+		}
+		if (!strcmp(cur->name, set_name)) {
+			if (cur->type == _CHAR || cur->type == _VARCHAR) {
+				if (cur->length < strlen(set_value) - 2 && strcmp(set_value, "NULL")) {
+					strcpy(err_msg, "Set Length Over");
+					free(_conditional);
+					free(_set);
+					return -1;
+				}
+			}
+			set_column = cur;
+		}
+		if (cur->next != 0)
+			cur = cur->next;
+		else
+			break;
+	}
+	if (conditional_column == 0) {
+		strcpy(err_msg, "Conditional Column Not Found");
+		free(_conditional);
+		free(_set);
+		return -1;
+	}
+	else if (set_column == 0) {
+		strcpy(err_msg, "Set Column Not Found");
+		free(_conditional);
+		free(_set);
+		return -1;
+	}
+	F = fopen(_file_location, "rb+");
+
+	search_start_index = data_start_index;
+	while (search_start_index < data_end_index) {
+		char IS_NULL[5];
+		fseek(F, search_start_index + conditional_column->start_index, SEEK_SET);
+		switch (conditional_column->type) {
+		case _INT:
+		{
+			int i_token;
+			if (!strcmp(conditional_value, "NULL")) {
+				fread(IS_NULL, 4, 1, F);
+				IS_NULL[4] = '\0';
+				if (!strcmp(IS_NULL, "NULL"))
+					conditional_search_success = 1;
+				break;
+			}
+			fread(&i_token, sizeof(int), 1, F);
+			if (i_token == atoi(conditional_value))
+				conditional_search_success = 1;
+			break;
+		}
+		case _FLOAT:
+		{
+			float f_token;
+			char* pos;
+			if (!strcmp(conditional_value, "NULL")) {
+				fread(IS_NULL, 4, 1, F);
+				IS_NULL[4] = '\0';
+				if (!strcmp(IS_NULL, "NULL"))
+					conditional_search_success = 1;
+				break;
+			}
+			fread(&f_token, sizeof(float), 1, F);
+			if (fabsf(strtof(conditional_value, &pos) - f_token) <= FLT_EPSILON)
+				conditional_search_success = 1;
+			break;
+		}
+		case _DOUBLE:
+		{
+			double d_token;
+			char* pos;
+			if (!strcmp(conditional_value, "NULL")) {
+				fread(IS_NULL, 4, 1, F);
+				IS_NULL[4] = '\0';
+				if (!strcmp(IS_NULL, "NULL"))
+					conditional_search_success = 1;
+				break;
+			}
+			fread(&d_token, sizeof(double), 1, F);
+			if (fabs(strtod(conditional_value, &pos) - d_token) <= DBL_EPSILON)
+				conditional_search_success = 1;
+			break;
+		}
+		case _CHAR:
+		{
+			char c_token;
+			if (!strcmp(conditional_value, "NULL")) {
+				c_token = fgetc(F);
+				if (c_token == pad) {
+					conditional_search_success = 1;
+				}
+				break;
+			}
+			c_token = fgetc(F);
+			if (c_token == conditional_value[0])
+				conditional_search_success = 1;
+			break;
+		}
+		case _VARCHAR:
+		{
+			char* s_token;
+			char c_token;
+			if (!strcmp(conditional_value, "NULL")) {
+				c_token = fgetc(F);
+				if (c_token == pad)
+					conditional_search_success = 1;
+				break;
+			}
+			s_token = (char*)malloc(conditional_column->length + 1);
+			fread(s_token, conditional_column->length, 1, F);
+			s_token = strtok(s_token, pad_seprator);
+			if (!strcmp(s_token, conditional_value))
+				conditional_search_success = 1;
+			free(s_token);
+			break;
+		}
+		}
+
+		if (conditional_search_success == 1) {
+			fseek(F, search_start_index + (set_column->start_index), SEEK_SET);
+			if (!strcmp(set_value, "NULL")) {
+				switch (set_column->type) {
+				case _INT:
+				case _FLOAT:
+					fputc('N', F); fputc('U', F); fputc('L', F); fputc('L', F);
+					break;
+				case _DOUBLE:
+					fputc('N', F); fputc('U', F); fputc('L', F); fputc('L', F);
+					for (unsigned int i = 0; i < (set_column->length) - 4; i++)
+						fputc(pad, F);
+					break;
+				case _CHAR:
+				case _VARCHAR:
+					for (unsigned int i = 0; i < set_column->length; i++)
+						fputc(pad, F);
+					break;
+				}
+			}
+			else {
+				switch (set_column->type) {
+				case _INT:
+				{
+					int i_token = atoi(set_value);
+					fwrite(&i_token, sizeof(int), 1, F);
+
+					break;
+				}
+				case _DOUBLE:
+				{
+					char* pos = NULL;
+					double d_token = strtod(set_value, &pos);
+					fwrite(&d_token, sizeof(double), 1, F);
+
+					break;
+				}
+				case _FLOAT:
+				{
+					char* pos = NULL;
+					float f_token = strtof(set_value, &pos);
+					fwrite(&f_token, sizeof(float), 1, F);
+
+					break;
+				}
+				case _CHAR:
+				{
+					char c_token = set_value[1];
+					fputc(c_token, F);
+					break;
+				}
+				case _VARCHAR:
+				{
+					char* s_token = (char*)malloc(strlen(set_value) - 1);
+					unsigned int destination_index;
+					int padding;
+
+					for (destination_index = 1; destination_index < strlen(set_value) - 1; destination_index++)
+						s_token[destination_index - 1] = set_value[destination_index];
+					s_token[destination_index - 1] = '\0';
+					fputs(s_token, F);
+					if (strlen(s_token) != set_column->length) {
+						padding = set_column->length - strlen(s_token);
+						for (int i = 0; i < padding; i++)
+							fputc(pad, F);
+					}
+					free(s_token);
+					break;
+				}
+				}
+			}
+			conditional_search_success = 0;
+		}
+		search_start_index += data_line_length;
+	}
+	if (conditional_search_success == -1) {
+		strcpy(err_msg, "Conditional Value Not Found");
+		free(_conditional);
+		free(_set);
+		fclose(F);
+		return -1;
+	}
+	free(_conditional);
+	free(_set);
+	fclose(F);
+	return 0;
+}
