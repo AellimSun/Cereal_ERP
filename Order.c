@@ -3,7 +3,8 @@
 //#define _GNU_SOURCE
 #include <string.h>
 #include <time.h>
-//
+
+// 발주일, 납기일에 임시로 저장할 시간함수
 //struct tm {
 //	int tm_sec;         /* 초,  range 0 to 59            */
 //	int tm_min;         /* 분, range 0 to 59             */
@@ -75,7 +76,7 @@ void creat_Order_List(int num, char* prd_code)
 	
 	int i = 0;
 	
-
+	//printf("출력 외안대\n");
 
 
 	while (i < num)
@@ -133,7 +134,7 @@ void creat_Order_List(int num, char* prd_code)
 							newNode->PRD_CODE = cur->_string_data[i];
 							printf("                    newNode->PRD_CODE : %s\n ", newNode->PRD_CODE);
 						}
-						//차라리 함수를 새로 선언해서 넘겨주자.
+					
 
 						//발주 파일에 insert할 구조체 리스트 생성 완료
 
@@ -182,11 +183,14 @@ void print_Node()
 //char* Request_Order(char* prd_code, int num)
 void Request_Order(char* prd_code, int num)
 {
+
+	//자재구조체
+	
+
+	//printf("->");
 	char* values;
 	int amount = num;
 	//initialization 구조체
-	//insert_ord = (Order*)malloc(sizeof(Order));
-	//insert_ord = creatNode_Order();
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
 
 		return -1;
@@ -194,9 +198,16 @@ void Request_Order(char* prd_code, int num)
 
 	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
 	insert_ord->next = NULL;
-	
+
+	{
+		/*met
+		while (met != NULL)
+		{
 
 
+			met = met->next;
+		}*/
+	}
 
 
 	/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
@@ -247,13 +258,15 @@ void Request_Order(char* prd_code, int num)
 		file_column_free();
 		return -1;
 	}
+	print_data();
 	//print_data();
 	values = malloc(sizeof(prd_code) * 3);
 	strcpy(values, "PRD_CODE = '");
 	strcat(values, prd_code);
 	strcat(values, "'");
 
-	printf("%s\n", values);
+
+	//printf("%s\n", values);
 	printf("추출한 데이터 확인\n");
 	if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 	//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
@@ -277,20 +290,17 @@ void Request_Order(char* prd_code, int num)
 
 
 	result_print(_result, result_count);
+	printf("values ->");
+	printf("%s\n", values);
 	printf("\n\n");
-	
-	//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-	//	printf("%s\n", err_msg);
-
-	//	file_column_free();
-	//	return -1;
-	//}
+	free(values);
 
 	
 
 
 	//특정 컬럼 추출
 	//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+	//메모리 핸들링이 넘 심함 수정요망
 	
 	if ((find = find_result(_result, "PRD_CODE")) == -1) {
 		printf("%s\n", err_msg);
@@ -301,105 +311,22 @@ void Request_Order(char* prd_code, int num)
 	}
 
 	//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
-	//
+	//차라리 함수를 새로 선언해서 넘겨주자.
 	creat_Order_List(result_count, prd_code);
 
-	
-	{
-		//int i = 0;
-		//while (i < result_count)
-		//{
-		//	Order* newNode = creatNode_Order();
-		//	printf("result_count : %d\n", i);
-		//	//printf("     ..%s\n", find->_string_data[i]);
-		//	if (strcmp(find->_string_data[i], prd_code) == 0)
-		//	{
-		//		//그에 해당하는 구조체 추출하기
-		//		//printf("prd_code : %s\n", find->_string_data[i]);
-
-		//		cur = _result;
-		//		while (1) {
-
-
-		//			printf("\t\t\ncur %d\n", i);
-		//			switch (cur->type) {
-		//				/*case _INT:
-		//					if (int_is_null(cur->_int_data[i]))
-		//						printf("     (NULL)");
-		//					else
-		//						printf("     %d", cur->_int_data[i]);
-		//					break;
-		//				case _FLOAT:
-		//					if (float_is_null(cur->_float_data[i]))
-		//						printf("     (NULL)");
-		//					else
-		//						printf("     %.5f", cur->_float_data[i]);
-		//					break;
-		//				case _DOUBLE:
-		//					if (double_is_null(cur->_double_data[i]))
-		//						printf("     (NULL)");
-		//					else
-		//						printf("     %.12lf", cur->_double_data[i]);
-		//					break;
-		//				case _CHAR:
-		//					if (char_is_null(cur->_char_data[i]))
-		//						printf("     (NULL)");
-		//					else
-		//						printf("     %c", cur->_char_data[i]);
-		//					break;*/
-		//			case _VARCHAR:
-		//				if (string_is_null(cur->_string_data[i]))
-		//					printf("     (NULL)");
-		//				else
-		//				{
-		//					if (strcmp(cur->name, "ACC_CODE") == 0)
-		//					{
-		//						newNode->ACC_CODE = cur->_string_data[i];
-		//						printf("                    newNode->ACC_CODE : %s\n ", newNode->ACC_CODE);
-		//					}
-		//					else if (strcmp(cur->name, "PRD_CODE") == 0)
-		//					{
-		//						newNode->PRD_CODE = cur->_string_data[i];
-		//						printf("                    newNode->PRD_CODE : %s\n ", newNode->PRD_CODE);
-		//					}
-		//					//차라리 함수를 새로 선언해서 넘겨주자.
-
-		//					//발주 파일에 insert할 구조체 리스트 생성 완료
-
-		//					printf("       ,%s", cur->_string_data[i]);
-		//				}
-		//				break;
-		//			}
-		//			if (cur->next == 0)
-		//				break;
-		//			else
-		//			{
-		//				//_result = _result->next;
-		//				cur = cur->next;
-		//			}
-
-		//		}
-
-		//		printf("\n");
-		//	}
-		//	i++;
-		//	newNode->next = insert_ord->next;
-		//	insert_ord->next = newNode;
-
-		//}
-	}
 	printf("\n\n");
 
 	
-	//return ACC_CODE; :: 연결리스트?
+	//return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
 	
+	//발주구조체 데이터 확인
 	print_Node();
 	//return main();
-	storage_Order(amount);
 
+	//발주내역 저장
+	storage_Order(amount);
 	file_column_free();
 	result_free(_result, result_count);
-	free(values);
 	
 }
 
@@ -420,17 +347,17 @@ int storage_Order(int num)
 	t_order = localtime(&base);
 
 	//발주일 및 납품일 담을 파일
-	char* ord_date;
+	char ord_date[5];
 
 
-	char* values = NULL;
+	char values[50];
 	char* int_to_char;
 	Order* cur = insert_ord->next; //노드의 헤드
-
+	
 	//발주일
 	//t_order->tm_mon;
 	//t_order->tm_mday;
-	ord_date = malloc(3);
+	
 	//itoa(o_mon,"%d", t_order->tm_mon);
 	//itoa(o_day, "%d", t_order->tm_mday);
 
@@ -438,7 +365,7 @@ int storage_Order(int num)
 	//itoa(d_mon, "%d", (t_order->tm_mday + 1));
 
 
-	values = malloc(sizeof(char*) * 2);
+	
 	//납기일
 	//t_order->tm_mon;
 	//(t_order->tm_mday) + 1;
@@ -449,8 +376,13 @@ int storage_Order(int num)
 
 	*/
 
-	while (cur != NULL)
+	while (1)
 	{
+		if (cur == NULL)
+		{
+			printf("발주품목 저장이 완료되었습니다..\n");
+			break;
+		}
 		//구조체 배열을 다 char로 선언, 형변환하여 저장.
 		//구조체배열로 받자. 거래처에서 
 		
@@ -492,15 +424,16 @@ int storage_Order(int num)
 
 		//발주일
 		printf("%d\n", t_order->tm_mon+1);
-		itoa(t_order->tm_mon+1, ord_date, 10);		//월
-		printf("%c", ord_date);
-		strcat(values, ord_date);
+		itoa(t_order->tm_mon+1, ord_date, 10);		
+		//sprintf(ord_date, "%d", t_order->tm_mon + 1);	//월
+		printf("int to char -> %s\n", ord_date);
+		strcpy(values, ord_date);
 		itoa(t_order->tm_mday, ord_date, 10);	//일
 		strcat(values, ord_date);
 		strcat(values, ", ");
 		printf("values : %s\n", values);
+
 		//납기일
-		
 		itoa(t_order->tm_mon+1,ord_date, 10);		//월
 		strcat(values, ord_date);
 		itoa(t_order->tm_mday + 1,ord_date,  10);	//일
@@ -537,18 +470,18 @@ int storage_Order(int num)
 
 
 
-		//if (_insert(values) == -1)
-		//{
-		//	printf("%s\n", err_msg);
+		if (_insert(values) == -1)
+		{
+			printf("%s\n", err_msg);
 
-		//	file_column_free();
-		//	return -1;
-		//}
+			file_column_free();
+			return -1;
+		}
 		cur = cur->next;
 	}
 	print_data();
-	free(values);
-
+	
+	printf("종료...\n");
 }
 
 //02. 메인 -> 발주 -> 발주입력(품목코드) -> 거래처 목록 -> 발주!

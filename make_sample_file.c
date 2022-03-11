@@ -110,7 +110,10 @@ int main(void)
 
 
 
-	if (_select("*","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	//if (_select("*","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
+	if (_select("*", "O_DATE, D_DATE , ACC_CODE , ORDER_NUM , PRD_CODE , NUM INT", &select_result_str) == -1) {
+
+		
 		printf("%s\n", err_msg);
 
 		file_column_free();
