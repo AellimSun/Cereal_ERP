@@ -20,12 +20,15 @@
 
 
 result* _result;
-//result* find;
+
 int result_count;
 
-Order* insert_ord;
-plan* head_Cod_n_Num;
 //발주-삽입(파일) head 노드
+Order* insert_ord;
+
+//공정으로 넘길 구조체 head노드
+plan* head_Cod_n_Num;
+
 
 int col = 1;
 
@@ -55,7 +58,6 @@ void creat_Order_List(Order* head, result* result_head, int num)
 
 	for (int i = 0; i < num; i++)
 	{
-		printf("result_count : %d\n", i);
 		//Order* newNode = creatNode_Order();
 		//printf("     ..%s\n", find->_string_data[i]);
 	/*	if (strcmp(find->_string_data[i], prd_code) == 0)
@@ -66,33 +68,7 @@ void creat_Order_List(Order* head, result* result_head, int num)
 		cur = result_head;
 		while (1) {
 
-
-			printf("\t\t\ncur %d\n", i);
 			switch (cur->type) {
-				/*case _INT:
-					if (int_is_null(cur->_int_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %d", cur->_int_data[i]);
-					break;
-				case _FLOAT:
-					if (float_is_null(cur->_float_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %.5f", cur->_float_data[i]);
-					break;
-				case _DOUBLE:
-					if (double_is_null(cur->_double_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %.12lf", cur->_double_data[i]);
-					break;
-				case _CHAR:
-					if (char_is_null(cur->_char_data[i]))
-						printf("     (NULL)");
-					else
-						printf("     %c", cur->_char_data[i]);
-					break;*/
 			case _VARCHAR:
 				if (string_is_null(cur->_string_data[i]))
 					printf("     (NULL)");
@@ -120,7 +96,6 @@ void creat_Order_List(Order* head, result* result_head, int num)
 				break;
 			else
 			{
-				//_result = _result->next;
 				cur = cur->next;
 			}
 
@@ -173,11 +148,11 @@ void print_Node_process(plan* head)
 		cur = cur->next;
 	}
 }
+
+
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 //char* Request_Order(char* prd_code, int num)
 //void Request_Order(char* prd_code, int num)
-
-
 void material_to_prosess(plan* head, bomRes* met)
 {
 	plan* newNode = malloc(sizeof(plan));
@@ -325,7 +300,6 @@ void Request_Order(bomRes* met_ord)
 		}
 		//Sleep(3000);
 		if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
-			//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 			printf("%s\n", err_msg);
 
 			file_column_free();
@@ -334,10 +308,8 @@ void Request_Order(bomRes* met_ord)
 		else {
 			
 			printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
-			//printf("%s\n\n", select_result_str);
 		}
 
-		//Sleep(3000);
 
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 			printf("%s\n", err_msg);
@@ -346,16 +318,12 @@ void Request_Order(bomRes* met_ord)
 			return -1;
 		}
 
-		//Sleep(3000);
 
-		
 		result_print(_result, result_count);
-		//printf("values in while ->");
-		printf("%s\n", values);
 		printf("\n\n");
 		//free(values);
 
-		//Sleep(3000);
+		Sleep(1000);
 
 		creat_Order_List(insert_ord, _result, result_count);
 
@@ -376,7 +344,7 @@ void Request_Order(bomRes* met_ord)
 		//return main();
 
 		//발주내역 저장
-		//storage_Order(insert_ord,amount);
+		storage_Order(insert_ord,amount);
 		//print_data();
 
 		met = met->next;
@@ -404,6 +372,7 @@ void Request_Order(bomRes* met_ord)
 //01 자재 -> 발주 -> 거래처 루트
 int storage_Order(Order* head, int num)
 {
+	
 	file_column_free();
 	if (initalizing("sample_Order") == -1)
 	{
@@ -424,11 +393,10 @@ int storage_Order(Order* head, int num)
 	t_order = localtime(&base);
 
 	//발주일 및 납품일 담을 파일
-	char ord_date[5];
+	unsigned char ord_date[5];
 
 
 	char values[50];
-	char* int_to_char;
 	//Order* cur = head->next; //노드의 헤드
 	Order* cur = head;
 	//발주일
@@ -448,12 +416,12 @@ int storage_Order(Order* head, int num)
 	printf("%d\n", t_order->tm_mon + 1);
 	itoa(t_order->tm_mon + 1, ord_date, 10);
 	//sprintf(ord_date, "%d", t_order->tm_mon + 1);	//월
-	printf("int to char -> %s\n", ord_date);
+	//printf("int to char -> %s\n", ord_date);
 	strcpy(values, ord_date);
 	itoa(t_order->tm_mday, ord_date, 10);	//일
 	strcat(values, ord_date);
 	strcat(values, ", ");
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
 
 	//납기일
 	itoa(t_order->tm_mon + 1, ord_date, 10);		//월
@@ -461,26 +429,29 @@ int storage_Order(Order* head, int num)
 	itoa(t_order->tm_mday + 1, ord_date, 10);	//일
 	strcat(values, ord_date);
 	strcat(values, ", ");
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
+
 	//거래처 코드
 	strcat(values, "'");
 	strcat(values, cur->ACC_CODE);
 	strcat(values, "'");
 	strcat(values, ", ");
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
+
 	//발주번호 :: INT TO CHAR
 	itoa(t_order->tm_mon + 1, ord_date, 10);		//월
 	strcat(values, ord_date);
 	itoa(col++, ord_date, 10);		//대충난수
 	strcat(values, ord_date);
 	strcat(values, ", ");
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
+
 	//품목코드 :: CHAR
 	strcat(values, "'");
 	strcat(values, cur->PRD_CODE);
 	strcat(values, "'");
 	strcat(values, ", ");
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
 
 	//수량 :: INT TO CHAR
 	itoa(num, ord_date, 10);			//수량
@@ -488,7 +459,7 @@ int storage_Order(Order* head, int num)
 
 
 
-	printf("values : %s\n", values);
+	//printf("values : %s\n", values);
 
 
 
@@ -500,116 +471,7 @@ int storage_Order(Order* head, int num)
 		return -1;
 	}
 
-	{
-		//while (1)
-		//{
-		//	if (cur == NULL)
-		//	{
-		//		printf("발주품목 저장이 완료되었습니다..\n");
-		//		break;
-		//	}
-		//	{
-		//		//구조체 배열을 다 char로 선언, 형변환하여 저장.
-		//		//구조체배열로 받자. 거래처에서 
 
-		//		// !!! 배열명은 주소값을 가리킨다 !!!
-		//		//Order *newOrder = creatNode_Order();
-		//		//형변환 할 함수
-
-		//		//발주이력을 저장하는 파일
-		//		//int _update(char* conditional, char* set) {
-		//		//strcpy(newOrder->ACC_CODE, cur->ACC_CODE);
-		//		//strcpy(newOrder->PRD_CODE, cur->PRD_CODE);
-		//		//newOrder->NUM = num;
-
-		//		//함수로 빼자
-		//		/*
-
-
-		//			values = strcat_Order();
-		//			strcat(values, "'");
-		//			strcat(values, newOrder.ACC_CODE);
-		//			strcat(values, "', ");
-		//			strcat(values, "'");
-
-
-		//		*/
-
-
-		//		//values = NULL;
-		//		//char* values = "'NULL', 'NULL', acc, prd, null";
-		//		//strcpy(values, newOrder.ACC_CODE);
-
-
-
-		//		//itoa(o_day, "%d", t_order->tm_mday);
-
-		//		//itoa(d_mon, "%d", t_order->tm_mon);
-		//		//itoa(d_mon, "%d", (t_order->tm_mday + 1));
-
-		//	}
-		//	//발주일
-		//	printf("%d\n", t_order->tm_mon + 1);
-		//	itoa(t_order->tm_mon + 1, ord_date, 10);
-		//	//sprintf(ord_date, "%d", t_order->tm_mon + 1);	//월
-		//	printf("int to char -> %s\n", ord_date);
-		//	strcpy(values, ord_date);
-		//	itoa(t_order->tm_mday, ord_date, 10);	//일
-		//	strcat(values, ord_date);
-		//	strcat(values, ", ");
-		//	printf("values : %s\n", values);
-
-		//	//납기일
-		//	itoa(t_order->tm_mon + 1, ord_date, 10);		//월
-		//	strcat(values, ord_date);
-		//	itoa(t_order->tm_mday + 1, ord_date, 10);	//일
-		//	strcat(values, ord_date);
-		//	strcat(values, ", ");
-		//	printf("values : %s\n", values);
-		//	//거래처 코드
-		//	strcat(values, "'");
-		//	strcat(values, cur->ACC_CODE);
-		//	strcat(values, "'");
-		//	strcat(values, ", ");
-		//	printf("values : %s\n", values);
-		//	//발주번호 :: INT TO CHAR
-		//	itoa(t_order->tm_mon + 1, ord_date, 10);		//월
-		//	strcat(values, ord_date);
-		//	itoa(col++, ord_date, 10);		//대충난수
-		//	strcat(values, ord_date);
-		//	strcat(values, ", ");
-		//	printf("values : %s\n", values);
-		//	//품목코드 :: CHAR
-		//	strcat(values, "'");
-		//	strcat(values, cur->PRD_CODE);
-		//	strcat(values, "'");
-		//	strcat(values, ", ");
-		//	printf("values : %s\n", values);
-
-		//	//수량 :: INT TO CHAR
-		//	itoa(num, ord_date, 10);			//수량
-		//	strcat(values, ord_date);
-
-
-
-		//	printf("values : %s\n", values);
-
-
-
-		//	if (_insert(values) == -1)
-		//	{
-		//		printf("%s\n", err_msg);
-
-		//		file_column_free();
-		//		return -1;
-		//	}
-		//	//print_data();
-		//	cur = cur->next;
-
-		//}
-	}
-
-	//file_column_free();
 	printf("종료...\n");
 }
 
