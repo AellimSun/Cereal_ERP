@@ -1,9 +1,11 @@
 #include "local.h"
 #include "cereal.h"
+#include "UI.h"
 
 
 void production_management(void);
 void material_management(void);
+void main_manu();
 
 void stock(void);				// 재고
 void order(void);				// 발주
@@ -16,13 +18,33 @@ void process(void);				// 공정관리
 
 int main(void)
 {
-	int input=0;
+	main_ui();
 
-	printf("메뉴를 선택하세요.\n");
-	printf("1. 자재관리\n");
-	printf("2. 생산관리\n");
-	printf("0.종료\n");
+	main_manu();
+	
+	return 0;
+}
 
+void main_manu() {
+
+	int input = 0;
+
+	printf("위치 : 메인메뉴\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        1. 자재관리        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        2. 생산관리        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        0.종료             |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 13);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -38,20 +60,32 @@ int main(void)
 	case 0:
 		break;
 	}
-
-	return 0;
 }
 
 void material_management(void)
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1.재고관리\n");
-	printf("2.발주관리\n");
-	printf("3.납품관리\n");
-	printf("4.거래처관리\n");
-	printf("0.이전으로\n");
 
+	printf("위치 : 메인메뉴 -> 자재관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        1. 재고관리        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        2. 발주관리        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        3. 납품관리        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        4. 거래처관리      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        0. 이전으로        |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 17);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -68,23 +102,35 @@ void material_management(void)
 		break;
 
 	case 4:
-		//account();
+		account();
 		break;
 
 	case 0:
-		main();
-		break;
+		main_manu();
 	}
 
 }
 void production_management(void)
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1.기초정보관리\n");
-	printf("2.생산계획\n");
-	printf("3.공정관리\n");
 
+	printf("위치 : 메인메뉴 -> 생산관리\n");
+
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      1. 기초정보관리      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2.생산계획           |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.공정관리           |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 13);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -102,13 +148,33 @@ void production_management(void)
 		break;
 
 	case 0:
-		main();
-		break;
+		main_manu();
 	}
 }
+
 void order(void)
 {
+	// 파일 위치 :: 초기화한다. 저장소 지정
+	//if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Order") == -1) {
+	//if (initalizing("account") == -1)
+	//{
+	//	printf("%s\n", err_msg);
 
+	//	file_column_free();
+	//	return -1;
+	//}
+
+
+	Request_Order("Q666", 3);
+
+	//printf("1\n");
+	//storage_Order("003", 5);
+	//printf("return\n");
+	//print_data();
+
+	//file_column_free();
+
+	
 }
 void delivery(void)
 {
@@ -122,11 +188,25 @@ void delivery(void)
 void base_information(void)
 {
 	int input = 0;
-	printf("메뉴를 선택하세요.\n");
-	printf("1.BOM 등록\n");
-	printf("2.BOM 조회\n");
-	printf("3.생산품목 리스트\n");
-	printf("0.이전으로\n");
+
+	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      1.BOM 등록           |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2.BOM 조회           |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.자재품목 리스트    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      0.이전으로           |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 15);
 
 	scanf("%d", &input);
 	system("cls");
@@ -134,7 +214,7 @@ void base_information(void)
 	{
 	case 1:
 	{
-		char* con = "ROOT_CODE = 'A0002'";
+		char* con = "A0002";
 		BOM_TREE* res = BOM_SEARCH(con);
 		BOM_Forward_PrintTree(res, res->NODE_CODE);
 
@@ -148,8 +228,7 @@ void base_information(void)
 	
 }
 
-
-void product_list(void)
+void process(void)
 {
 
 }
