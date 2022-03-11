@@ -68,7 +68,6 @@ void bg_process(void)
 
 	PRO_all_read();
 
-
 	free(head);
 }
 
@@ -83,7 +82,6 @@ void check_parts(int num, char* bom_res, req_code* head)
 	New(head, 2,"C0002");//3
 	New(head, 2,"C0003");//2
 	New(head, 1,"D0001");//5
-
 }
 
 int produce_parts(req_code* head)
@@ -168,7 +166,7 @@ void pro_material_use(char* p_code, int p_num) {
 		system("pause");
 
 		//update 하기
-		for (int i = 0; i < result_count; i++) {
+		for (int i = 0; i < p_num; i++) {
 			cur = _result;
 			while (1) {
 				//현재 노드의 컬럼명이 STATUS일 경우
@@ -209,11 +207,12 @@ void pro_material_use(char* p_code, int p_num) {
 					}
 				}
 				//cur = cur->next;
+				if (cur->next== NULL)
+					break;
+				else
+					cur = cur->next;
 			}
-			if (cur->next, NULL)
-				break;
-			else
-				cur = cur->next;
+			
 		}
 		if (cnt < p_num) printf("자재가 부족합니다.\n");
 		printf("\n");
