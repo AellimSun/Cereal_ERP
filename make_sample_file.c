@@ -40,7 +40,7 @@ int main(void)
 	//	return -1;
 	//}
 	 
-	if (initalizing("sample_Order") == -1) {
+	if (initalizing("account") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -110,8 +110,8 @@ int main(void)
 
 
 
-	//if (_select("*","ACC_CODE, PRD_CODE, BN_REGI_NUM, NAME", &select_result_str) == -1) {
-	if (_select("*", "O_DATE, D_DATE , ACC_CODE , ORDER_NUM , PRD_CODE , NUM INT", &select_result_str) == -1) {
+	if (_select("PRD_CODE = 'U002'", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+	//if (_select("*", "O_DATE, D_DATE , ACC_CODE , ORDER_NUM , PRD_CODE , NUM INT", &select_result_str) == -1) {
 
 		
 		printf("%s\n", err_msg);
@@ -123,15 +123,15 @@ int main(void)
 		printf("%s\n\n", select_result_str);
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 	}
+	print_data();
+	//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+	//	printf("%s\n", err_msg);
 
-	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}
-	result_print(_result, result_count);
-	printf("\n\n");
+	//	file_column_free();
+	//	return -1;
+	//}
+	//result_print(_result, result_count);
+	//printf("\n\n");
 
 	//if ((find = find_result(_result, "FLdf")) == -1) {
 	//	printf("%s\n", err_msg);

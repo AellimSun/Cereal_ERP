@@ -118,7 +118,7 @@ void code_read(char* condition) {
 		conditional = tmpCondition;
 	}
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -204,7 +204,7 @@ void material_create() {
 
 	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -361,7 +361,7 @@ int findStock(char* code) {
 	strcat(conditional, code);
 	strcat(conditional, "'");
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();

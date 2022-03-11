@@ -76,8 +76,8 @@ void creat_Order_List(int num, char* prd_code)
 	
 	int i = 0;
 	
-	//printf("출력 외안대\n");
-
+	printf("출력 외안대\n");
+	
 
 	while (i < num)
 	{
@@ -184,7 +184,7 @@ void print_Node()
 //void Request_Order(char* prd_code, int num)
 
 //plan구조체로 넘겨줘야한다.
-plan* Request_Order(bomRes* met_ord, plan* num)
+plan* Request_Order(bomRes* met_ord)
 {
 
 	
@@ -192,7 +192,7 @@ plan* Request_Order(bomRes* met_ord, plan* num)
 
 	//printf("->");
 	char* values;
-	int amount = num;
+	
 	//initialization 구조체
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
 
@@ -203,66 +203,6 @@ plan* Request_Order(bomRes* met_ord, plan* num)
 
 
 
-
-
-	
-		//자재구조체
-		
-		bomRes* met = met_ord->next;
-
-		char* prd_code = met->CODE;
-		//int num = met->AMOUNT;
-
-		//while (met != NULL)
-		//{
-
-
-		//	met = met->next;
-		//}
-	
-
-
-	/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
-
-	/*
-			자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
-			거래처 파일로 이 품목코드를 넘겨줌
-
-		while(1)
-		{
-
-			if(거래처파일.품목코드 == 자재.품목코드)
-			if(strcmp(거래처파일.품목코드, 자재.품목코드) == 0)
-			{
-
-				//서칭할 구조체 필요한가?
-
-				_select("PRD_CODE = prd_code", *,&select_result_str)
-
-				해당 품목코드를 포함하는 거래처 컬럼 전체 출력
-
-				printf("%s\n\n", select_result_str);
-
-
-				발주파일에 변동사항 업데이트
-
-				발주일   납기일    품목코드   거래처코드   수량
-				================================================
-				NULL     NULL       NULL       NULL        NULL
-
-				return 자재함수로 리턴, 거래처 코드만 리턴? :: 자재팀과 상의 필요
-			}
-			else
-			{
-				해당 품목을 취급하는 거래처가 존재하지 않습니다.
-				( 홈 ) 화면으로 돌아갑니다.
-			}
-
-
-	}
-
-		*/
-		//if (initalizing("sample_Client") == -1) 
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -270,19 +210,8 @@ plan* Request_Order(bomRes* met_ord, plan* num)
 		file_column_free();
 		return -1;
 	}
-		
 
-	print_data();
-	//print_data();
-	values = malloc(sizeof(prd_code) * 3);
-	strcpy(values, "PRD_CODE = '");
-	strcat(values, prd_code);
-	strcat(values, "'");
-
-
-	//printf("%s\n", values);
-	printf("추출한 데이터 확인\n");
-	if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
+	if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
 		//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
@@ -294,51 +223,139 @@ plan* Request_Order(bomRes* met_ord, plan* num)
 		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
 	}
 
-	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-		printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
+	
+		//자재구조체
+		
+	bomRes* met = met_ord->next;
+
+
+
+	while (met != NULL)
+	{
+
+
+		printf("======================================\n");
+
+		char* prd_code = met->CODE;
+		printf("met->CODE : %s", met->CODE);
+		printf("prd_code : %s\n", prd_code);
+		int amount = met->AMOUNT;
+
+		/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
+
+		/*
+				자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
+				거래처 파일로 이 품목코드를 넘겨줌
+
+			while(1)
+			{
+
+				if(거래처파일.품목코드 == 자재.품목코드)
+				if(strcmp(거래처파일.품목코드, 자재.품목코드) == 0)
+				{
+
+					//서칭할 구조체 필요한가?
+
+					_select("PRD_CODE = prd_code", *,&select_result_str)
+
+					해당 품목코드를 포함하는 거래처 컬럼 전체 출력
+
+					printf("%s\n\n", select_result_str);
+
+
+					발주파일에 변동사항 업데이트
+
+					발주일   납기일    품목코드   거래처코드   수량
+					================================================
+					NULL     NULL       NULL       NULL        NULL
+
+					return 자재함수로 리턴, 거래처 코드만 리턴? :: 자재팀과 상의 필요
+				}
+				else
+				{
+					해당 품목을 취급하는 거래처가 존재하지 않습니다.
+					( 홈 ) 화면으로 돌아갑니다.
+				}
+
+
+		}
+
+			*/
+			//if (initalizing("sample_Client") == -1) 
+
+
+
+		//print_data();
+		//print_data();
+		values = malloc(sizeof(prd_code) * 4);
+		strcpy(values, "PRD_CODE = '");
+		strcat(values, prd_code);
+		strcat(values, "'");
+
+
+		printf("values ..-> %s\n", values);
+		printf("추출한 데이터 확인\n");
+		if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+			//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		else {
+			//printf("%s\n\n", select_result_str);
+			printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
+		}
+
+		//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+		//	printf("%s\n", err_msg);
+
+		//	file_column_free();
+		//	return -1;
+		//}
+
+
+
+		//result_print(_result, result_count);
+		//printf("values ->");
+		//printf("%s\n", values);
+		//printf("\n\n");
+		//free(values);
+
+
+
+
+		////특정 컬럼 추출
+		////printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+		////메모리 핸들링이 넘 심함 수정요망
+
+		//if ((find = find_result(_result, "PRD_CODE")) == -1) {
+		//	printf("%s\n", err_msg);
+
+		//	file_column_free();
+		//	result_free(_result, result_count);
+		//	return -1;
+		//}
+
+		////if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
+		////차라리 함수를 새로 선언해서 넘겨주자.
+		//creat_Order_List(result_count, prd_code);
+
+		//printf("\n\n");
+
+
+		////return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
+
+		////발주구조체 데이터 확인
+		//print_Node();
+		////return main();
+
+		////발주내역 저장
+		//storage_Order(amount);
+		print_data();
+		met = met->next;
 	}
-
-
-
-	result_print(_result, result_count);
-	printf("values ->");
-	printf("%s\n", values);
-	printf("\n\n");
-	free(values);
-
-
-
-
-	//특정 컬럼 추출
-	//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
-	//메모리 핸들링이 넘 심함 수정요망
-
-	if ((find = find_result(_result, "PRD_CODE")) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		result_free(_result, result_count);
-		return -1;
-	}
-
-	//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
-	//차라리 함수를 새로 선언해서 넘겨주자.
-	creat_Order_List(result_count, prd_code);
-
-	printf("\n\n");
-
-
-	//return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
-
-	//발주구조체 데이터 확인
-	print_Node();
-	//return main();
-
-	//발주내역 저장
-	storage_Order(amount);
 	file_column_free();
 	result_free(_result, result_count);
 	
