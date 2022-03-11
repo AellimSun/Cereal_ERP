@@ -3,7 +3,7 @@
 
 
 #define PRO_FILE_NAME "process"
-#define MAT_FILE_NAME "material"
+#define MAT_FILE_NAME "test_pro_material"
 
 #define PLAN_NUM 100
 #define PLAN_CODE "A1001"
@@ -20,6 +20,7 @@ typedef struct _req_code {
 }req_code;
 
 void init(void);
+void PRO_all_read();
 
 void bg_process(void);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
@@ -55,6 +56,7 @@ void bg_process(void)
 	head->code = NULL;
 	head->next = NULL;
 
+	PRO_all_read();
 
 	//3pro_material_create();
 
@@ -64,6 +66,8 @@ void bg_process(void)
 	//give_LOT();				//생산완료품 LOT번호 생성-실행날짜 기반
 	//produce_product();		//생산계획 품목 생산 및 등록
 	//material_upload();		//생산자제 등록
+
+	free(head);
 }
 
 void check_parts(int num, char* bom_res, req_code* head)
@@ -126,7 +130,7 @@ void pro_material_use(char* p_code) {
 	char* conditional = (char*)malloc(sizeof(text1) + sizeof(p_code) + sizeof(text2));
 	if (conditional == 0) exit(1);
 
-	char* set = "STATUS,DATE";
+	char* select_column = "STATUS, DATE";
 	char* CODE = p_code;
 	result* find;
 	result* _result;
@@ -137,25 +141,27 @@ void pro_material_use(char* p_code) {
 	strcat(conditional, text2);
 
 
-	if (initalizing("test_pro_material") == -1) {
+	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
 		return -1;
 	}
-	if (_select(conditional,set,&select_result_str) == -1) {
+	if (_select(conditional,select_column,&select_result_str) == -1) {
 		printf("%s\n", err_msg);
 		
 		file_column_free();
 		return -1;
 	}
-	
-	if ((result_count = recv_result(&_result, select_result_str)) == -1)
+	else
 	{
-		printf("%s\n", err_msg);
+		if ((result_count = recv_result(&_result, select_result_str)) == -1);
+		{
+			printf("%s\n", err_msg);
 
-		result_free(_result, result_count);
-		return -1;
+			result_free(_result, result_count);
+			return -1;
+		}
 	}
 	result_print(_result, result_count);
 	printf("\n\n");
@@ -172,13 +178,15 @@ void pro_material_use(char* p_code) {
 	result_free(_result, result_count);
 	print_data();
 
+	free(conditional);
+
 	system("pause");
 	system("cls");
 }
 
 void init(void)
 {
-	_create("test_pro_material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
+	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
 
 	char* value[30];
 
@@ -232,4 +240,45 @@ void init(void)
 	file_column_free();
 
 
+}
+
+void PRO_all_read() {
+	char* conditional = "*";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	//char* values = "'B4001', 'store', 20220308, 'D0004'";
+	int result_count;
+	result* _result;
+
+	if (initalizing(MAT_FILE_NAME) == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		printf("조회할 데이터가 없습니다.\n");
+
+		file_column_free();
+		system("pause");
+		system("cls");
+		stock();
+	}
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		result_print(_result, result_count);
+		printf("\n\n");
+	}
+
+	file_column_free();
+	result_free(_result, result_count);
+
+	system("pause");
+	system("cls");
+	stock();
 }
