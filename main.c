@@ -154,6 +154,48 @@ void production_management(void)
 
 void order(void)
 {
+	int input = 0;
+	while (1)
+	{
+
+
+	printf("위치 : 메인메뉴 -> 생산관리\n");
+
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|    1. 발주내역 전체 조회  |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2.( 작업중 )         |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.( 작업중 )         |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|       0. 시작메뉴         |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 13);
+	scanf("%d", &input);
+	system("cls");
+	switch (input)
+	{
+	case 1:
+		all_Order_List();
+		break;
+
+	case 2:
+		break;
+
+	case 3:
+		break;
+
+	case 0:
+		main_manu();
+	}
+
 	// 파일 위치 :: 초기화한다. 저장소 지정
 	//if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Order") == -1) {
 	//if (initalizing("account") == -1)
