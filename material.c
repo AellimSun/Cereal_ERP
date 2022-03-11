@@ -1,3 +1,4 @@
+#include <time.h>
 #include "cereal.h"
 
 void stock();
@@ -55,7 +56,7 @@ void stock()
 //모든 재고 조회
 void all_read() {
 	char* conditional = "*";
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
 	//char* values = "'B4001', 'store', 20220308, 'D0004'";
 	int result_count;
 	result* _result;
@@ -96,7 +97,7 @@ void all_read() {
 
 //코드번호로 검색하여 조회
 void code_read(char* condition) {
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
 	int result_count;
 	result* _result;
 	char* conditional = condition;
@@ -157,6 +158,7 @@ void material_create() {
 	char STATUS[5];
 	char DATE[8];
 	char ACC_CODE[5];
+	char LOT[5];
 
 	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> create\n\n");
 
@@ -179,6 +181,14 @@ void material_create() {
 	scanf("%s", ACC_CODE);
 	printf("\n\n");
 
+	//LOT번호 만들기
+	int random = 0;
+	char tmpRand[4];
+	srand(time(NULL));
+	random = (rand() % 10000);
+	strcpy(LOT, "L");
+	strcat(LOT, itoa(random, tmpRand, 10));
+
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
 	strcat(values, "', '");
@@ -187,12 +197,12 @@ void material_create() {
 	strcat(values, DATE);
 	strcat(values, ", '");
 	strcat(values, ACC_CODE);
+	strcat(values, "', '");
+	strcat(values, LOT);
 	strcat(values, "'");
 	printf("\n");
-	printf("%s", values);
-	printf("\n");
 
-	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
+	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
 
 	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
 		printf("%s\n", err_msg);
@@ -328,7 +338,8 @@ void confirm_Material(plan* p) {
 	scanf("%c", &input);
 
 	if (input == 'y') {
-		//발주로 보내기.....
+		//발주로 보내기
+		Request_Order(result3, p);
 	}
 	else {
 		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
