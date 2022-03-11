@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 6031)
 #define _CRT_SECURE_NO_WARNINGS
 #define _INT 1
 #define _FLOAT 2
