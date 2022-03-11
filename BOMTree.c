@@ -138,8 +138,6 @@ int Show_BOM_ROOT_CODE_list()	//BOM 파일에서 ROOT코드 리스트를 뽑아오세요
 	return 1;
 }
 
-
-
 BOM_TREE* BOM_SEARCH(char* _conditional)
 {
 	char* text1 = "ROOT_CODE = '";
