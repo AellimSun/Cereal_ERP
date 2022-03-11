@@ -21,15 +21,29 @@ void updateAccount();
 void account()
 {
 	int menu;
-	printf("1.거래처 등록\n");
-	printf("2.거래처 수정\n");
-	printf("3.거래처 조회\n");
-	printf("4.거래처 삭제\n");
-	printf("0.메인으로");
-	printf("\n\n");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      1. 거래처 등록       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2. 거래처 수정       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3. 거래처 조회       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      4. 거래처 삭제       |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      0. 메인으로          |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 17);
 	scanf("%d", &menu);
 
-
+	system("cls");
 
 	switch (menu)
 	{
@@ -46,7 +60,7 @@ void account()
 		deleteAccount();
 		break;
 	case 0:
-		main();
+		main_manu();
 		break;
 	}
 }
@@ -59,26 +73,40 @@ void insertAccount()
 	char PRD_CODE[5];			//취급 품목 코드
 	char RorD[2];			//R:원자재 D:납품
 
-	printf("==========================\n");
-	printf("새로운 거래처를 등록합니다.\n");
-	printf("==========================\n");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 등록\n\n");
+	printf("\t\t\t==========================\n");
+	printf("\t\t\t새로운 거래처를 등록합니다.\n");
+	printf("\t\t\t==========================\n\n");
 
-	printf("거래처 코드를 입력하세요 : ");
+	printf("\t\t거래처 코드를 입력하세요. \n");
+	printf("\n\t\t\t-> \n");
+	printf("\n\t\t거래처의 사업자 등록 번호를 입력하세요. \n");
+	printf("\n\t\t\t-> \n");
+	printf("\n\t\t취급 품목 코드를 입력하세요. \n");
+	printf("\n\t\t\t-> \n");
+	printf("\n\t\t원자재 거래처는 'R' 납품 거래처는 'D'를 입력하세요. \n");
+	printf("\n\t\t\t-> \n");
+	gotoxy(27,8);
 	scanf("%s", ACC_CODE);
-	printf("거래처의 사업자 등록 번호를 입력하세요 : ");
+	gotoxy(27, 12);
 	scanf("%s", BN_REGI_NUM);
-	printf("취급 품목 코드를 입력하세요 : ");
+	gotoxy(27, 16);
 	scanf("%s", PRD_CODE);
-	printf("원자재 거래처는 'R' 납품 거래처는 'D'를 입력하세요 : ");
+	gotoxy(27, 20);
 	scanf("%s", RorD);
 	//printf("%s", RorD);
 	//char temp = ("R\n" || "D\n");
+
+	system("cls");
 	while(1)
 	{
 		if ((strcmp(RorD, "R") != 0) && (strcmp(RorD, "D") != 0))
 		{
-			printf("잘못 입력했습니다. 다시 입력하세요		");
+			printf("\n\t\t\t< 잘못 입력했습니다! >\n");
+			printf("\t  < 원자재 취급 거래처는 'R' 납품 취급 거래처는 'D를 입력해주세요! >\n\n");
+			printf("\t\t\t 'R' 혹은 'D' 입력 :  ");
 			scanf("%s", RorD);
+			system("cls");
 		}
 		else
 			break;
@@ -111,9 +139,9 @@ void insertAccount()
 			return -1;
 		}
 
-		char ex1[50] = "'A1001', '18-854-1123', 'C201', 'R'";
-		char ex2[50] = "'A1002', '20-774-4556', 'C202', 'R'";
-		char ex3[50] = "'A1003', '21-814-9563', 'D201', 'D'";
+		char ex1[50] = "'A1001', '18-854-1123', 'D001', 'R'";
+		char ex2[50] = "'A1002', '20-774-4556', 'D002', 'R'";
+		char ex3[50] = "'A1003', '21-814-9563', 'D003', 'R'";
 
 		/*if (_insert(ex1) == -1)
 		{
@@ -148,7 +176,7 @@ void insertAccount()
 		printf("\n");
 		file_column_free();
 
-		printf("새로운 거래처 등록완료. 메인으로 이동합니다.");
+		printf("\n\t\t < 새로운 거래처 등록완료! 메인으로 이동합니다. >");
 		system("pause");
 		system("cls");
 		account();
@@ -157,14 +185,30 @@ void insertAccount()
 void readAccount()
 {
 	int menu;
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회\n\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|   1. 거래처 코드로 조회   |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t| 2. 사업자 등록 번호로 조회|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|    3. 품목 코드로 조회    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|   4. 거래처 구분별 조회   |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|       5. 전체 조회        |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|       0. 이전으로         |\n");
+	printf("\t\t\t-----------------------------\n");
 
-	printf("1. 거래처 코드로 조회\n");
-	printf("2. 사업자 등록 번호로 조회\n");
-	printf("3. 품목 코드로 조회\n");
-	printf("4. 거래처 구분별 조회\n");
-	printf("5. 전체 조회\n");
-	printf("0. 이전으로\n");
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 19);
 	scanf("%d", &menu);
+	system("cls");
 	switch (menu)
 	{
 	case 1:
@@ -190,6 +234,7 @@ void readAccount()
 
 void read_all()
 {
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회 -> 전체 조회\n\n");
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -201,7 +246,8 @@ void read_all()
 	print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
@@ -213,7 +259,10 @@ void read_ACC_CODE()
 	result* _result;
 	int result_count;
 
-	printf("검색할 거래처의 코드를 입력하세요 : ");
+
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회 -> 코드로 조회\n\n");
+	printf("\t\t검색할 거래처의 코드를 입력하세요 \n");
+	printf("\t\t\t -> ");
 	scanf("%s", naver);
 
 	strcat(temp, naver);
@@ -253,7 +302,8 @@ void read_ACC_CODE()
 	//print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
@@ -265,7 +315,9 @@ void read_BN_REGI_NUM()
 	result* _result;
 	int result_count;
 
-	printf("검색할 거래처의 사업자 번호를 입력하세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회 -> 사업자 번호로 조회\n\n");
+	printf("\t\t검색할 거래처의 사업자 번호를 입력하세요 : \n");
+	printf("\t\t\t -> ");
 	scanf("%s", naver);
 
 	strcat(temp, naver);
@@ -306,7 +358,8 @@ void read_BN_REGI_NUM()
 	//print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
@@ -317,8 +370,9 @@ void read_PRD_CODE()
 
 	result* _result;
 	int result_count;
-
-	printf("검색할 품목의 코드를 입력하세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회 -> 품목 코드로 조회\n\n");
+	printf("\t\t검색할 품목의 코드를 입력하세요 : \n");
+	printf("\t\t\t -> ");
 	scanf("%s", naver);
 
 	strcat(temp, naver);
@@ -359,7 +413,8 @@ void read_PRD_CODE()
 	//print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
@@ -370,9 +425,10 @@ void read_RorD()
 
 	result* _result;
 	int result_count;
-
-	printf("검색할 거래처의 유형을 입력하세요 : \n");
-	printf("원자재 'R' 납품 'D'");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 조회 -> 사업자 번호로 조회\n\n");
+	printf("\t\t검색할 거래처의 유형을 입력하세요 : \n");
+	printf("\t\t< 원자재 'R' 납품 'D' >");
+	printf("\t\t\t -> ");
 	scanf("%s", naver);
 
 	strcat(temp, naver);
@@ -413,7 +469,8 @@ void read_RorD()
 	//print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
@@ -433,8 +490,9 @@ void deleteAccount()
 
 	char naver[20];
 	char temp[30] = "BN_REGI_NUM='";
-
-	printf("삭제할 거래처의 사업자 번호를 입력하세요 : ");
+	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 삭제\n\n");
+	printf("\t\t삭제할 거래처의 사업자 번호를 입력하세요 : ");
+	printf("\t\t\t -> ");
 	scanf("%s", naver);
 	strcat(temp, naver);
 	strcat(temp, "'");
@@ -453,12 +511,17 @@ void deleteAccount()
 	print_data();
 	printf("\n");
 	file_column_free();
-
+	system("pause");
+	system("cls");
 	account();
 }
 
 void updateAccount()
 {
+	printf("\n");
+	printf(" < 거래처 목록 >\n");
+	printf("========================================================\n");
+
 	//수정할 거래처 볼 수 있게 조회해주기
 	if (initalizing("account") == -1)
 	{
@@ -467,7 +530,6 @@ void updateAccount()
 		file_column_free();
 		return -1;
 	}
-
 	print_data();
 	printf("\n");
 
@@ -484,7 +546,8 @@ void updateAccount()
 	//result* _result;
 	//int result_count;
 
-	printf("수정할 거래처의 코드를 입력하세요 : ");
+	printf("========================================================\n\n");
+	printf("\t\t수정할 거래처의 코드를 입력하세요 : ");
 	scanf("%s", naver1);
 
 	strcat(temp, naver1);
@@ -492,9 +555,9 @@ void updateAccount()
 
 	char* conditional = temp;
 
-	printf("수정할 컬럼명을 입력하세요 : ");
+	printf("\t\t수정할 컬럼명을 입력하세요 : ");
 	scanf("%s", naver2);
-	printf("새로운 값을 입력하세요 : ");
+	printf("\t\t새로운 값을 입력하세요 : ");
 	scanf("%s", naver3);
 	strcat(naver2, "='");
 	strcat(naver2, naver3);
