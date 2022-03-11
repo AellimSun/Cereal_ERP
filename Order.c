@@ -18,36 +18,6 @@
 //};
 
 
-//typedef struct _order
-//{
-//
-//	char* ACC_CODE; //배열명은 주소값을 가리킨다.
-//	char* PRD_CODE; //배열명은 주소값을 가리킨다.
-//	int O_Day;
-//	int D_Day;
-//	int NUM;
-//	
-//	struct _order* next;
-//
-//}Order;
-
-//typedef struct _acc_code
-//{
-//
-//	char* ACC_CODE; //배열명은 주소값을 가리킨다.
-//
-//	struct _acc_code* next;
-//
-//}ACC_CODE;
-//
-//typedef struct _prd_code
-//{
-//
-//	char* PRD_CODE; //배열명은 주소값을 가리킨다.
-//
-//	struct _prd_code* next;
-//
-//}PRD_CODE;
 
 result* _result;
 result* find;
@@ -77,13 +47,13 @@ void creat_Order_List(int num, char* prd_code)
 	int i = 0;
 	
 	printf("출력 외안대\n");
-	
+	printf("prd_code : %s\n", prd_code);
 
-	while (i < num)
+	while (i < num + 1)
 	{
 		printf("result_count : %d\n", i);
 		Order* newNode = creatNode_Order();
-		//printf("     ..%s\n", find->_string_data[i]);
+		printf("     ..%s\n", find->_string_data[i]);
 		if (strcmp(find->_string_data[i], prd_code) == 0)
 		{
 			//그에 해당하는 구조체 추출하기
@@ -184,14 +154,14 @@ void print_Node()
 //void Request_Order(char* prd_code, int num)
 
 //plan구조체로 넘겨줘야한다.
-plan* Request_Order(bomRes* met_ord)
+void Request_Order(bomRes* met_ord)
 {
 
 	
 	
-
-	//printf("->");
-	char* values;
+	file_column_free();
+	printf("Request_Order\n");
+	char values[30];
 	
 	//initialization 구조체
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
@@ -203,25 +173,18 @@ plan* Request_Order(bomRes* met_ord)
 
 
 
-	if (initalizing("account") == -1)
-	{
-		printf("%s\n", err_msg);
 
-		file_column_free();
-		return -1;
-	}
+	//if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+	//	//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
+	//	printf("%s\n", err_msg);
 
-	if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
-		//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		return -1;
-	}
-	else {
-		//printf("%s\n\n", select_result_str);
-		printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
-	}
+	//	file_column_free();
+	//	return -1;
+	//}
+	//else {
+	//	//printf("%s\n\n", select_result_str);
+	//	printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
+	//}
 
 
 	
@@ -282,21 +245,30 @@ plan* Request_Order(bomRes* met_ord)
 		}
 
 			*/
-			//if (initalizing("sample_Client") == -1) 
+		//if (initalizing("sample_Client") == -1) 
 
 
 
 		//print_data();
 		//print_data();
-		values = malloc(sizeof(prd_code) * 4);
+	
 		strcpy(values, "PRD_CODE = '");
-		strcat(values, prd_code);
+		strcat(values, "D0002");
 		strcat(values, "'");
 
 
 		printf("values ..-> %s\n", values);
 		printf("추출한 데이터 확인\n");
-		if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+
+		if (initalizing("account") == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+
+		if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
 			//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 			printf("%s\n", err_msg);
 
@@ -304,60 +276,65 @@ plan* Request_Order(bomRes* met_ord)
 			return -1;
 		}
 		else {
-			//printf("%s\n\n", select_result_str);
+			
 			printf("\n...조건을 만족하는 데이터가 존재합니다\n\n");
+			//printf("%s\n\n", select_result_str);
 		}
 
-		//if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-		//	printf("%s\n", err_msg);
+		Sleep(500);
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			printf("%s\n", err_msg);
 
-		//	file_column_free();
-		//	return -1;
-		//}
+			file_column_free();
+			return -1;
+		}
 
 
-
-		//result_print(_result, result_count);
-		//printf("values ->");
-		//printf("%s\n", values);
-		//printf("\n\n");
+		
+		result_print(_result, result_count);
+		printf("values in while ->");
+		printf("%s\n", values);
+		printf("\n\n");
 		//free(values);
 
 
 
 
-		////특정 컬럼 추출
-		////printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
-		////메모리 핸들링이 넘 심함 수정요망
+		//특정 컬럼 추출
+		//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+		//메모리 핸들링이 넘 심함 수정요망
 
-		//if ((find = find_result(_result, "PRD_CODE")) == -1) {
-		//	printf("%s\n", err_msg);
+		if ((find = find_result(_result, "PRD_CODE")) == -1) {
+			printf("%s\n", err_msg);
 
-		//	file_column_free();
-		//	result_free(_result, result_count);
-		//	return -1;
-		//}
+			file_column_free();
+			result_free(_result, result_count);
+			return -1;
+		}
+		
+		//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
+		//차라리 함수를 새로 선언해서 넘겨주자.
+		creat_Order_List(result_count, prd_code);
 
-		////if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
-		////차라리 함수를 새로 선언해서 넘겨주자.
-		//creat_Order_List(result_count, prd_code);
-
-		//printf("\n\n");
+		printf("\n\n");
 
 
-		////return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
+		//return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
 
-		////발주구조체 데이터 확인
-		//print_Node();
-		////return main();
+		//발주구조체 데이터 확인
+		print_Node();
+		//return main();
 
-		////발주내역 저장
-		//storage_Order(amount);
+		//발주내역 저장
+		storage_Order(amount);
 		print_data();
+
 		met = met->next;
+		result_free(_result, result_count);
+		file_column_free();
 	}
-	file_column_free();
-	result_free(_result, result_count);
+	
+	
 	
 	
 }
