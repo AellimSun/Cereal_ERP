@@ -1,7 +1,8 @@
 #pragma once
-#include <stdio.h>
-#include <Windows.h>
 #include "local.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <Windows.h>
 #include "BOMTree.h"
 
 typedef struct Plan

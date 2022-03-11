@@ -194,15 +194,28 @@ void base_information(void)
 	case 1:
 	{
 		char* con = "A0002";
-		BOM_TREE* res = BOM_SEARCH(con);
-		BOM_Forward_PrintTree(res, res->NODE_CODE);
 
+		break;
 	}
 	case 2:
+	{
+		BOM_search_main();
+
+
+		/*char* con = "A0002";
+		BOM_TREE* res = BOM_SEARCH(con);
+		BOM_Forward_PrintTree(res, con);*/
+
+		break;
+	}
 	case 3:
+	{
 		product_list();
+		break;
+	}
 	case 0:
 		material_management();
+		break;
 	}
 	
 }

@@ -232,8 +232,10 @@ void confirm_Material(plan* p) {
 	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
 	bomRes* result = (bomRes*)malloc(sizeof(bomRes));
 	result->next = NULL;
+	bomRes* head1 = result;
 	bomRes* result2 = (bomRes*)malloc(sizeof(bomRes));
 	result2->next = NULL;
+	bomRes* head2 = result2;
 
 	//BOM 조회
 	//char* con = "ROOT_CODE = 'A0002'";
@@ -243,23 +245,141 @@ void confirm_Material(plan* p) {
 
 	get_Materials_From_Bom(res, res->NODE_CODE, result);
 
+	/*bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+	newNode->AMOUNT = 0;
+	newNode->CODE = result->next->CODE;
+	newNode->next = NULL;
+	result2->next = newNode;*/
 	result = result->next;
-	result2 = result2->next;
+	int flag = 1;
 	while (result->next != NULL) {
+		result2 = head2;
 		while (result2->next != NULL) {
+			result2 = result2->next;
+			flag = 1;
 			if (strcmp(result2->CODE, result->CODE) == 0) {
 				result2->AMOUNT += result->AMOUNT;
+				flag = 0;
+				break;
 			}
-			result2 = result2->next;
 		}
-		bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
-		newNode = result;
-		result2->next = result;
+		if (flag == 1) {
+			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+			newNode->CODE = result->CODE;
+			newNode->AMOUNT = result->AMOUNT;
+			newNode->next = result2->next;
+			result2->next = newNode;
+		}
+		result = result->next;
 	}
-	//출력
-	/*printf("품목명 : ");
-	printf("\t필요\t\t\t현황\n\n");
-	printf("옥수수 : 3개\t\t\t옥수수 : 1개");*/
+
+	printf("\t필요\n");
+	bomRes* list = head2;
+	while (list->next != NULL) {
+		list = list->next;
+		int planedAmt = atoi(p->PLAN_PRODUCTION);
+		//char* name = (char*)malloc(sizeof(char));
+		list->AMOUNT *= planedAmt;
+		
+		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
+
+		printf("%s : %d개\n", list->CODE, list->AMOUNT);
+	}
+
+	printf("\n\t현재\n");
+	list = head2;
+	while (list->next != NULL) {
+		list = list->next;
+		int planedAmt = atoi(p->PLAN_PRODUCTION);
+		//char* name = (char*)malloc(sizeof(char));
+		
+		int stock = findStock(list->CODE)*planedAmt;
+
+		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
+
+		printf("%s : %d개\n", list->CODE, stock);
+	}
+
+	system("pause");
+	system("cls");
+
+	bomRes* result3 = (bomRes*)malloc(sizeof(bomRes));
+	result3->next = NULL;
+	printf("현재 부족한 항목은\n\n");
+	list = head2;
+	while (list->next != NULL) {
+		list = list->next;
+		bomRes* newnode = (bomRes*)malloc(sizeof(bomRes));
+		newnode->CODE = list->CODE;
+		int planedAmt = atoi(p->PLAN_PRODUCTION);
+		int stock = findStock(list->CODE) * planedAmt;			//현재
+		int need = list->AMOUNT;
+		newnode->AMOUNT = need - stock;
+
+		newnode->next = result3->next;
+		result3->next = newnode;
+
+		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
+
+		printf("%s : %d개\n", newnode->CODE, newnode->AMOUNT);
+	}
+
+	char input;
+	printf("입니다. 주문하시겠습니까?(y / n)");
+	scanf("%c", &input);
+
+	if (input == 'y') {
+		//발주로 보내기.....
+	}
+	else {
+		printf("취소를 선택하셨습니다.\n 작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
+		system("pause");
+		system("cls");
+		production_menu();
+	}
+	
+}
+
+int findStock(char* code) {
+	int res = 0;
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	int result_count;
+	result* _result;
+	char* conditional = (char*)malloc(sizeof(char));
+	strcpy(conditional, "PRD_CODE = '");
+	strcat(conditional, code);
+	strcat(conditional, "'");
+
+	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		file_column_free();
+		return 0;
+	}
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			file_column_free();
+			result_free(_result, result_count);
+			return 0;
+		}
+		while (_result->next != NULL) {
+			if (strcmp(_result->name, "STATUS") == 0) {
+				res++;
+			}
+		}
+		result_print(_result, result_count);
+
+		return res;
+	}
+
+	file_column_free();
+	free(conditional);
+	result_free(_result, result_count);
 }
 
 void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE, bomRes* result) {
