@@ -258,7 +258,7 @@ void base_information(void)
 	{
 	case 1:
 	{
-		char* con = "A0002";
+
 
 		break;
 	}
