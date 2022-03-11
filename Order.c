@@ -24,7 +24,7 @@ result* _result;
 int result_count;
 
 Order* insert_ord;
-
+plan* head_Cod_n_Num;
 //발주-삽입(파일) head 노드
 
 int col = 1;
@@ -103,17 +103,15 @@ void creat_Order_List(Order* head, result* result_head, int num)
 						//newNode->ACC_CODE = cur->_string_data[i];
 						head->ACC_CODE = cur->_string_data[i];
 
-						printf("                    ACC_CODE : %s\n ", head->ACC_CODE);
+						//printf("                    ACC_CODE : %s\n ", head->ACC_CODE);
 					}
 					else if (strcmp(cur->name, "PRD_CODE") == 0)
 					{
 						head->PRD_CODE = cur->_string_data[i];
-						printf("                    PRD_CODE : %s\n ", head->PRD_CODE);
+						//printf("                    PRD_CODE : %s\n ", head->PRD_CODE);
 					}
 					
-					Sleep(3000);
-					//발주 파일에 insert할 구조체 리스트 생성 완료
-
+					//발주 파일에 insert할 구조체 리스트 생성 완료..실패!
 					//printf("       ,%s", cur->_string_data[i]);
 				}
 				break;
@@ -161,9 +159,47 @@ void print_Node(Order* head)
 	}
 }
 
+void print_Node_process(plan* head)
+{
+	plan* cur;
+	cur = head->next;
+
+	printf("~~~print_Node_process~~~\n");
+	while (cur != NULL)
+	{
+		printf("PRD_COD : %s,  ", cur->CODE);
+		printf("PRD_VAL : %d\n", cur->values);
+
+		cur = cur->next;
+	}
+}
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 //char* Request_Order(char* prd_code, int num)
 //void Request_Order(char* prd_code, int num)
+
+
+void material_to_prosess(plan* head, bomRes* met)
+{
+	plan* newNode = malloc(sizeof(plan));
+	if (newNode == NULL)
+	{
+		return -1;
+	}
+
+	newNode->CODE = met->CODE;
+	newNode->next = NULL;
+	newNode->PLAN_PRODUCTION = 0;
+	newNode->values = met->AMOUNT;
+
+
+	newNode->next = head->next;
+	head->next = newNode;
+
+
+
+}
+
+
 
 //plan구조체로 넘겨줘야한다.
 void Request_Order(bomRes* met_ord)
@@ -175,6 +211,7 @@ void Request_Order(bomRes* met_ord)
 	printf("Request_Order\n");
 	char values[30];
 	
+	plan* Cod_n_Num;
 	//initialization 구조체
 	
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
@@ -184,6 +221,12 @@ void Request_Order(bomRes* met_ord)
 	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
 	insert_ord->next = NULL;
 
+	head_Cod_n_Num = (plan*)malloc(sizeof(plan));
+
+	if (head_Cod_n_Num == NULL)
+		return -1;
+
+	head_Cod_n_Num->next = NULL;
 
 
 
@@ -207,18 +250,18 @@ void Request_Order(bomRes* met_ord)
 
 
 
+
 	while (met != NULL)
 	{
 
+		material_to_prosess(head_Cod_n_Num,met);
 
-		printf("======================================\n");
+		//printf("======================================\n");
 
 		char* prd_code = met->CODE;
-		printf("met->CODE : %s", met->CODE);
+		//printf("met->CODE : %s", met->CODE);
 		printf("prd_code : %s\n", prd_code);
 		int amount = met->AMOUNT;
-
-		/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
 
 		/*
 				자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
@@ -270,8 +313,8 @@ void Request_Order(bomRes* met_ord)
 		strcat(values, "'");
 
 
-		printf("values ..-> %s\n", values);
-		printf("추출한 데이터 확인\n");
+		//printf("values ..-> %s\n", values);
+		//printf("추출한 데이터 확인\n");
 
 		if (initalizing("account") == -1)
 		{
@@ -320,16 +363,6 @@ void Request_Order(bomRes* met_ord)
 		//특정 컬럼 추출
 		//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
 		//메모리 핸들링이 넘 심함 수정요망
-
-		//if ((find = find_result(_result, "PRD_CODE")) == -1) {
-		//	printf("%s\n", err_msg);
-
-		//	file_column_free();
-		//	result_free(_result, result_count);
-		//	return -1;
-		//}
-		Sleep(3000);
-
 		//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
 		//차라리 함수를 새로 선언해서 넘겨주자.
 
@@ -343,7 +376,7 @@ void Request_Order(bomRes* met_ord)
 		//return main();
 
 		//발주내역 저장
-		storage_Order(insert_ord,amount);
+		//storage_Order(insert_ord,amount);
 		//print_data();
 
 		met = met->next;
@@ -352,7 +385,18 @@ void Request_Order(bomRes* met_ord)
 
 	}
 	
-	
+	print_Node_process(head_Cod_n_Num);
+
+
+	printf("발주를 종료합니다. 메인으로 돌아갑니다");
+	Sleep(500);
+	printf(".");
+	Sleep(500);
+	printf(".");
+	Sleep(500);
+	printf(".");
+
+	//return main();
 	
 	
 }
@@ -360,7 +404,7 @@ void Request_Order(bomRes* met_ord)
 //01 자재 -> 발주 -> 거래처 루트
 int storage_Order(Order* head, int num)
 {
-	//file_column_free();
+	file_column_free();
 	if (initalizing("sample_Order") == -1)
 	{
 		printf("%s\n", err_msg);
