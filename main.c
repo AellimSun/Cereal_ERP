@@ -165,7 +165,7 @@ void order(void)
 	//}
 
 
-	Request_Order("Q666", 3);
+	Request_Order("C209", 3);
 
 	//printf("1\n");
 	//storage_Order("003", 5);

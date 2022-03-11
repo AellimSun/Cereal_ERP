@@ -182,6 +182,7 @@ void print_Node()
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 //char* Request_Order(char* prd_code, int num)
 void Request_Order(char* prd_code, int num)
+//Plan* Request_Order(bomRes* prd_code, Plan* num)
 {
 
 	//자재구조체
@@ -480,7 +481,8 @@ int storage_Order(int num)
 		cur = cur->next;
 	}
 	print_data();
-	
+
+	file_column_free();
 	printf("종료...\n");
 }
 
