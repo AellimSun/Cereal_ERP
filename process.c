@@ -25,7 +25,6 @@ void PRO_all_read();
 void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE);
 void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth);
 
-
 void bg_process(void);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
