@@ -131,10 +131,10 @@ void pro_material_use(char* p_code, int p_num) {
 	char* select_column = "PRD_CODE,STATUS,LOT";
 	char* set = "STATUS='uesed'";
 	char* CODE = p_code;
-	result* find;
 	result* _result;
+	result* cur;
 	int result_count;
-	int cnt=0;
+	int cnt = 0;
 
 	strcpy(conditional, text1);
 	strcat(conditional, CODE);
@@ -154,7 +154,7 @@ void pro_material_use(char* p_code, int p_num) {
 		return -1;
 	}
 	else {
-		int i=0;
+		int i = 0;
 
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
 			printf("%s\n", err_msg);
@@ -163,44 +163,64 @@ void pro_material_use(char* p_code, int p_num) {
 			result_free(_result, result_count);
 			return -1;
 		}
+		result_print(_result, result_count);
+
+		system("pause");
+
 		//update 하기
-		while (_result != NULL && cnt != p_num) {
-			//현재 노드의 컬럼명이 STATUS일 경우
-			if (strcmp(_result->name, "STATUS") == 0) {
-				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
-				if (strcmp(*(_result->_string_data), "store") == 0) {
-					while (strcmp(_result->name, "LOT") != 0)
-					{
-							_result = _result->next;
-					}				//LOT까지 가기
-					char* lot = (char*)malloc(sizeof(*(_result->_string_data)));
-					char* txt1 = "LOT='";
-					char* txt2 = "'";
-					char* conditional1 = (char*)malloc(sizeof(txt1) + sizeof(lot) + sizeof(txt2));
-					char* set = "STATUS = '_used'";
-					if (conditional1 == 0) exit(1);
+		for (int i = 0; i < result_count; i++) {
+			cur = _result;
+			while (1) {
+				//현재 노드의 컬럼명이 STATUS일 경우
+				//if (cur == NULL)
+				//{
+				//	printf("result NULL\n");
+				//	break;
+				//}
+				if (strcmp(cur->name, "STATUS") == 0) {
+					//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
+					if (strcmp(cur->_string_data[i], "store") == 0) {
+						while (strcmp(cur->name, "LOT") != 0)
+						{
+							cur = cur->next;
+						}				//LOT까지 가기
+						char* lot = (char*)malloc(sizeof(cur->_string_data[i]));
+						if (lot == 0) exit(1);
+						char* txt1 = "LOT='";
+						char* txt2 = "'";
+						char* conditional1 = (char*)malloc(sizeof(txt1) + sizeof(lot) + sizeof(txt2));
+						if (conditional1 == 0) exit(1);
+						char* set = "STATUS = '_used'";
 
-					strcpy(lot, *(_result->_string_data));
+						strcpy(lot, cur->_string_data[i]);
+						strcpy(conditional1, txt1);
+						strcat(conditional1, lot);
+						strcat(conditional1, txt2);
 
-					strcpy(conditional1, txt1);
-					strcat(conditional1, lot);
-					strcat(conditional1, txt2);
+						if (_update(conditional1, set) == -1) {
+							printf("%s\n", err_msg);
 
-					if (_update(conditional1, set) == -1) {
-						printf("%s\n", err_msg);
-
-						file_column_free();
-						return -1;
+							file_column_free();
+							return -1;
+						}
+						printf("자재수정 : %s\n", conditional1);
+						cnt++;
+						free(conditional1);
 					}
-					printf("자재수정 : %s\n", conditional1);
-					cnt++;
-					free(conditional1);
 				}
+				//cur = cur->next;
 			}
-			_result = _result->next;
+			if (cur->next, NULL)
+				break;
+			else
+				cur = cur->next;
 		}
 		if (cnt < p_num) printf("자재가 부족합니다.\n");
+		printf("\n");
 	}
+	//	while (_result != NULL && cnt != p_num) {
+	//		
+	//}
 
 	file_column_free();
 
