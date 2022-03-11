@@ -464,3 +464,4 @@ void BOM_read()
 	print_data();
 	file_column_free();
 }
+
