@@ -61,6 +61,8 @@ void all_read() {
 	int result_count;
 	result* _result;
 
+	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> 전품목 조회\n\n");
+
 	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
@@ -126,7 +128,7 @@ void code_read(char* condition) {
 	}
 
 	if (_select(conditional, select_column, &select_result_str) == -1) {
-		printf("조회할 데이터가 없습니다.\n");
+		printf("\t\t\t < 조회할 데이터가 없습니다. > \n");
 
 		file_column_free();
 		system("pause");

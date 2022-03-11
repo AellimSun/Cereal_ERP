@@ -19,6 +19,9 @@ typedef struct _BOM_TREE
 	Element1 M_CODE[6];
 }BOM_TREE;
 
+
+int Show_BOM_ROOT_CODE_list();
+void BOM_search_main();
 BOM_TREE* BOM_SEARCH(char* conditional);
 //conditional에 맞는 BOM트리를 생성하여 리턴해주는 함수
 

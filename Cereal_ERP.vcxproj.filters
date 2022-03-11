@@ -54,11 +54,14 @@
     <ClCompile Include="BOMTree.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="account.c">
-      <Filter>소스 파일\123</Filter>
-    </ClCompile>
     <ClCompile Include="UI.c">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Order.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="account.c">
+      <Filter>소스 파일\123</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
