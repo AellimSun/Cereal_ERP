@@ -172,7 +172,6 @@ void insertMaterials()
 
 void updateMaterials()
 {
-	//먼저 수정할 리스트 볼 수 있게 조회하기
 	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -185,17 +184,18 @@ void updateMaterials()
 	printf("\n");
 
 	char search1[10];
-	char temp[30] = "CODE='";
-	char search2[10], search3[10];
+	char temp1[30] = "CODE='";
+	char search2[20];
+	char search3[10];
 	char temp2[30];
  
 	printf("수정할 거래처의 코드(CODE)를 입력 : ");
 	scanf("%s", search1);
 
-	strcat(temp, search1);
-	strcat(temp, "'");
-
-	char *conditional = temp;
+	strcat(temp1, search1);
+	strcat(temp1, "'");
+	
+	char* conditional = temp1;
 
 	printf("수정할 컬럼명을 입력 : ");
 	scanf("%s", search2);
@@ -203,7 +203,7 @@ void updateMaterials()
 	scanf("%s", search3);
 	strcat(search2, "='");
 	strcat(search2, search3);
-	strcat(search2, "='");
+	strcat(search2, "'");
 
 	char* set = search2;
 
@@ -218,6 +218,10 @@ void updateMaterials()
 	print_data();
 	printf("\n");
 	file_column_free();
+
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
 
 	product_list();
 }
@@ -282,13 +286,13 @@ void deleteMaterials()
 	print_data();
 	printf("\n");
 
-	char search[10];
-	char temp[20] = "CODE='";
+	char search[20];
+	char temp[30] = "CODE='";
 
 	printf("삭제할 자재품목코드를 입력 : ");
 	scanf("%s", search);
 	strcat(temp, search);
-	strcat(temp, search);
+	strcat(temp, "'");
 
 	char* conditional = temp;
 
@@ -304,8 +308,11 @@ void deleteMaterials()
 	printf("\n");
 	file_column_free();
 	
-	product_list();
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
 
+	product_list();
 }
 
 void read_CODE(char* search)
