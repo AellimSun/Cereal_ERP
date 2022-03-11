@@ -60,6 +60,9 @@
     <ClCompile Include="UI.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Order.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">
@@ -83,9 +86,6 @@
       <Filter>리소스 파일</Filter>
     </None>
     <None Include="material.dat">
-      <Filter>리소스 파일</Filter>
-    </None>
-    <None Include="test_pro_material.dat">
       <Filter>리소스 파일</Filter>
     </None>
   </ItemGroup>

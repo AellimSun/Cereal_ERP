@@ -131,7 +131,7 @@ void pro_material_use(char* p_code, int p_num) {
 	char* text2 = "'";
 	char* conditional = (char*)malloc(sizeof(text1) + sizeof(p_code) + sizeof(text2));
 	if (conditional == 0) exit(1);
-	char* select_column = "PRD_CODE,STATUS,DATE";
+	char* select_column = "PRD_CODE,STATUS,LOT";
 	char* set = "STATUS='uesed'";
 	char* CODE = p_code;
 	result* find;
@@ -149,21 +149,20 @@ void pro_material_use(char* p_code, int p_num) {
 		file_column_free();
 		return -1;
 	}
-	/*if (_update_N(conditional,set,p_num) == -1) {
+
+	if (_select(conditional, select_column, &select_result_str) == -1) {
 		printf("%s\n", err_msg);
-		
+
 		file_column_free();
 		return -1;
-	}*/
-	if (_select(conditional, select_column, &select_result_str) == -1) {
-		file_column_free();
-		return 0;
 	}
 	else {
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			printf("%s\n", err_msg);
+
 			file_column_free();
 			result_free(_result, result_count);
-			return 0;
+			return -1;
 		}
 		//update 하기
 		while (_result->next != NULL) {
@@ -171,15 +170,32 @@ void pro_material_use(char* p_code, int p_num) {
 			if (strcmp(_result->name, "STATUS") == 0) {
 				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
 				if (strcmp(*(_result->_string_data), "store") == 0) {
+					while (strcmp(_result->name,"LOT")!=0)
+					{
+						_result = _result->next;
+					}				//LOT까지 가기
+					char* lot = (char*)malloc(sizeof(_result->_string_data));
+					char* txt1 = "LOT='";
+					char* txt2 = "'";
+					char* conditional1 = (char*)malloc(sizeof(txt1)+sizeof(lot)+sizeof(txt2));
+					char* set = "STATUS = 'used_'";
+					if (conditional1 == 0) exit(1);
 					
-					char* txt1 = "DATE=";
-					char* conditional1 = (char*)malloc(sizeof(txt1)+sizeof(int));
+					strcpy(lot, *(_result->_string_data));
+
 					strcpy(conditional1, txt1);
-					strcat(conditional1, );
-					if (_update(conditional1, "SATATUS = 'used'") == -1{
+					strcat(conditional1, lot);
+
+					strcat(conditional1, txt2);
+
+					if (_update(conditional1,set) == -1){
+						printf("%s\n", err_msg);
+
 						file_column_free();
-						return 0;
+						return -1;
 					}
+
+					printf("자재수정 : %s",conditional1 );
 				}
 			}
 			_result = _result->next;
@@ -200,40 +216,40 @@ void pro_material_use(char* p_code, int p_num) {
 	result_free(_result, result_count);
 	free(conditional);
 
-	system("pause");
-	system("cls");
+	//system("pause");
+	//system("cls");
 }
 
 void init(void)
 {
-	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
+	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
 
 	char* value[30];
 
-	value[0] = "'B0001','store',22031001,'0000'";
-	value[1] = "'B0001','store',22031002,'0000'";
-	value[2] = "'B0002','store',22031001,'0000'";
-	value[3] = "'B0002','store',22031002,'0000'";
-	value[4] = "'B0002','store',22031003,'0000'";
-	value[5] = "'B0003','store',22031001,'0000'";
-	value[6] = "'B0003','store',22031002,'0000'";
-	value[7] = "'B0003','store',22031003,'0000'";
-	value[8] = "'B0003','store',22031004,'0000'";
-	value[9] = "'B0004','store',22031001,'0000'";
-	value[10] = "'B0004','store',22031002,'0000'";
-	value[11] = "'B0004','store',22031003,'0000'";
-	value[12] = "'B0004','store',22031004,'0000'";
-	value[13] = "'B0004','store',22031005,'0000'";
-	value[14] = "'C0001','store',22031001,'0000'";
-	value[15] = "'C0001','store',22031002,'0000'";
-	value[16] = "'C0001','store',22031003,'0000'";
-	value[17] = "'C0001','store',22031004,'0000'";
-	value[18] = "'C0002','store',22031001,'0000'";
-	value[19] = "'C0002','store',22031002,'0000'";
-	value[20] = "'C0002','store',22031003,'0000'";
-	value[21] = "'C0003','store',22031001,'0000'";
-	value[22] = "'C0003','store',22031002,'0000'";
-	value[23] = "'D0001','store',22031001,'0000'";
+	value[0] = "'B0001','store',22031001,'0000','L0001'";
+	value[1] = "'B0001','store',22031002,'0000','L0002'";
+	value[2] = "'B0002','store',22031001,'0000','L0003'";
+	value[3] = "'B0002','store',22031002,'0000','L0004'";
+	value[4] = "'B0002','store',22031003,'0000','L0005'";
+	value[5] = "'B0003','store',22031001,'0000','L0006'";
+	value[6] = "'B0003','store',22031002,'0000','L0007'";
+	value[7] = "'B0003','store',22031003,'0000','L0008'";
+	value[8] = "'B0003','store',22031004,'0000','L0009'";
+	value[9] = "'B0004','store',22031001,'0000','L0010'";
+	value[10] = "'B0004','store',22031002,'0000','L0011'";
+	value[11] = "'B0004','store',22031003,'0000','L0012'";
+	value[12] = "'B0004','store',22031004,'0000','L0013'";
+	value[13] = "'B0004','store',22031005,'0000','L0014'";
+	value[14] = "'C0001','store',22031001,'0000','L0015'";
+	value[15] = "'C0001','store',22031002,'0000','L0016'";
+	value[16] = "'C0001','store',22031003,'0000','L0017'";
+	value[17] = "'C0001','store',22031004,'0000','L0018'";
+	value[18] = "'C0002','store',22031001,'0000','L0019'";
+	value[19] = "'C0002','store',22031002,'0000','L0020'";
+	value[20] = "'C0002','store',22031003,'0000','L0021'";
+	value[21] = "'C0003','store',22031001,'0000','L0022'";
+	value[22] = "'C0003','store',22031002,'0000','L0023'";
+	value[23] = "'D0001','store',22031001,'0000','L0024'";
 
 
 	if (initalizing("test_pro_material") == -1) {
@@ -258,13 +274,11 @@ void init(void)
 	print_data();
 	printf("\n");
 	file_column_free();
-
-
 }
 
 void PRO_all_read() {
 	char* conditional = "*";
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
 	//char* values = "'B4001', 'store', 20220308, 'D0004'";
 	int result_count;
 	result* _result;
