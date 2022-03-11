@@ -40,10 +40,12 @@ void updateMaterials();
 void readMaterials();
 void deleteMaterials();
 
-void read_CODE();
+void read_CODE(char* search);
 void read_NAME();
 void read_MSP();
 void read_ALL();
+
+result* read_CODE2(char* search);
 
 
 void product_list()
@@ -256,7 +258,7 @@ void readMaterials()
 	switch (menu)
 	{
 	case 1:
-		read_CODE();
+		read_CODE(NULL);
 		break;
 	case 2:
 		read_NAME();
@@ -312,18 +314,17 @@ void deleteMaterials()
 
 }
 
-void read_CODE()
+void read_CODE(char* search)
 {
-	char search[5];
 	char temp[20] = "CODE='";
 
 	result* _result;
 	int result_count;
-
+	
+	char input[20];
 	printf("검색할 자재품목 코드를 입력 : ");
-	scanf("%s", search);
-
-	strcat(temp, search);
+	scanf("%s", input);
+	strcat(temp, input);
 	strcat(temp, "'");
 
 	char* conditional = temp;
@@ -356,13 +357,57 @@ void read_CODE()
 		file_column_free();
 		return -1;
 	}
-	result_print(_result, result_count);
 
+	result_print(_result, result_count);
 	printf("\n");
 	file_column_free();
 
 	product_list();
+}
 
+result* read_CODE2(char* search)
+{
+	char temp[20] = "CODE='";
+
+	result* _result;
+	int result_count;
+
+	strcat(temp, search);
+	strcat(temp, "'");
+
+	char* conditional = temp;
+	char* select_column = "CODE, NAME, BACKUP, MSP";
+
+	if (initalizing("list") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	printf("%s", conditional);
+
+	if (_select(conditional, select_column, &select_result_str) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	else
+	{
+		printf("%s\n", select_result_str);
+	}
+	if ((result_count = recv_result(&_result, select_result_str)) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+
+	file_column_free();
+	return _result;
 }
 
 void read_NAME()
