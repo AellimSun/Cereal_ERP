@@ -18,18 +18,18 @@
 //};
 
 
-typedef struct _order
-{
-
-	char* ACC_CODE; //배열명은 주소값을 가리킨다.
-	char* PRD_CODE; //배열명은 주소값을 가리킨다.
-	int O_Day;
-	int D_Day;
-	int NUM;
-	
-	struct _order* next;
-
-}Order;
+//typedef struct _order
+//{
+//
+//	char* ACC_CODE; //배열명은 주소값을 가리킨다.
+//	char* PRD_CODE; //배열명은 주소값을 가리킨다.
+//	int O_Day;
+//	int D_Day;
+//	int NUM;
+//	
+//	struct _order* next;
+//
+//}Order;
 
 //typedef struct _acc_code
 //{
@@ -181,11 +181,13 @@ void print_Node()
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
 //char* Request_Order(char* prd_code, int num)
-void Request_Order(char* prd_code, int num)
-//Plan* Request_Order(bomRes* prd_code, Plan* num)
+//void Request_Order(char* prd_code, int num)
+
+//plan구조체로 넘겨줘야한다.
+plan* Request_Order(bomRes* met_ord, plan* num)
 {
 
-	//자재구조체
+	
 	
 
 	//printf("->");
@@ -196,62 +198,71 @@ void Request_Order(char* prd_code, int num)
 
 		return -1;
 	}
-
 	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
 	insert_ord->next = NULL;
 
-	{
-		/*met
-		while (met != NULL)
-		{
 
 
-			met = met->next;
-		}*/
-	}
+
+
+	
+		//자재구조체
+		
+		bomRes* met = met_ord->next;
+
+		char* prd_code = met->CODE;
+		//int num = met->AMOUNT;
+
+		//while (met != NULL)
+		//{
+
+
+		//	met = met->next;
+		//}
+	
 
 
 	/* 조건문을 문자로 해서 파일에서 찾는게 안됨 */
 
 	/*
-		 자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
-		 거래처 파일로 이 품목코드를 넘겨줌
-	 
-	 while(1)
-	 {
-	 
-		 if(거래처파일.품목코드 == 자재.품목코드)
-		 if(strcmp(거래처파일.품목코드, 자재.품목코드) == 0)
-		 {
-				
+			자재에서 품목 코드, 거래처 코드, 수량을 받아왓다
+			거래처 파일로 이 품목코드를 넘겨줌
+
+		while(1)
+		{
+
+			if(거래처파일.품목코드 == 자재.품목코드)
+			if(strcmp(거래처파일.품목코드, 자재.품목코드) == 0)
+			{
+
 				//서칭할 구조체 필요한가?
 
-				_select("PRD_CODE = prd_code", *,&select_result_str) 
+				_select("PRD_CODE = prd_code", *,&select_result_str)
 
 				해당 품목코드를 포함하는 거래처 컬럼 전체 출력
 
 				printf("%s\n\n", select_result_str);
 
-	 
-				발주파일에 변동사항 업데이트 
-	 
+
+				발주파일에 변동사항 업데이트
+
 				발주일   납기일    품목코드   거래처코드   수량
 				================================================
-			    NULL     NULL       NULL       NULL        NULL    
-	 
+				NULL     NULL       NULL       NULL        NULL
+
 				return 자재함수로 리턴, 거래처 코드만 리턴? :: 자재팀과 상의 필요
-		 }
-		 else
-		 {
+			}
+			else
+			{
 				해당 품목을 취급하는 거래처가 존재하지 않습니다.
-				( 홈 ) 화면으로 돌아갑니다. 
-		 }
+				( 홈 ) 화면으로 돌아갑니다.
+			}
 
 
 	}
 
-	 */
-	//if (initalizing("sample_Client") == -1) 
+		*/
+		//if (initalizing("sample_Client") == -1) 
 	if (initalizing("account") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -259,6 +270,8 @@ void Request_Order(char* prd_code, int num)
 		file_column_free();
 		return -1;
 	}
+		
+
 	print_data();
 	//print_data();
 	values = malloc(sizeof(prd_code) * 3);
@@ -270,7 +283,7 @@ void Request_Order(char* prd_code, int num)
 	//printf("%s\n", values);
 	printf("추출한 데이터 확인\n");
 	if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
-	//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
+		//if (_select("*", "ACC_CODE, BN_REGI_NUM, PRD_CODE", &select_result_str) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -296,13 +309,13 @@ void Request_Order(char* prd_code, int num)
 	printf("\n\n");
 	free(values);
 
-	
+
 
 
 	//특정 컬럼 추출
 	//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
 	//메모리 핸들링이 넘 심함 수정요망
-	
+
 	if ((find = find_result(_result, "PRD_CODE")) == -1) {
 		printf("%s\n", err_msg);
 
@@ -317,9 +330,9 @@ void Request_Order(char* prd_code, int num)
 
 	printf("\n\n");
 
-	
+
 	//return ACC_CODE; :: 연결리스트 공정으로 넘기기(함수)
-	
+
 	//발주구조체 데이터 확인
 	print_Node();
 	//return main();
@@ -328,6 +341,7 @@ void Request_Order(char* prd_code, int num)
 	storage_Order(amount);
 	file_column_free();
 	result_free(_result, result_count);
+	
 	
 }
 
@@ -341,6 +355,11 @@ int storage_Order(int num)
 		file_column_free();
 		return -1;
 	}
+	else
+	{
+		print_data();
+	}
+	
 	//발주일 : 오늘 날짜, 납기일 : 내일
 	struct tm* t_order;
 	time_t base = time(NULL);
@@ -478,11 +497,13 @@ int storage_Order(int num)
 			file_column_free();
 			return -1;
 		}
+		//print_data();
 		cur = cur->next;
-	}
-	print_data();
 
-	file_column_free();
+	}
+	
+
+	//file_column_free();
 	printf("종료...\n");
 }
 

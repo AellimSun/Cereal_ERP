@@ -26,3 +26,16 @@ typedef struct Material {
 	int DATE;
 	char ACC_CODE[5];
 };
+
+//발주품목 저장 구조체
+typedef struct _order
+{
+	char* ACC_CODE; //배열명은 주소값을 가리킨다.
+	char* PRD_CODE; //배열명은 주소값을 가리킨다.
+	int O_Day;
+	int D_Day;
+	int NUM;
+
+	struct _order* next;
+
+}Order;
