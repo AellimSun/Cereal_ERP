@@ -1,4 +1,6 @@
 #include "cereal.h"
+#include <string.h>
+
 
 #define PRO_FILE_NAME "process"
 #define MAT_FILE_NAME "material"
@@ -23,8 +25,8 @@ void bg_process(void);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);		// 부족한 부품 생성/ 자재에서 사용함으로 바꿈
 
-void pro_material_create(req_code* p_code);
-void pro_material_use();
+void pro_material_create(char* p_code);
+void pro_material_use(char* p_code);
 //give_LOT();		// 생산품 LOT번호 생성
 //produce_product();		//생산계획 품목 자재에 생산 수량 업로드
 req_code* New(req_code* head, int num, char* code);
@@ -117,16 +119,22 @@ void pro_material_create() {
 	system("pause");
 	system("cls");
 }
-void pro_material_use(req_code* p_code) {
+void pro_material_use(char* p_code) {
 
-	char* conditional = "CODE='";
-	char* set = "DATE";
+	char* text1 = "PRD_CODE = '";
+	char* text2 = "'";
+	char* conditional = (char*)malloc(sizeof(text1) + sizeof(p_code) + sizeof(text2));
+	if (conditional == 0) exit(1);
+
+	char* set = "STATUS,DATE";
+	char* CODE = p_code;
 	result* find;
 	result* _result;
 	int result_count;
 
-	strcat(conditional, p_code);
-	strcat(conditional, "'");
+	strcpy(conditional, text1);
+	strcat(conditional, CODE);
+	strcat(conditional, text2);
 
 
 	if (initalizing("test_pro_material") == -1) {
@@ -137,7 +145,7 @@ void pro_material_use(req_code* p_code) {
 	}
 	if (_select(conditional,set,&select_result_str) == -1) {
 		printf("%s\n", err_msg);
-
+		
 		file_column_free();
 		return -1;
 	}
@@ -150,6 +158,7 @@ void pro_material_use(req_code* p_code) {
 		return -1;
 	}
 	result_print(_result, result_count);
+	printf("\n\n");
 
 	if ((find = find_result(_result, "DATE")) == -1)
 	{
@@ -207,7 +216,7 @@ void init(void)
 	}
 	int i = 0;
 
-	while (i < 23)
+	while (i <= 23)
 	{
 		if (_insert(value[i]) == -1) {
 			printf("%s\n", err_msg);
