@@ -1,17 +1,5 @@
+#include <time.h>
 #include "cereal.h"
-
-typedef struct Material {
-	char PRD_CODE[5];
-	char STATUS[5];
-	int DATE;
-	char ACC_CODE[5];
-};
-
-typedef struct _bomRes {
-	char* CODE;
-	int AMOUNT;
-	struct _bomRes* next;
-}bomRes;
 
 void stock();
 void all_read();
@@ -19,6 +7,7 @@ void code_read();
 void material_create();
 void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE);
 void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
+void freeNodes(bomRes* obj);
 
 void stock()
 {
@@ -64,9 +53,10 @@ void stock()
 	}
 }
 
+//모든 재고 조회
 void all_read() {
 	char* conditional = "*";
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
 	//char* values = "'B4001', 'store', 20220308, 'D0004'";
 	int result_count;
 	result* _result;
@@ -107,8 +97,9 @@ void all_read() {
 	stock();
 }
 
+//코드번호로 검색하여 조회
 void code_read(char* condition) {
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
+	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
 	int result_count;
 	result* _result;
 	char* conditional = condition;
@@ -129,7 +120,7 @@ void code_read(char* condition) {
 		conditional = tmpCondition;
 	}
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -169,6 +160,7 @@ void material_create() {
 	char STATUS[5];
 	char DATE[8];
 	char ACC_CODE[5];
+	char LOT[5];
 
 	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리 -> create\n\n");
 
@@ -191,6 +183,14 @@ void material_create() {
 	scanf("%s", ACC_CODE);
 	printf("\n\n");
 
+	//LOT번호 만들기
+	int random = 0;
+	char tmpRand[4];
+	srand(time(NULL));
+	random = (rand() % 10000);
+	strcpy(LOT, "L");
+	strcat(LOT, itoa(random, tmpRand, 10));
+
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
 	strcat(values, "', '");
@@ -199,14 +199,14 @@ void material_create() {
 	strcat(values, DATE);
 	strcat(values, ", '");
 	strcat(values, ACC_CODE);
+	strcat(values, "', '");
+	strcat(values, LOT);
 	strcat(values, "'");
 	printf("\n");
-	printf("%s", values);
-	printf("\n");
 
-	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6)");
+	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -232,39 +232,42 @@ void material_create() {
 //생산계획 입력 후 받아와서 재고 확인
 void confirm_Material(plan* p) {
 	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
+	//bom 트리를 가공하기 쉽게 가져올 리스트
 	bomRes* result = (bomRes*)malloc(sizeof(bomRes));
 	result->next = NULL;
-	bomRes* head1 = result;
+	bomRes* head1 = result;			//헤드로 돌아오게 할수있도록 헤드 위치 저장
+
+	//원재료(단말노드)만 저장할 리스트
 	bomRes* result2 = (bomRes*)malloc(sizeof(bomRes));
 	result2->next = NULL;
-	bomRes* head2 = result2;
+	bomRes* head2 = result2;		//헤드로 돌아오게 할수있도록 헤드 위치 저장
 
 	//BOM 조회
-	//char* con = "ROOT_CODE = 'A0002'";
-	char* code = p->CODE;
-	BOM_TREE* res = BOM_SEARCH(code);
-	//BOM_Forward_PrintTree(res, res->NODE_CODE);
+	BOM_TREE* res = BOM_SEARCH(p->CODE);
 
+	//재귀적으로 모든 노드 훓어서 result리스트에 담기
 	get_Materials_From_Bom(res, res->NODE_CODE, result);
 
-	/*bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
-	newNode->AMOUNT = 0;
-	newNode->CODE = result->next->CODE;
-	newNode->next = NULL;
-	result2->next = newNode;*/
+	//원재료(단말노드)만 따로 리스트 만들기
 	result = result->next;
 	int flag = 1;
 	while (result->next != NULL) {
+		//원재료 리스트의 포인터 헤더로 다시 옮기기
 		result2 = head2;
 		while (result2->next != NULL) {
 			result2 = result2->next;
+			//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
+			//원재료 리스트에 항목 추가할수 있도록 flag 세우기
 			flag = 1;
+			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 기존에 숫자만 더해줌
 			if (strcmp(result2->CODE, result->CODE) == 0) {
 				result2->AMOUNT += result->AMOUNT;
 				flag = 0;
 				break;
 			}
 		}
+		//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
+		//원재료 리스트에 항목 추가
 		if (flag == 1) {
 			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
 			newNode->CODE = result->CODE;
@@ -274,7 +277,10 @@ void confirm_Material(plan* p) {
 		}
 		result = result->next;
 	}
+	//트리를 그대로 담아온 리스트는 이제 필요없으므로 free
+	freeNodes(head1);
 
+	//생산계획의 수량에 맞추려면 필요한 원재료 개수 출력
 	printf("\t필요\n");
 	bomRes* list = head2;
 	while (list->next != NULL) {
@@ -288,6 +294,7 @@ void confirm_Material(plan* p) {
 		printf("%s : %d개\n", list->CODE, list->AMOUNT);
 	}
 
+	//현재 가지고있는 재고의 개수 출력
 	printf("\n\t현재\n");
 	list = head2;
 	while (list->next != NULL) {
@@ -305,6 +312,7 @@ void confirm_Material(plan* p) {
 	system("pause");
 	system("cls");
 
+	//원자재 - 재고수량 = 부족한 항목 출력
 	bomRes* result3 = (bomRes*)malloc(sizeof(bomRes));
 	result3->next = NULL;
 	printf("현재 부족한 항목은\n\n");
@@ -314,6 +322,7 @@ void confirm_Material(plan* p) {
 		bomRes* newnode = (bomRes*)malloc(sizeof(bomRes));
 		newnode->CODE = list->CODE;
 		int planedAmt = atoi(p->PLAN_PRODUCTION);
+		//findStock(품목명)으로 재고가 현재 몇개인지 세기
 		int stock = findStock(list->CODE) * planedAmt;			//현재
 		int need = list->AMOUNT;
 		newnode->AMOUNT = need - stock;
@@ -327,14 +336,15 @@ void confirm_Material(plan* p) {
 	}
 
 	char input;
-	printf("입니다. 주문하시겠습니까?(y / n)");
+	printf("입니다. 주문하시겠습니까?(y / n) : ");
 	scanf("%c", &input);
 
 	if (input == 'y') {
-		//발주로 보내기.....
+		//발주로 보내기
+		Request_Order(result3, p);
 	}
 	else {
-		printf("취소를 선택하셨습니다.\n 작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
+		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
 		system("pause");
 		system("cls");
 		production_menu();
@@ -342,17 +352,18 @@ void confirm_Material(plan* p) {
 	
 }
 
+//해당 코드의 재고가 몇개인지 세어서 리턴
 int findStock(char* code) {
 	int res = 0;
 	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE";
 	int result_count;
 	result* _result;
-	char* conditional = (char*)malloc(sizeof(char));
+	char conditional[50];
 	strcpy(conditional, "PRD_CODE = '");
 	strcat(conditional, code);
 	strcat(conditional, "'");
 
-	if (initalizing("D:\\visual studio\\Sources\\Repos\\Cereal_ERP\\material") == -1) {
+	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -369,18 +380,23 @@ int findStock(char* code) {
 			result_free(_result, result_count);
 			return 0;
 		}
+		//재고 계산하는 부분
 		while (_result->next != NULL) {
+			//현재 노드의 컬럼명이 STATUS일 경우
 			if (strcmp(_result->name, "STATUS") == 0) {
-				res++;
+				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
+				if (strcmp(*(_result->_string_data), "store") == 0) {
+					//재고 +1
+					res++;
+				}
 			}
+			_result = _result->next;
 		}
-		result_print(_result, result_count);
 
 		return res;
 	}
 
 	file_column_free();
-	free(conditional);
 	result_free(_result, result_count);
 }
 
@@ -417,4 +433,13 @@ void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth, bomRes* result)
 	}
 	if (CurNode->RightSibling != NULL) // 형제 존재시
 		_get_Materials_From_Bom(CurNode->RightSibling, Depth, result); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
+}
+
+void freeNodes(bomRes* obj) {
+	while (obj->next != NULL) {
+		obj = obj->next;
+		bomRes* tmp = obj;
+		obj = obj->next;
+		free(tmp);
+	}
 }

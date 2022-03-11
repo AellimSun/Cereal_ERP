@@ -887,6 +887,7 @@ int _select(char* conditional, char* select, char** result) {
 	int result_count = 0;
 
 	strcpy(_conditional, conditional);
+	
 	strcpy(_select, select);
 
 
