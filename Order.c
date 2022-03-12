@@ -85,28 +85,6 @@ void creat_Order_List(Order* head, result* result_head, int num)
 
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
-void material_to_prosess(plan* head, bomRes* met)
-{
-	plan* newNode = malloc(sizeof(plan));
-	if (newNode == NULL)
-	{
-		return -1;
-	}
-
-	newNode->CODE = met->CODE;
-	newNode->next = NULL;
-	newNode->PLAN_PRODUCTION = 0;
-	newNode->values = met->AMOUNT;
-
-
-	newNode->next = head->next;
-	head->next = newNode;
-
-
-
-}
-
-
 void Request_Order(bomRes* met_ord)
 {
 
