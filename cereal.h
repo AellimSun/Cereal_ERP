@@ -43,3 +43,12 @@ typedef struct _order
 }Order;
 char LOT[5];
 
+//거래처 저장 구조체
+typedef struct Accontnode {
+	char ACC_CODE[10];
+	char BN_REGI_NUM[10];
+	char PRD_CODE[10];
+	char RorD[5];
+	struct Accountnode* next;
+}Anode;
+
