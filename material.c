@@ -467,8 +467,11 @@ void confirm_Material(plan* p) {
 	//트리를 그대로 담아온 리스트는 이제 필요없으므로 free
 	freeNodes(head1);
 
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 재고확인\n\n");
 	//생산계획의 수량에 맞추려면 필요한 원재료 개수 출력
-	printf("\t필요\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t필요\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	bomRes* list = head2;
 	while (list->next != NULL) {
 		list = list->next;
@@ -476,26 +479,41 @@ void confirm_Material(plan* p) {
 		//char* name = (char*)malloc(sizeof(char));
 		list->AMOUNT *= planedAmt;
 
-		printf("%s : %d개\n", list->CODE, list->AMOUNT);
+		printf("\t\t\t\t%s(", list->CODE);
+		read_CODE2(list->CODE);
+		printf(") : %d개\n", list->AMOUNT);
 	}
 
 	//현재 가지고있는 재고의 개수 출력
-	printf("\n\t현재\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t현재\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	list = head2;
 	while (list->next != NULL) {
 		list = list->next;
 		int stock = findStock(list->CODE);
 
-		printf("%s : %d개\n", list->CODE, stock);
+		printf("\t\t\t\t%s(", list->CODE);
+		read_CODE2(list->CODE);
+		printf(") : %d개\n", stock);
 	}
 
 	system("pause");
 	system("cls");
 
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 재고확인\n\n");
+
+	printf("\n\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|입력한 계획을 실행하시겠습니까? (Y/N)  |\n");
+	printf("\t\t\t-----------------------------------------\n");
+	printf("\t\t\t\t 입력 :\n");
+
 	//원자재 - 재고수량 = 부족한 항목 출력
 	bomRes* result3 = (bomRes*)malloc(sizeof(bomRes));
 	result3->next = NULL;
-	printf("현재 부족한 항목은\n\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t부족\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	list = head2;
 	while (list->next != NULL) {
 		list = list->next;
@@ -515,17 +533,21 @@ void confirm_Material(plan* p) {
 
 		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
 
-		printf("%s : %d개\n", newnode->CODE, newnode->AMOUNT);
+		printf("\t\t\t\t%s(", newnode->CODE);
+		read_CODE2(newnode->CODE);
+		printf(") : %d개\n", newnode->AMOUNT);
 	}
 
 	//freeNodes(result2);
 
+
+	gotoxy(40, 7);
 	getchar();
 	char input;
-	printf("입니다. 주문하시겠습니까?(y / n) : ");
+	//printf("입니다. 주문하시겠습니까?(y / n) : ");
 	scanf("%c", &input);
 
-	if (input == 'y') {
+	if (input == 'Y') {
 		//발주로 보내기
 		Request_Order(result3);
 
@@ -535,12 +557,18 @@ void confirm_Material(plan* p) {
 
 		//공정으로 보내기
 		system("cls");
-		printf("발주한 재고 기록 작성을 완료했습니다.\n");
+		printf("\n\t\t\t-----------------------------------------\n");
+		printf("\t\t\t| 발주한 재고 기록 작성을 완료했습니다! |\n");
+		printf("\t\t\t-----------------------------------------\n");
 		system("pause");
 		process(result3,p);
 	}
 	else {
-		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
+		system("cls");
+		printf("\n\t\t\t-----------------------------------------\n");
+		printf("\t\t\t|\t\t취소를 선택하셨습니다.\t|\n");
+		printf("\t\t\t|\t생산 계획 메뉴로 돌아갑니다.\t|\n");
+		printf("\t\t\t-----------------------------------------\n");
 		system("pause");
 		system("cls");
 		production_menu();
