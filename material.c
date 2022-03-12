@@ -323,6 +323,9 @@ void confirm_Material(plan* p) {
 		int stock = findStock(list->CODE);			//ÇöÀç
 		int need = list->AMOUNT;
 		newnode->AMOUNT = need - stock;
+		if (newnode->AMOUNT < 0) {
+			newnode->AMOUNT = 0;
+		}
 
 		newnode->next = result3->next;
 		result3->next = newnode;
