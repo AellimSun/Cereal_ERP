@@ -6,9 +6,6 @@
 #define MAT_FILE_NAME "test_pro_material"
 #define BOM_FILE_NAME "BOM_SAMPLE_3"
 
-#define PLAN_NUM 100
-#define PLAN_CODE "A1001"
-
 typedef struct _process {
 	int data;
 	struct _process* next;
@@ -25,7 +22,7 @@ void PRO_all_read();
 void BOM_read();
 
 void bg_process(plan* prd_plan);
-void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
+void check_parts(req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
 void produce_product(char* p_code, int p_num);		//  생산계획따라 품목 자재에 생산 수량 업로드
 void pro_material_create(char* p_code);
@@ -57,17 +54,12 @@ void process(void)
 	bg_process(tmp);
 
 	main();
-}//
+}
 
 void bg_process(plan* prd_plan)
 {
 	char* p_code = prd_plan->CODE;
 	int p_num = atoi(prd_plan->PLAN_PRODUCTION);
-
-	BOM_TREE* bom_res;
-	bom_res = BOM_SEARCH(p_code);
-	//BOM_read();
-	//system("pause");
 
 	req_code* mat_head = (req_code*)malloc(sizeof(req_code));
 	if (mat_head == NULL) exit(1);
@@ -76,23 +68,17 @@ void bg_process(plan* prd_plan)
 	mat_head->next = NULL;
 
 	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
-	//printf("자재 목록\n");
-	//PRO_all_read();
 
-	check_parts(PLAN_NUM, bom_res, mat_head);			//부족한 제작부품 개수 파악
+	check_parts(mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
-	//confirm_produce();		//작업지시 확정 - 위에 있는지 확인
 	produce_product(p_code,p_num);		//생산계획 품목 생산 및 등록
-	//pro_material_create();
 
-	//printf("자재 목록\n");
-	//PRO_all_read();
 	system("pause");
 
 	req_code_free_Head(mat_head);
 }
 
-void check_parts(int num, char* bom_res, req_code* head)
+void check_parts(req_code* head)
 {
 	//_BOM_Backward_PrintTree();
 
