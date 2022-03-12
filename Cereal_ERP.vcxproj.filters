@@ -75,4 +75,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="process.dat">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="BOM_SAMPLE_3.dat">
+      <Filter>리소스 파일</Filter>
+    </None>
+    <None Include="material.dat">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
 </Project>

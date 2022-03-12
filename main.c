@@ -121,7 +121,7 @@ void production_management(void)
 	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|      1. 기초정보관리      |\n");
+	printf("\t\t\t|      1.기초정보관리       |\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.생산계획           |\n");
 	printf("\t\t\t-----------------------------\n");
@@ -168,16 +168,16 @@ void order(void)
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|    1. 발주내역 전체 조회  |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      2.( 작업중 )         |\n");
+		printf("\t\t\t|                           |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      3.( 작업중 )         |\n");
+		printf("\t\t\t|                           |\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|       0. 시작메뉴         |\n");
 		printf("\t\t\t-----------------------------\n\n");
 
 		printf("\t\t\t\t 입력 :\n");
 		printf("\t\t\t\t        ^");
-		gotoxy(40, 13);
+		gotoxy(40, 15);
 		scanf("%d", &input);
 		system("cls");
 		switch (input)
@@ -196,29 +196,7 @@ void order(void)
 			main_manu();
 		}
 
-		//원자재?
 
-		// 파일 위치 :: 초기화한다. 저장소 지정
-		//if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Order") == -1) {
-		//if (initalizing("account") == -1)
-		//{
-		//	printf("%s\n", err_msg);
-
-		//	file_column_free();
-		//	return -1;
-		//}
-
-
-		//Request_Order("D201");
-
-		//printf("1\n");
-		//storage_Order("003", 5);
-		//printf("return\n");
-		//print_data();
-
-		//file_column_free();
-
-	//}
 }
 void delivery(void)
 {
@@ -243,14 +221,12 @@ void base_information(void)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.BOM 조회           |\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|      3.자재품목 리스트    |\n");
-	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      0.이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
 	printf("\t\t\t\t 입력 :\n");
 	printf("\t\t\t\t        ^");
-	gotoxy(40, 15);
+	gotoxy(40, 13);
 
 	scanf("%d", &input);
 	system("cls");
@@ -258,19 +234,12 @@ void base_information(void)
 	{
 	case 1:
 	{
-
-
+		BOM_record_main();
 		break;
 	}
 	case 2:
 	{
 		BOM_search_main();
-
-
-		/*char* con = "A0002";
-		BOM_TREE* res = BOM_SEARCH(con);
-		BOM_Forward_PrintTree(res, con);*/
-
 		break;
 	}
 	case 3:
@@ -279,13 +248,12 @@ void base_information(void)
 		break;
 	}
 	case 0:
-		material_management();
+		production_management();
 		break;
 	}
-	
 }
 
-void process(void)
-{
-
-}
+//void process(void)
+//{
+//
+//}

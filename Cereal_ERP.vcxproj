@@ -159,6 +159,11 @@
     <ClInclude Include="local.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="BOM_SAMPLE_3.dat" />
+    <None Include="material.dat" />
+    <None Include="process.dat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

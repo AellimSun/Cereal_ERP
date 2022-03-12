@@ -18,7 +18,6 @@ typedef struct Plan
 typedef struct _bomRes {
 	char* CODE;
 	int AMOUNT;
-	char* ACC_CODE;
 	struct _bomRes* next;
 }bomRes;
 
@@ -33,14 +32,23 @@ typedef struct Material {
 //발주품목 저장 구조체
 typedef struct _order
 {
-	char* ACC_CODE; //배열명은 주소값을 가리킨다.
-	char* PRD_CODE; //배열명은 주소값을 가리킨다.
-	int O_Day;		//발주일
-	int D_Day;		//납기일
-	int NUM;		//수량
+	char* ACC_CODE; //거래처 코드
+	char* PRD_CODE; //품목코드
+	//int O_Day;		//발주일
+	//int D_Day;		//납기일
+	//int NUM;		//수량
 
 	struct _order* next;
 
 }Order;
 char LOT[5];
+
+//거래처 저장 구조체
+typedef struct Accontnode {
+	char ACC_CODE[10];
+	char BN_REGI_NUM[10];
+	char PRD_CODE[10];
+	char RorD[5];
+	struct Accountnode* next;
+}Anode;
 

@@ -49,15 +49,15 @@ bool isEmpty(Qlink* aql)
 	else return false;
 }
 
-bool isFull(Qlink* aql)
-{
-	if (aql->rear >= 3)
-	{
-		printf("Queue is full");
-		return true;
-	}
-	else return false;
-}
+//bool isFull(Qlink* aql)
+//{
+//	if (aql->rear >= 3)
+//	{
+//		printf("Queue is full");
+//		return true;
+//	}
+//	else return false;
+//}
 
 void enQueue(Qlink* aql, element adata)
 {
@@ -101,7 +101,7 @@ void printQ(Qlink* aql)
 	Node* curr = aql->front;
 	int j = 0;
 
-	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 새 계획 수립-> 계획 목록 열람\n\n");
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 계획 목록 열람\n\n");
 	if (curr->que == NULL)
 	{
 		
@@ -208,7 +208,7 @@ void production_plan(void)
 	//print_data();
 	file_column_free();
 
-	//confirm_Material(values);
+	confirm_Material(values);
 
 	printf("\n");
 
