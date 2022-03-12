@@ -85,11 +85,11 @@ void all_read() {
 			file_column_free();
 			return -1;
 		}
+		file_column_free();
 		result_print(_result, result_count);
 		printf("\n\n");
 	}
 
-	file_column_free();
 	result_free(_result, result_count);
 
 	system("pause");
@@ -299,10 +299,7 @@ void confirm_Material(plan* p) {
 	list = head2;
 	while (list->next != NULL) {
 		list = list->next;
-		int planedAmt = atoi(p->PLAN_PRODUCTION);
-		//char* name = (char*)malloc(sizeof(char));
-		
-		int stock = findStock(list->CODE)*planedAmt;
+		int stock = findStock(list->CODE);
 
 		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
 
@@ -323,7 +320,7 @@ void confirm_Material(plan* p) {
 		newnode->CODE = list->CODE;
 		int planedAmt = atoi(p->PLAN_PRODUCTION);
 		//findStock(품목명)으로 재고가 현재 몇개인지 세기
-		int stock = findStock(list->CODE) * planedAmt;			//현재
+		int stock = findStock(list->CODE);			//현재
 		int need = list->AMOUNT;
 		newnode->AMOUNT = need - stock;
 
@@ -335,13 +332,79 @@ void confirm_Material(plan* p) {
 		printf("%s : %d개\n", newnode->CODE, newnode->AMOUNT);
 	}
 
+	//freeNodes(result2);
+
 	char input;
 	printf("입니다. 주문하시겠습니까?(y / n) : ");
 	scanf("%c", &input);
 
 	if (input == 'y') {
+		char values[50];
+		char PRD_CODE[5];
+		char STATUS = "store";
+		char DATE[8];
+		char ACC_CODE[5];
+		char LOT[5];
+
+		struct tm* t;
+		time_t timer;
+
+		timer = time(NULL);    // 현재 시각을 초 단위로 얻기
+		t = localtime(&timer); // 초 단위의 시간을 분리하여 구조체에 넣기
+
+		//DATE에 오늘날짜 집어넣기(20001010형식)
+		sprintf(DATE, "%04d%02d%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
+
 		//발주로 보내기
-		Request_Order(result3, p);
+		Request_Order(result3);
+
+		if (initalizing("material") == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		//발주한 품목 자재에 insert
+		list = result3;
+		while (list->next != NULL) {
+			list = list->next;
+			for (int i = 0; i < list->AMOUNT; i++) {
+				strcpy(PRD_CODE, list->CODE);
+				strcpy(ACC_CODE, list->ACC_CODE);
+
+				//LOT번호 만들기
+				int random = 0;
+				char tmpRand[4];
+				srand(time(NULL));
+				random = (rand() % 10000);
+				strcpy(LOT, "L");
+				strcat(LOT, itoa(random, tmpRand, 10));
+
+				strcpy(values, "'");
+				strcat(values, PRD_CODE);
+				strcat(values, "', '");
+				strcat(values, STATUS);
+				strcat(values, "', ");
+				strcat(values, DATE);
+				strcat(values, ", '");
+				strcat(values, ACC_CODE);
+				strcat(values, "', '");
+				strcat(values, LOT);
+				strcat(values, "'");
+
+				if (_insert(values) == -1) {
+					printf("%s\n", err_msg);
+
+					file_column_free();
+					return -1;
+				}
+			}
+		}
+
+		file_column_free();
+		//freeNodes(result3);
+
+		//공정으로 보내기
 	}
 	else {
 		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
@@ -388,11 +451,14 @@ int findStock(char* code) {
 				if (strcmp(*(_result->_string_data), "store") == 0) {
 					//재고 +1
 					res++;
+					break;
 				}
 			}
 			_result = _result->next;
 		}
 
+		file_column_free();
+		result_free(_result, result_count);
 		return res;
 	}
 
@@ -415,12 +481,6 @@ void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE, bomRes* resu
 
 void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth, bomRes* result)
 {
-	//int i = 0; // 들여쓰기로 트리의 Depth 표현 
-	//for (i = 0; i < Depth; i++)
-	//   printf("   ");
-
-	printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
-
 	if (CurNode->LeftChild != NULL) // 차일드 존재시
 		_get_Materials_From_Bom(CurNode->LeftChild, Depth + 1, result); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
 	
