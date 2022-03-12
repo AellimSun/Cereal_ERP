@@ -142,7 +142,7 @@ void pro_material_use(char* p_code, int p_num) {
 	if (conditional == 0) exit(1);
 
 	char* select_column = "PRD_CODE,STATUS,LOT";
-	char* set = "STATUS='uesed'";
+	char* set = "STATUS='_used'";
 	char* CODE = p_code;
 	result* _result;
 	result* cur;
