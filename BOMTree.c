@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "cereal.h"
 #include "BOMTree.h"
 #include "UI.h"
@@ -7,8 +6,6 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <windows.h>
-#pragma warning (disable : 6385)
-#pragma warning (disable : 6386)
 
 #define FILE_NAME "bom"
 
@@ -20,7 +17,7 @@ void BOM_search_main()
 
 	do
 	{
-		if (input < 0 || input > 3)
+		if (input < -1 || input > 3)
 		{
 			printf("잘못된 입력입니다. 다시 입력해주세요");
 			Sleep(1500);
@@ -44,10 +41,28 @@ void BOM_search_main()
 		gotoxy(40, 13);
 
 		scanf("%d", &input);
-	}while (input < 0 || input>2);
+	}while (input < -1 || input>2);
 
 	switch (input)
 	{
+	case -1:
+	{
+		system("cls");
+		if (initalizing(FILE_NAME) == -1)
+		{
+			printf("bom파일이 존재하지 않습니다\n");
+
+			file_column_free();
+			exit(1);
+		}
+		print_data();
+		printf("\n");
+		file_column_free();
+
+		system("pause");
+		BOM_search_main();
+	}
+	break;
 	case 1:
 	{
 		//1.BOM 정전개
@@ -97,7 +112,7 @@ void BOM_search_main()
 		if (!list_count)
 			return;
 
-		printf("BOM 정전개 할 품명코드를 입력하세요. ");
+		printf("BOM 역전개 할 품명코드를 입력하세요. ");
 		scanf("%s", &input_temp);
 
 		char* search_code = (char*)malloc(sizeof(input_temp));
@@ -501,8 +516,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(ROOT_CODE, cur->_string_data[i]);
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "NODE_CODE") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -513,8 +527,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(NODE_CODE, cur->_string_data[i]);
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "PRODUCT_NAME") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -525,8 +538,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(PRODUCT_NAME, cur->_string_data[i]);
 
-
-		result* cur = _result;
+				result* cur = _result;
 		while ((strcmp(cur->name, "REQ_NUM") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -537,8 +549,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		REQ_NUM = cur->_int_data[i];
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "M_CODE") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -799,7 +810,7 @@ BOM_LIST* BOM_RESEARCH(char* _conditional)
 	ROOT_LIST =	Make_LIST(_result, result_count, ROOT_LIST, _conditional);
 
 	file_column_free();
-	result_free(_result, result_count); //애매...
+	result_free(_result, result_count);
 	return ROOT_LIST;
 }
 
@@ -932,20 +943,15 @@ BOM_LIST* BOM_CreateNode_list(BOM_LIST* list, Element1* ROOT_CODE, Element1* NOD
 	newNode->pre = NULL;
 
 	if (list == NULL)
-	{
 		list = newNode;
-	}
 	else
 	{
 		BOM_LIST* cur = list;
 		while (cur->next != NULL)
-		{
 			cur = cur->next;
-		}
 		cur->next = newNode;
 		newNode->pre = cur;
 	}
-
 	return list;
 }
 
@@ -1097,45 +1103,31 @@ void BOM_record_main()
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|      1.BOM 신규등록       |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      2.BOM 수정           |\n");
-		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      3.BOM 삭제           |\n");
-		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|      0.이전으로           |\n");
 		printf("\t\t\t-----------------------------\n\n");
 		printf("\t\t\t\t 입력 :\n");
 		printf("\t\t\t\t        ^");
-		gotoxy(40, 15);
+		gotoxy(40, 11);
 
 		scanf("%d", &input);
-	} while (input < 0 || input > 3);
+	} while (input < -1 || input > 1);
 
 
 	switch (input)
 	{
+	case -1:
+	{
+		//1.BOM 파일 초기화
+		init_bom();
+		system("pause");
+		system("cls");
+		BOM_record_main();
+	}
+	break;
 	case 1:
 	{
 		//1.BOM 신규등록 
 		BOM_Create_main();
-		system("pause");
-		system("cls");
-		BOM_record_main();
-	}
-	break;
-	case 2:
-	{
-		//2.BOM 수정
-		BOM_Update_main();
-		system("pause");
-		system("cls");
-		BOM_record_main();
-	}
-	break;
-	case 3:
-	{
-		//3.BOM 삭제 
-		BOM_Delete_main();
-		system("pause");
 		system("cls");
 		BOM_record_main();
 	}
@@ -1152,7 +1144,8 @@ void BOM_record_main()
 
 void BOM_Create_main()
 {
-	char input_code[10];
+	char input_code1[10] = { 0 };
+	char input_code2[10] = { 0 };
 
 	//모코드 검색
 	do
@@ -1170,60 +1163,385 @@ void BOM_Create_main()
 		printf("\t\t\t   입력 :\n");
 		printf("\t\t\t          ^");
 		gotoxy(34, 10);
-		scanf("%s", input_code);
+		scanf("%s", input_code1);
 
-		if (!code_to_name(input_code))
+		if (strcmp(input_code1, "`") == 0)
+			break;
+
+		if (!code_to_name(input_code1))
 		{
 			printf("\t\t\t  검색된 결과가 없습니다.\n");
 			Sleep(1500);
 		}
-		if (!Show_BOM_CODE_list(input_code))
+		else if (!Show_BOM_CODE_list(input_code1))
 		{
 			printf("\t\t\t  이미 등록된 정보 입니다.\n");
 			printf("\t\t\t  삭제 후 접근하세요.!\n");
 			Sleep(1500);
 		}
-	} while (!code_to_name(input_code) || !Show_BOM_CODE_list(input_code));
+	} while (!code_to_name(input_code1) || !Show_BOM_CODE_list(input_code1));
+
+
+	if (strcmp(input_code1, "`") == 0)
+		return;
 
 	Element1 ROOT_CODE[6] = { 0 };
-	strcpy(ROOT_CODE, input_code);
+	strcpy(ROOT_CODE, input_code1);
+
+	Element1 _NODE_CODE[10][6] = { 0 };
+	int index = 0;
 
 	//자코드 검색
 	do
 	{
-		system("cls");
+		if(index == 0)
+			system("cls");
+
+		gotoxy(0, 0);
 		printf("위치 : 기초정보관리 -> BOM 등록 -> BOM 신규등록 -> 모코드 검색 -> 자코드 검색\n\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|*                         *|\n");
-		printf("\t\t\t|     BOM 파일에 신규       |\n");
-		printf("\t\t\t|     등록 할 제품의 품명   |\n");
+		printf("\t\t\t|     %s의 자코드로      |\n", ROOT_CODE);
+		printf("\t\t\t|     등록할 제품의 품명    |\n");
 		printf("\t\t\t|     코드를 입력하세요.    |\n");
-		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t|                           |\n");
+		printf("\t\t\t|*    등록 완료 키 : `     *|\n");
 		printf("\t\t\t-----------------------------\n\n");
-
 		printf("\t\t\t   입력 :\n");
 		printf("\t\t\t          ^");
-		gotoxy(34, 10);
-		scanf("%s", input_code);
+		gotoxy(34, 11);
+		printf("        ");
+		gotoxy(34, 11);
+		scanf("%s", input_code2);
 
-		if (!code_to_name(input_code))
+		if (strcmp(input_code2, "`") == 0)
+			break;
+
+		if (!code_to_name(input_code2))
 		{
 			printf("\t\t\t  검색된 결과가 없습니다.\n");
 			Sleep(1500);
 		}
-		if (!Show_BOM_BACK_ABLE_NODE_CODE_list(input_code))
+		if (!Show_BOM_BACK_ABLE_NODE_CODE_list(input_code2))
 		{
 			printf("\t\t\t  이미 등록된 정보 입니다.\n");
 			printf("\t\t\t  삭제 후 접근하세요.!\n");
 			Sleep(1500);
 		}
-	} while (!code_to_name(input_code) || !Show_BOM_BACK_ABLE_NODE_CODE_list(input_code));
+		strcpy(_NODE_CODE[index], input_code2);
+		int count = 0;
+
+		printf("\n\t\t\t-----------------------------\n");
+		while (count <= index)
+		{
+			printf("\t\t\t|*     자코드 : %s       *|\n", _NODE_CODE[count]);
+			printf("\t\t\t-----------------------------\n");
+			count++;
+		}
+
+		index++;
+	} while (!code_to_name(input_code2) || !Show_BOM_BACK_ABLE_NODE_CODE_list(input_code2) || strcmp(input_code2, "`") != 0);
 
 
+	Element2 req_num[10] = { 0 };
+	for (int i = 0; i < index; i++)
+	{
+		if (i == 0)
+			system("cls");
+
+		gotoxy(0, 0);
+		printf("위치 : BOM 등록 -> BOM 신규등록 -> 모코드 검색 -> 자코드 검색 -> 필요수량 입력\n\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t|     %s의 필요수량을    |\n", _NODE_CODE[i]);
+		printf("\t\t\t|     입력하세요.           |\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t-----------------------------\n\n");
+		printf("\t\t\t   입력 :\n");
+		printf("\t\t\t          ^");
+		gotoxy(34, 9);
+		printf("        ");
+		gotoxy(34, 9);
+		scanf("%d", &req_num[i]);
+
+		int count = 0;
+
+		printf("\n\t\t\t-----------------------------\n");
+		while (count <= i)
+		{
+			printf("\t\t\t|*   자코드%d 필요수량 : %d  *|\n", count+1, req_num[count]);
+			printf("\t\t\t-----------------------------\n");
+			count++;
+		}
+	}
+
+	Sleep(500);
+	system("cls");
+	printf("위치 : BOM 등록 -> BOM 신규등록 -> 모코드 검색 -> 자코드 검색 -> 필요수량 입력\n\n");
+	printf("\t\t   ------------------------------------------\n");
+	printf("\t\t   ROOT_CODE     NODE_CODE   REQ_NUM   M_CODE\n");
+	printf("\t\t   ==========================================\n");
+
+	printf("\t\t     %s\t  %s\t\t%d\t%s\n", ROOT_CODE, input_code1, 1, "(NULL)");
+	for (int i = 0; i < index; i++)
+		printf("\t\t     %s\t  %s\t\t%d\t%s\n", ROOT_CODE, _NODE_CODE[i], req_num[i], ROOT_CODE);
+	printf("\t\t   ------------------------------------------\n\n\n");
+	printf("    입력한 내용은 다음과 같습니다. ");
+	system("pause");
 
 
+	//code에 맞는 제품명 뽑아오기
+	char product_text[10][40] = { 0 };
+	for (int i = 0; i < index; i++)
+		strcpy(product_text[i], code_to_name_list(_NODE_CODE[i]));
 
+	//req_num 을 문자로 변경
+	char req_text[10][40] = { 0 };
+	for (int i = 0; i < index; i++)
+		_itoa(req_num[i], req_text[i], 10);
 
+	char final_text[10][40] = { 0 };
+	//문장 합치기
+	for (int i = 0; i < index; i++)
+	{
+		strcpy(final_text[i], "'");
+		strcat(final_text[i], ROOT_CODE);
+		strcat(final_text[i], "','");
+		strcat(final_text[i], _NODE_CODE[i]);
+		strcat(final_text[i], "','");
+		strcat(final_text[i], product_text[i]);
+		strcat(final_text[i], "',");
+		strcat(final_text[i], req_text[i]);
+		strcat(final_text[i], ",'");
+		strcat(final_text[i], ROOT_CODE);
+		strcat(final_text[i], "'");
+	}
+
+	char root_text[40] = { 0 };
+	strcpy(root_text, "'");
+	strcat(root_text, ROOT_CODE);
+	strcat(root_text, "','");
+	strcat(root_text, ROOT_CODE);
+	strcat(root_text, "','");
+	strcat(root_text, code_to_name_list(ROOT_CODE));
+	strcat(root_text, "',");
+	strcat(root_text, "1");
+	strcat(root_text, ",");
+	strcat(root_text, "NULL");
+	strcat(root_text, "'");
+
+	//등록하기전에 제일 첫 코드가 0000 이면 삭제하고 등록하기
+	if (is_first_data_0())
+		delete_data_0();
+
+	//등록하기
+	if (initalizing(FILE_NAME) == -1)
+	{
+		printf("bom파일이 존재하지 않습니다\n");
+
+		file_column_free();
+		exit(1);
+	}
+
+	if (_insert(root_text) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	for (int i = 0; i < index; i++)
+	{
+		if (_insert(final_text[i]) == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			exit(1);
+		}
+	}
+
+	printf("    파일에 등록 되었습니다. ");
+	file_column_free();
+	system("pause");
+}
+
+int is_first_data_0()
+{
+	result* _result;
+	int result_count;
+
+	if (initalizing(FILE_NAME) == -1)
+	{
+		printf("bom파일이 존재하지 않습니다\n");
+
+		file_column_free();
+		exit(1);
+	}
+	if (_select("ROOT_CODE = '00000'", "ROOT_CODE, NODE_CODE, PRODUCT_NAME, REQ_NUM, M_CODE", &select_result_str) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return 0;
+	}
+	if ((result_count = recv_result(&_result, select_result_str)) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		exit(1);
+	}
+
+	Element1 ROOT_CODE[6] = { 0 };
+	Element1 NODE_CODE[6] = { 0 };
+	Element1 PRODUCT_NAME[30] = { 0 };
+	Element2 REQ_NUM = 0;
+	Element1 M_CODE[6] = { 0 };
+
+	result* cur = _result;
+
+	for (int index = 0; index < result_count; index++)
+	{
+		cur = _result;
+		while ((strcmp(cur->name, "ROOT_CODE") != 0) && cur != NULL)
+			cur = cur->next;
+		if (cur == NULL)
+		{
+			printf("ROOT_CODE 컬럼이 존재하지 않습니다.");
+			file_column_free();
+			exit(1);
+		}
+		strcpy(ROOT_CODE, cur->_string_data[index]);
+
+		cur = _result;
+		while ((strcmp(cur->name, "NODE_CODE") != 0) && cur != NULL)
+			cur = cur->next;
+		if (cur == NULL)
+		{
+			printf("NODE_CODE 컬럼이 존재하지 않습니다.");
+			file_column_free();
+			exit(1);
+		}
+		strcpy(NODE_CODE, cur->_string_data[index]);
+
+		cur = _result;
+		while ((strcmp(cur->name, "PRODUCT_NAME") != 0) && cur != NULL)
+			cur = cur->next;
+		if (cur == NULL)
+		{
+			printf("PRODUCT_NAME 컬럼이 존재하지 않습니다.");
+			file_column_free();
+			exit(1);
+		}
+		strcpy(PRODUCT_NAME, cur->_string_data[index]);
+
+		cur = _result;
+		while ((strcmp(cur->name, "REQ_NUM") != 0) && cur != NULL)
+			cur = cur->next;
+		if (cur == NULL)
+		{
+			printf("REQ_NUM 컬럼이 존재하지 않습니다.");
+			file_column_free();
+			exit(1);
+		}
+		REQ_NUM = cur->_int_data[index];
+
+		cur = _result;
+		while ((strcmp(cur->name, "M_CODE") != 0) && cur != NULL)
+			cur = cur->next;
+		if (cur == NULL)
+		{
+			printf("M_CODE 컬럼이 존재하지 않습니다.");
+			file_column_free();
+			exit(1);
+		}
+		strcpy(M_CODE, cur->_string_data[index]);
+	}
+
+	if (strcmp(ROOT_CODE, "00000") == 0 && strcmp(NODE_CODE, "00000") == 0 && strcmp(PRODUCT_NAME, "00000") == 0 && (REQ_NUM == 0) && strcmp(M_CODE, "00000") == 0)
+	{
+		file_column_free();
+		result_free(_result, result_count);
+		return 1;
+	}
+
+	file_column_free();
+	result_free(_result, result_count);
+	return 0;
+}
+
+void delete_data_0()
+{
+	if (initalizing(FILE_NAME) == -1)
+	{
+		printf("bom파일이 존재하지 않습니다\n");
+
+		file_column_free();
+		return;
+	}
+	if (_delete("ROOT_CODE = '00000'") == -1)
+	{
+		//printf("%s\n", err_msg);
+
+		file_column_free();
+		return;
+	}
+
+	file_column_free();
+}
+
+char* code_to_name_list(char* _conditional)
+{
+	char* text1 = "CODE = '";
+	char* text2 = "'";
+	char* conditional = (char*)malloc(sizeof(text1) + sizeof(_conditional) + sizeof(text2));
+	if (conditional == NULL)
+	{
+		printf("메모리 부족");
+		exit(1);
+	}
+	strcpy(conditional, text1);
+	strcat(conditional, _conditional);
+	strcat(conditional, text2);
+
+	result* _result;
+	int result_count;
+
+	//char* conditional = temp;
+	char* select_column = "NAME";
+
+	if (initalizing("list") == -1)
+	{
+		//printf("%s\n", err_msg);
+
+		file_column_free();
+		return 0;
+	}
+	//printf("%s", conditional);
+
+	if (_select(conditional, select_column, &select_result_str) == -1)
+	{
+		file_column_free();
+		return 0;
+	}
+
+	if ((result_count = recv_result(&_result, select_result_str)) == -1)
+	{
+		//printf("%s\n", err_msg);
+
+		file_column_free();
+		return 0;
+	}
+
+	static char re_cha[30] = { 0 };
+	strcpy(re_cha, _result->_string_data[0]);
+
+	file_column_free();
+	result_free(_result, result_count);
+
+	return re_cha;
 }
 
 int code_to_name(char* _conditional)
@@ -1277,22 +1595,28 @@ int code_to_name(char* _conditional)
 	return 1;
 }
 
+void init_bom()
+{ 
+	if (_create(FILE_NAME, "ROOT_CODE VARCHAR(6) NODE_CODE VARCHAR(6) PRODUCT_NAME VARCHAR(30) REQ_NUM INT M_CODE VARCHAR(6)") == -1)
+	{
+		printf("%s\n", err_msg);
 
-void BOM_Update_main()
-{
-	system("cls");
-	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> BOM 등록 -> BOM 수정\n\n");
+		return;
+	}
+	if (initalizing("bom") == -1)
+	{
+		printf("%s\n", err_msg);
 
+		file_column_free();
+		return;
+	}
 
+	if (_insert("'00000','00000','00000',0,'00000'") == -1)
+		{
+		printf("%s\n", err_msg);
 
-
-
-}
-
-void BOM_Delete_main()
-{
-	system("cls");
-	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> BOM 등록 -> BOM 삭제\n\n");
-
-
+		file_column_free();
+		return;
+	}
+	file_column_free();
 }
