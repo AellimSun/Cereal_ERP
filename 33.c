@@ -184,12 +184,12 @@ void updateMaterials()
 	printf("\n");
 
 	char search1[10];
-	char temp1[30] = "CODE='";
-	char search2[20];
-	char search3[10];
-	char temp2[30];
+	char temp1[20] = "CODE='";
+	char search2[30];
+	char search3[30];
+	char temp2[20];
  
-	printf("수정할 거래처의 코드(CODE)를 입력 : ");
+	printf("수정할 자재품목 코드(CODE)를 입력 : ");
 	scanf("%s", search1);
 
 	strcat(temp1, search1);
@@ -338,7 +338,7 @@ void read_CODE(char* search)
 		file_column_free();
 		return -1;
 	}
-	printf("%s", conditional);
+	//printf("%s", conditional);
 
 	if (_select(conditional, select_column, &select_result_str) == -1)
 	{
