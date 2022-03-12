@@ -22,9 +22,9 @@ typedef struct _req_code {
 
 void init(void);
 void PRO_all_read();
-void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE);
-void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth);
-void BOM_read();
+//void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE);
+//void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth);
+//void BOM_read();
 
 void bg_process(plan* prd_plan);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
@@ -49,13 +49,13 @@ void process(void)
 
 	init();
 	printf("공정이 시작됩니다.\n");
-	bg_process();
+	bg_process(tmp);
 }//
 
 void bg_process(plan* prd_plan)
 {
-	BOM_TREE* bom_res;
-	char* con;
+	//BOM_TREE* bom_res;
+	char* con = (char*)malloc(sizeof(prd_plan->CODE));
 	strcpy(con,prd_plan->CODE);
 	bom_res = BOM_SEARCH(con);
 	system("pause");
