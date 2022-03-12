@@ -8,6 +8,7 @@ void material_create();
 void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE);
 void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
 void freeNodes(bomRes* obj);
+void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root);
 
 void stock()
 {
@@ -229,7 +230,68 @@ void material_create() {
 	stock();
 }
 
-void makeLeafsList(bomRes* leafs, bomRes* result2) {
+int findMotherAmts(char* child, int res, char* root) {
+	while (1) {
+		if (strcmp(child, root) == 0) {
+			break;
+		}
+		int result_count;
+		result* _result;
+		char* select_column = "NODE_CODE, REQ_NUM, M_CODE";
+		char conditional[20] = "NODE_CODE='";
+		strcat(conditional, child);
+		strcat(conditional, "'");
+
+		if (initalizing("BOM_SAMPLE_3") == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+		if (_select(conditional, select_column, &select_result_str) == -1) {
+			file_column_free();
+			return 0;
+		}
+		else {
+			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+				file_column_free();
+				result_free(_result, result_count);
+				return 0;
+			}
+			else {
+				_findMotherAmts(_result, result_count, child, res, root);
+			}
+		}
+	}
+	return res;
+}
+
+void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root) {
+	if (strcmp(child, root) == 0) {
+		return;
+	}
+	//_result 다시 맨처음으로 보낸뒤 모코드로 다시 올라가 반복
+	char mCode[10];
+	while (1) {
+		if (strcmp(_result->name, "REQ_NUM") == 0) {
+			res *= _result->_int_data[0];
+			break;
+		}
+		_result = _result->next;
+	}
+	while (1) {
+		if (strcmp(_result->name, "M_CODE") == 0) {
+			strcpy(mCode, _result->_string_data[0]);
+			break;
+		}
+		_result = _result->next;
+	}
+	file_column_free();
+	result_free(_result, result_count);
+	findMotherAmts(mCode, res, root);
+}
+
+void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
 	leafs = leafs->next;
 	int flag = 1;
 	while (leafs->next != NULL) {
@@ -239,9 +301,9 @@ void makeLeafsList(bomRes* leafs, bomRes* result2) {
 			//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
 			//원재료 리스트에 항목 추가할수 있도록 flag 세우기
 			flag = 1;
-			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 기존에 숫자만 더해줌
+			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 넘어감
 			if (strcmp(result2->CODE, leafs->CODE) == 0) {
-				result2->AMOUNT += leafs->AMOUNT;
+			//	result2->AMOUNT += leafs->AMOUNT;
 				flag = 0;
 				break;
 			}
@@ -251,7 +313,8 @@ void makeLeafsList(bomRes* leafs, bomRes* result2) {
 		if (flag == 1) {
 			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
 			newNode->CODE = leafs->CODE;
-			newNode->AMOUNT = leafs->AMOUNT;
+			//루트코드로 도달할때까지의 원재료의 필요개수 곱하기
+			newNode->AMOUNT = findMotherAmts(leafs->CODE, 1, root);
 			newNode->next = result2->next;
 			result2->next = newNode;
 		}
@@ -378,11 +441,11 @@ void confirm_Material(plan* p) {
 	//BOM 조회
 	BOM_TREE* res = BOM_SEARCH(p->CODE);
 
-	//재귀적으로 모든 노드 훓어서 result리스트에 담기
+	//재귀적으로 모든 노드 훓어서 leafs리스트에 담기
 	get_Materials_From_Bom(res, res->NODE_CODE, leafs);
 
 	//원재료(단말노드)만 따로 리스트 만들기
-	makeLeafsList(leafs, result2);
+	makeLeafsList(leafs, result2, p->CODE);
 	
 	//트리를 그대로 담아온 리스트는 이제 필요없으므로 free
 	freeNodes(head1);
