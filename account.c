@@ -492,8 +492,8 @@ void deleteAccount()
 	char naver[20];
 	char temp[30] = "BN_REGI_NUM='";
 	printf("위치 : 메인메뉴 -> 자재관리 -> 거래처관리 -> 거래처 삭제\n\n");
-	printf("\t\t삭제할 거래처의 사업자 번호를 입력하세요 : ");
-	printf("\t\t\t -> ");
+	printf("\t\t삭제할 거래처의 사업자 번호를 입력하세요 : \n");
+	printf("\t\t -> ");
 	scanf("%s", naver);
 	strcat(temp, naver);
 	strcat(temp, "'");
