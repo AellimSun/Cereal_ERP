@@ -19,7 +19,7 @@ void read_NAME();
 void read_MSP();
 void read_ALL();
 
-result* read_CODE2(char* search);
+void read_CODE2(char* search);
 
 
 void product_list()
@@ -370,18 +370,26 @@ void read_CODE(char* search)
 	product_list();
 }
 
-result* read_CODE2(char* search)
+void read_CODE2(char* _conditional)
 {
-	char temp[20] = "CODE='";
+	char* text1 = "CODE = '";
+	char* text2 = "'";
+	char* conditional = (char*)malloc(sizeof(text1) + sizeof(_conditional) + sizeof(text2));
+	if (conditional == NULL)
+	{
+		printf("메모리 부족");
+		exit(1);
+	}
+	strcpy(conditional, text1);
+	strcat(conditional, _conditional);
+	strcat(conditional, text2);
+
 
 	result* _result;
 	int result_count;
 
-	strcat(temp, search);
-	strcat(temp, "'");
-
-	char* conditional = temp;
-	char* select_column = "CODE, NAME, BACKUP, MSP";
+	//char* conditional = temp;
+	char* select_column = "NAME";
 
 	if (initalizing("list") == -1)
 	{
@@ -390,7 +398,7 @@ result* read_CODE2(char* search)
 		file_column_free();
 		return -1;
 	}
-	printf("%s", conditional);
+	//printf("%s", conditional);
 
 	if (_select(conditional, select_column, &select_result_str) == -1)
 	{
@@ -399,10 +407,7 @@ result* read_CODE2(char* search)
 		file_column_free();
 		return -1;
 	}
-	else
-	{
-		printf("%s\n", select_result_str);
-	}
+
 	if ((result_count = recv_result(&_result, select_result_str)) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -411,8 +416,10 @@ result* read_CODE2(char* search)
 		return -1;
 	}
 
+	printf("%s", _result->_string_data[0]);
+
 	file_column_free();
-	return _result;
+	result_free(_result, result_count);
 }
 
 void read_NAME()
