@@ -141,7 +141,12 @@ plan* production_new_plan()
 
 	getchar();
 
-	printf("계획연도, 연간계획량, 품목 코드 입력 : ");
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리\n\n");
+
+	printf("\t\t       < 계획연도, 연간계획량, 품목 코드 입력 > \n\n");
+	printf("\t\t( 예시 : 20220301     50           Q666 )\n\n");
+	printf("\t\t -> ");
+
 	for (int i = 0; i < 3; i++)
 	{
 		char temp[100];
@@ -178,11 +183,25 @@ plan* production_menu()
 {
 	int key;
 	plan* values;
+
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리\n\n");
 	while(1)
 	{
-		printf("1. 새 계획 수립\n");
-		printf("2. 계획 목록 열람\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|      1. 새 계획 수립      |\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|     2. 계획 목록 열람     |\n");
+		printf("\t\t\t-----------------------------\n\n");
+
+		printf("\t\t\t\t 입력 :\n");
+		printf("\t\t\t\t        ^");
+		gotoxy(40, 12);
 		scanf("%d", &key);
+		system("cls");
 
 		if (key == 1) 
 		{
@@ -193,7 +212,7 @@ plan* production_menu()
 		{
 			plan_reading();
 		}
-		else printf("잘못된 입력값입니다.\n\n");
+		else printf("\n\t\t    < 잘못된 입력값입니다. > \n\n");
 	}	
 }
 
