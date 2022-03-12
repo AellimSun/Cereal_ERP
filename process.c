@@ -51,9 +51,11 @@ void process(void)
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
 	Sleep(2500);
+	system("cls");
 	bg_process(tmp);
 
-	main();
+	free(tmp);
+	main_manu();
 }
 
 void bg_process(plan* prd_plan)
