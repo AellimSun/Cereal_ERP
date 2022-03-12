@@ -23,11 +23,11 @@ typedef struct
 
 } Qlink;
 
-void gotoxy(int x, int y)
-{
-	COORD pos = { x,y };
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-}
+//void gotoxy(int x, int y)
+//{
+//	COORD pos = { x,y };
+//	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+//}
 
 Qlink* Create()
 {
