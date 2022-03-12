@@ -1,4 +1,6 @@
 #include "cereal.h"
+
+#include "cereal.h"
 #include <string.h>
 #include <time.h>
 
@@ -23,7 +25,7 @@ bomRes* Head(void);
 void free_node(bomRes* head);
 
 //void process(*plan prd_plan)
-void process(bomRes* result , plan* p)
+void process(bomRes* result, plan* p)
 {
 	plan* tmp = p;
 	bomRes* p_use_amount = result;
@@ -57,7 +59,7 @@ void bg_process(plan* prd_plan, bomRes* result)
 
 	//check_parts(mat_head);				//부족한 제작부품 개수 파악
 	produce_parts(result);			//부족한 제작부품 생산명령, 원자재 사용
-	produce_product(p_code,p_num);		//생산계획 품목 생산 및 등록
+	produce_product(p_code, p_num);		//생산계획 품목 생산 및 등록
 
 	system("pause");
 
@@ -240,16 +242,16 @@ void pro_material_create(char* p_code) {
 	char values[50];
 	char* PRD_CODE = p_code;
 	char STATUS[6] = "store";
-	char DATE[9] = {""};
-	char tmp[9] = {""};
+	char DATE[9] = { "" };
+	char tmp[9] = { "" };
 	char LOT[6];
 
-	strcpy(LOT,give_LOT());
+	strcpy(LOT, give_LOT());
 
 	//날짜 입력
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-	sprintf(tmp, "%d", tm.tm_year+1900);
+	sprintf(tmp, "%d", tm.tm_year + 1900);
 
 	strcpy(DATE, tmp);
 	if (tm.tm_mon < 10)
@@ -295,7 +297,7 @@ void pro_material_create(char* p_code) {
 }
 char* give_LOT(void)
 {
-	char LOT[6] = {""};
+	char LOT[6] = { "" };
 	int random = 0;
 	char tmpRand[5];
 
