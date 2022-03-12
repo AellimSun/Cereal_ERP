@@ -17,7 +17,7 @@ void main_ui() {
 	printf("\t\t\t|                                   |\n");
 	printf("\t\t\t=====================================\n");
 	printf("\n\t\t\t\t¡¶¿€ ∆¿ : ∆ƒ∏¿√ΩΩ∫\n\n");
-	//Sleep(2000);
+	Sleep(2000);
 	system("cls");
 
 	printf("\n");
@@ -28,7 +28,7 @@ void main_ui() {
 	printf("\t\t\t=====================================\n");
 	printf("\n\t\t\t\t¡¶¿€ ∆¿ : ∆ƒ∏¿√ΩΩ∫\n\n");
 	printf("\t\t\t\tΩ√Ω∫≈€ Ω√¿€ ¡ÿ∫Ò¡ﬂ.\n");
-	//Sleep(500);
+	Sleep(500);
 	system("cls");
 
 	printf("\n");
