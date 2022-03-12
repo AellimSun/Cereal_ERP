@@ -26,7 +26,7 @@ void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE);
 void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth);
 void BOM_read();
 
-void bg_process(void);
+void bg_process(plan* prd_plan);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
 void produce_product(req_code* head);		//  생산계획따라 품목 자재에 생산 수량 업로드
@@ -37,17 +37,26 @@ char give_LOT();		// 생산품 LOT번호 생성
 req_code* New(req_code* head, int num, char* code);
 void req_code_free_Head(req_code* head);
 
+//void process(*plan prd_plan)
 void process(void)
 {
+	//plan* tmp = 들어온 파일;
+	plan* tmp = (plan*)malloc(sizeof(plan));
+	if (tmp == NULL) exit(1);
+	tmp->CODE = "A0001";
+	tmp->PLAN_PRODUCTION = "1";
+	tmp->values = "2022";
+
 	init();
 	printf("공정이 시작됩니다.\n");
 	bg_process();
 }//
 
-void bg_process(void)
+void bg_process(plan* prd_plan)
 {
 	BOM_TREE* bom_res;
-	char* con = "A0001";
+	char* con;
+	strcpy(con,prd_plan->CODE);
 	bom_res = BOM_SEARCH(con);
 	system("pause");
 	BOM_Forward_PrintTree(bom_res,con);
@@ -65,15 +74,16 @@ void bg_process(void)
 	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
 
 	PRO_all_read();
+	system("pause");
 
 	check_parts(PLAN_NUM, bom_res,mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();		//작업지시 확정 - 위에 있는지 확인
 	produce_product(mat_head);		//생산계획 품목 생산 및 등록
 	//pro_material_create();
-	//material_upload();		//생산자제 등록
 
 	PRO_all_read();
+	system("pause");
 
 	req_code_free_Head(mat_head);
 }
@@ -81,6 +91,7 @@ void bg_process(void)
 void check_parts(int num, char* bom_res, req_code* head)
 {
 	//_BOM_Backward_PrintTree();
+
 	New(head, 1,"B0001");//2
 	New(head, 2,"B0002");//3
 	New(head, 2,"B0003");//4
