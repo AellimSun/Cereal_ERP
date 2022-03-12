@@ -25,10 +25,9 @@ typedef struct _bomRes {
 //재고 한줄의 정보를 담는 구조체
 typedef struct Material {
 	char PRD_CODE[5];
+	char PRD_NAME[20];
 	char STATUS[5];
 	int DATE;
-	char ACC_CODE[5];
-
 };
 
 //발주품목 저장 구조체
