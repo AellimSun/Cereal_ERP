@@ -22,9 +22,9 @@ char* give_LOT();		// 생산품 LOT번호 생성
 
 bomRes* New(bomRes* head, int num, char* code);
 bomRes* Head(void);
-void free_node(bomRes* head);
+void free_Bnode(bomRes* head);
+void free_Pnode(plan* head);
 
-//void process(*plan prd_plan)
 void process(bomRes* result, plan* p)
 {
 	plan* tmp = p;
@@ -32,7 +32,6 @@ void process(bomRes* result, plan* p)
 	system("cls");
 	PRO_all_read();
 	system("pause");
-	//init();
 	system("cls");
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
@@ -47,7 +46,9 @@ void process(bomRes* result, plan* p)
 
 	PRO_all_read();
 	system("pause");
-	free(tmp);
+	free_Bnode(result);
+	free_Pnode(p);
+
 	main_manu();
 }
 
@@ -56,30 +57,11 @@ void bg_process(plan* prd_plan, bomRes* result)
 	char* p_code = prd_plan->CODE;
 	int p_num = atoi(prd_plan->PLAN_PRODUCTION);
 
-	//bomRes* mat_head = Head();
-
-	//check_parts(mat_head);				//부족한 제작부품 개수 파악
 	produce_parts(result);			//부족한 제작부품 생산명령, 원자재 사용
 	produce_product(p_code, p_num);		//생산계획 품목 생산 및 등록
 
 	system("pause");
-
-	free_node(result);
 }
-
-//void check_parts(bomRes* head)
-//{
-//	//_BOM_Backward_PrintTree();
-//
-//	New(head, 1, "B0001");//2
-//	New(head, 2, "B0002");//3
-//	New(head, 2, "B0003");//4
-//	New(head, 3, "B0004");//5
-//	New(head, 2, "C0001");//4
-//	New(head, 2, "C0002");//3
-//	New(head, 2, "C0003");//2
-//	New(head, 1, "D0001");//5
-//}
 
 int produce_parts(bomRes* result)
 {
@@ -91,49 +73,18 @@ int produce_parts(bomRes* result)
 	{
 		p_num = cur->AMOUNT;
 		p_code = cur->CODE;
-		//printf("pro_material_use 실행 %d번\n", cnt + 1);
 		printf("\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|*                         *|\n");
 		printf("\t\t\t|       자재 생산중...      |\n");
 		printf("\t\t\t|*                         *|\n");
 		printf("\t\t\t-----------------------------\n");
-		//printf("\t\t\t\t\n");
+
 		pro_material_use(p_code, p_num);
 		cur = cur->next;
 	}
 }
-//bomRes* Head(void)
-//{
-//	bomRes* head = (bomRes*)malloc(sizeof(bomRes));
-//	if (head == NULL) exit(1);
-//	head->AMOUNT = NULL;
-//	head->CODE = NULL;
-//	head->next = NULL;
-//	return head;
-//}
-//bomRes* New(bomRes* head, int num, char* code)
-//{
-//	bomRes* NewNode = (bomRes*)malloc(sizeof(bomRes));
-//	if (NewNode == NULL) exit(1);
-//
-//	NewNode->AMOUNT = num;
-//	NewNode->CODE = code;
-//	NewNode->next = head->next;
-//	head->next = NewNode;
-//}
-void free_node(bomRes* head)
-{
-	bomRes* cur = head->next;
-	if (cur == NULL) exit(1);
-	while (cur->next != NULL)
-	{
-		head = cur;
-		cur = cur->next;
-		free(head);
-	}
-	free(cur);
-}
+
 
 void pro_material_use(char* p_code, int p_num) {
 
@@ -249,6 +200,7 @@ void pro_material_create(char* p_code) {
 	char tmp[9] = { "" };
 	char LOT[6];
 
+	
 	strcpy(LOT, give_LOT());
 
 	//날짜 입력
@@ -351,6 +303,30 @@ void produce_product(char* p_code, int p_num)
 	printf("\t\t\t-----------------------------\n");
 
 	Sleep(3000);
+}
+void free_Bnode(bomRes* head)
+{
+	bomRes* cur = head->next;
+	if (cur == NULL) exit(1);
+	while (cur->next != NULL)
+	{
+		head = cur;
+		cur = cur->next;
+		free(head);
+	}
+	free(cur);
+}
+void free_Pnode(plan* head)
+{
+	plan* cur = head->next;
+	if (cur == NULL) exit(1);
+	while (cur->next != NULL)
+	{
+		head = cur;
+		cur = cur->next;
+		free(head);
+	}
+	free(cur);
 }
 
 void init(void)
