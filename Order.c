@@ -177,8 +177,6 @@ void Request_Order(bomRes* met_ord)
 {
 
 	
-	
-	file_column_free();
 	printf("Request_Order\n");
 	char values[30];
 	
