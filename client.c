@@ -363,6 +363,8 @@ void result_print(result* result_head, int result_count) {
 			cur = cur->next;
 	}
 	printf("\n=========================================\n");
+
+
 	for (int i = 0; i < result_count; i++) {
 		cur = result_head;
 		while (1) {
