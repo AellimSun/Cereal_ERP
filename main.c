@@ -177,7 +177,7 @@ void order(void)
 
 		printf("\t\t\t\t ют╥б :\n");
 		printf("\t\t\t\t        ^");
-		gotoxy(40, 13);
+		gotoxy(40, 15);
 		scanf("%d", &input);
 		system("cls");
 		switch (input)
