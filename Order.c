@@ -449,6 +449,7 @@ int storage_Order(Order* head, int num)
 //02. 메인 -> 발주 -> 발주입력(품목코드) -> 거래처 목록 -> 발주!
 void all_Order_List()
 {
+	char key = NULL;
 	if (initalizing("sample_Order") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -457,7 +458,32 @@ void all_Order_List()
 		return -1;
 	}
 
-	print_data();
+	while (1)
+	{
+		
+		if (key == '`')
+		{
+			printf("메인메뉴로 돌아갑니다");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			file_column_free();
+			return main();
+		}
+		system("cls");
+		print_data();
+		printf("(`) 메인으로");
+		
+		printf("\n->");
+		scanf("%c", &key);
+		//file_column_free();
+		
+
+		
+	}
 	
 	
 	//return;
