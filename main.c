@@ -168,9 +168,9 @@ void order(void)
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|    1. 발주내역 전체 조회  |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      2.( 작업중 )         |\n");
+		printf("\t\t\t|                           |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|      3.( 작업중 )         |\n");
+		printf("\t\t\t|                           |\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|       0. 시작메뉴         |\n");
 		printf("\t\t\t-----------------------------\n\n");
@@ -196,29 +196,7 @@ void order(void)
 			main_manu();
 		}
 
-		//원자재?
 
-		// 파일 위치 :: 초기화한다. 저장소 지정
-		//if (initalizing("D:\\00_Bird_00\\첵스\\project\\Cereal\\Clanguage\\01_ERP\\sample_Order") == -1) {
-		//if (initalizing("account") == -1)
-		//{
-		//	printf("%s\n", err_msg);
-
-		//	file_column_free();
-		//	return -1;
-		//}
-
-
-		//Request_Order("D201");
-
-		//printf("1\n");
-		//storage_Order("003", 5);
-		//printf("return\n");
-		//print_data();
-
-		//file_column_free();
-
-	//}
 }
 void delivery(void)
 {
