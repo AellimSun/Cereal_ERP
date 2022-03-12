@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "cereal.h"
 #include "BOMTree.h"
 #include "UI.h"
