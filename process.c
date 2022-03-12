@@ -80,12 +80,11 @@ void bg_process(plan* prd_plan, bomRes* result)
 //	New(head, 1, "D0001");//5
 //}
 
-int produce_parts(bomRes* head)
+int produce_parts(bomRes* result)
 {
-	bomRes* cur = head->next;
+	bomRes* cur = result->next;
 	int p_num;
 	char* p_code;
-	int cnt = 0;
 
 	while (cur != NULL)
 	{
@@ -100,29 +99,28 @@ int produce_parts(bomRes* head)
 		printf("\t\t\t-----------------------------\n");
 		//printf("\t\t\t\t\n");
 		pro_material_use(p_code, p_num);
-		cnt++;
 		cur = cur->next;
 	}
 }
-bomRes* Head(void)
-{
-	bomRes* head = (bomRes*)malloc(sizeof(bomRes));
-	if (head == NULL) exit(1);
-	head->AMOUNT = NULL;
-	head->CODE = NULL;
-	head->next = NULL;
-	return head;
-}
-bomRes* New(bomRes* head, int num, char* code)
-{
-	bomRes* NewNode = (bomRes*)malloc(sizeof(bomRes));
-	if (NewNode == NULL) exit(1);
-
-	NewNode->AMOUNT = num;
-	NewNode->CODE = code;
-	NewNode->next = head->next;
-	head->next = NewNode;
-}
+//bomRes* Head(void)
+//{
+//	bomRes* head = (bomRes*)malloc(sizeof(bomRes));
+//	if (head == NULL) exit(1);
+//	head->AMOUNT = NULL;
+//	head->CODE = NULL;
+//	head->next = NULL;
+//	return head;
+//}
+//bomRes* New(bomRes* head, int num, char* code)
+//{
+//	bomRes* NewNode = (bomRes*)malloc(sizeof(bomRes));
+//	if (NewNode == NULL) exit(1);
+//
+//	NewNode->AMOUNT = num;
+//	NewNode->CODE = code;
+//	NewNode->next = head->next;
+//	head->next = NewNode;
+//}
 void free_node(bomRes* head)
 {
 	bomRes* cur = head->next;
@@ -229,7 +227,10 @@ void pro_material_use(char* p_code, int p_num) {
 			}
 
 		}
-		if (cnt < p_num) printf("자재가 부족합니다.\n");
+		if (cnt < p_num)
+		{
+			printf("자재가 부족합니다.\n");
+		}
 	}
 	file_column_free();
 	result_free(_result, result_count);
