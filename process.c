@@ -1,7 +1,7 @@
-
 #include "cereal.h"
 #include <string.h>
 #include <time.h>
+
 #define PRO_FILE_NAME "process"
 //#define MAT_FILE_NAME "test_pro_material"
 #define MAT_FILE_NAME "material"
@@ -57,8 +57,6 @@ void bg_process(plan* prd_plan, bomRes* result)
 
 	produce_parts(result);			//부족한 제작부품 생산명령, 원자재 사용
 	produce_product(p_code, p_num);		//생산계획 품목 생산 및 등록
-
-	system("pause");
 }
 int produce_parts(bomRes* result)
 {
