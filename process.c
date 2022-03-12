@@ -8,7 +8,6 @@
 #define BOM_FILE_NAME "BOM_SAMPLE_3"
 #define LIS_FILE_NAME "list"
 
-void init(void);
 void PRO_all_read();
 void pro_read(char*);
 void bg_process(plan* prd_plan, bomRes* result);
@@ -336,62 +335,7 @@ void free_Bnode(bomRes* head)
 }
 void free_Pnode(plan* head)
 {
-	plan* cur = head->next;
-	if (cur == NULL) exit(1);
-	while (cur->next != NULL)
-	{
-		head = cur;
-		cur = cur->next;
-		free(head);
-	}
-	free(cur);
-}
-void init(void)
-{
-	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
-	char* value[30];
-	value[0] = "'B0001','store',22031001,'L0001'";
-	value[1] = "'B0001','store',22031002,'L0002'";
-	value[2] = "'B0002','store',22031001,'L0003'";
-	value[3] = "'B0002','store',22031002,'L0004'";
-	value[4] = "'B0002','store',22031003,'L0005'";
-	value[5] = "'B0003','store',22031001,'L0006'";
-	value[6] = "'B0003','store',22031002,'L0007'";
-	value[7] = "'B0003','store',22031003,'L0008'";
-	value[8] = "'B0003','store',22031004,'L0009'";
-	value[9] = "'B0004','store',22031001,'L0010'";
-	value[10] = "'B0004','store',22031002,'L0011'";
-	value[11] = "'B0004','store',22031003,'L0012'";
-	value[12] = "'B0004','store',22031004,'L0013'";
-	value[13] = "'B0004','store',22031005,'L0014'";
-	value[14] = "'C0001','store',22031001,'L0015'";
-	value[15] = "'C0001','store',22031002,'L0016'";
-	value[16] = "'C0001','store',22031003,'L0017'";
-	value[17] = "'C0001','store',22031004,'L0018'";
-	value[18] = "'C0002','store',22031001,'L0019'";
-	value[19] = "'C0002','store',22031002,'L0020'";
-	value[20] = "'C0002','store',22031003,'L0021'";
-	value[21] = "'C0003','store',22031001,'L0022'";
-	value[22] = "'C0003','store',22031002,'L0023'";
-	value[23] = "'D0001','store',22031001,'L0024'";
-	if (initalizing("test_pro_material") == -1) {
-		printf("%s\n", err_msg);
-		file_column_free();
-		return -1;
-	}
-	int i = 0;
-	while (i <= 23)
-	{
-		if (_insert(value[i]) == -1) {
-			printf("%s\n", err_msg);
-			file_column_free();
-			return -1;
-		}
-		i++;
-	}
-	//print_data();
-	//printf("\n");
-	file_column_free();
+	free(head);
 }
 void PRO_all_read()
 {
