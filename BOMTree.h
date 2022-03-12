@@ -19,7 +19,23 @@ typedef struct _BOM_TREE
 	Element1 M_CODE[6];
 }BOM_TREE;
 
+typedef struct _BOM_LIST
+{
+	struct _BOM_LIST* next;
+	struct _BOM_LIST* pre;
+
+	Element2 REQ_NUM;
+	Element1 NODE_CODE[6];
+	Element1 M_CODE[6];
+}BOM_LIST;
+
+int Show_BOM_ROOT_CODE_list();
+void BOM_search_main();
 BOM_TREE* BOM_SEARCH(char* conditional);
+BOM_LIST* _BOM_SEARCH(char* conditional, BOM_LIST* list);
+BOM_LIST* recur_search(char* search_code, BOM_LIST* list);
+BOM_LIST* BOM_CreateNode_list(BOM_LIST* list, Element2 REQ_NUM, Element1* NODE_CODE, Element1* M_CODE);
+void Free_list(BOM_LIST* h);
 //conditional에 맞는 BOM트리를 생성하여 리턴해주는 함수
 
 BOM_TREE* BOM_CreateNode(Element2 REQ_NUM, Element1* NODE_CODE, Element1* M_CODE);
