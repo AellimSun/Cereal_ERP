@@ -344,7 +344,7 @@ void produce_product(char* p_code, int p_num)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*     생산한 자재 : %s *|\n", p_code);
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|*       생산량 : %d       *|\n", p_num);
+	printf("\t\t\t|*       생산량 : %d        *|\n", p_num);
 	printf("\t\t\t-----------------------------\n");
 
 	Sleep(3000);
