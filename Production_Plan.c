@@ -208,7 +208,7 @@ void production_plan(void)
 	//print_data();
 	file_column_free();
 
-	//confirm_Material(values);
+	confirm_Material(values);
 
 	printf("\n");
 
