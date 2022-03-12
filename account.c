@@ -1,12 +1,7 @@
 #include "local.h"
+#include "cereal.h"
 
-typedef struct Accontnode {
-	char ACC_CODE[10];
-	char BN_REGI_NUM[10];
-	char PRD_CODE[30];
-	char RorD[5];
-	struct Accountnode* next;
-}Anode;
+
 
 void insertAccount();
 void readAccount();
@@ -17,6 +12,7 @@ void read_PRD_CODE();
 void read_RorD();
 void deleteAccount();
 void updateAccount();
+void read_prd(char* code);
 
 void account()
 {
@@ -96,6 +92,8 @@ void insertAccount()
 	scanf("%s", RorD);
 	//printf("%s", RorD);
 	//char temp = ("R\n" || "D\n");
+
+	read_prd(PRD_CODE);
 
 	system("cls");
 	while(1)
@@ -203,7 +201,7 @@ void readAccount()
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|       0. 이전으로         |\n");
 	printf("\t\t\t-----------------------------\n");
-
+	//printf("7.test\n");
 	printf("\t\t\t\t 입력 :\n");
 	printf("\t\t\t\t        ^");
 	gotoxy(40, 19);
@@ -226,8 +224,11 @@ void readAccount()
 	case 5:
 		read_all();
 		break;
-	case 6:
+	case 0:
 		account();
+		break;
+	case 7:
+		//read_prd();
 		break;
 	}
 }
@@ -577,4 +578,66 @@ void updateAccount()
 	file_column_free();
 	
 	account();
+}
+
+void read_prd(char *code)
+{
+	if (initalizing("list") == -1) {
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	char PRD_CODE[5];
+	bomRes* list = (bomRes*)malloc(sizeof(bomRes));
+	bomRes* head = (bomRes*)malloc(sizeof(bomRes));
+
+	int result_count;
+	result* _result;
+	char* select_column = "CODE";
+	char conditional[20] = "CODE='";
+	strcat(conditional, code);
+	strcat(conditional, "'");
+
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		file_column_free();
+		system("cls");
+		printf("존재하는 않는 품목코드입니다.\n");
+		system("pause");
+		system("cls");
+		insertAccount();
+	}
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			file_column_free();
+			result_free(_result, result_count);
+			printf("존재하는 않는 품목코드입니다.\n");
+			insertAccount();
+		}
+		
+	}
+
+	file_column_free();
+	result_free(_result, result_count);
+
+	for (int i = 0; i < list->AMOUNT; i++) {
+
+		if (initalizing("account") == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+
+		strcpy(PRD_CODE, list->CODE);
+
+		printf("%s\n", list->CODE);
+
+		printf("\n");
+		file_column_free();
+
+	}
+
+	free(list);
+	free(head);
 }
