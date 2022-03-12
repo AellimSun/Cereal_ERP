@@ -20,7 +20,7 @@ typedef struct _req_code {
 void init(void);
 void PRO_all_read();
 
-void bg_process(plan* prd_plan);
+void bg_process(plan* prd_plan, bomRes* result);
 void check_parts(req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
 void produce_product(char* p_code, int p_num);		//  생산계획따라 품목 자재에 생산 수량 업로드
@@ -33,14 +33,10 @@ req_code* Head(void);
 void free_node(req_code* head);
 
 //void process(*plan prd_plan)
-void process(void)
+void process(bomRes* result , plan* p)
 {
-	//plan* tmp = 들어온 파일;
-	plan* tmp = (plan*)malloc(sizeof(plan));
-	if (tmp == NULL) exit(1);
-	tmp->CODE = "A0001";
-	tmp->PLAN_PRODUCTION = "2";
-	tmp->values = "2022";
+	plan* tmp = p;
+	bomRes* p_use_amount = result;
 
 	init();
 	printf("\n");
@@ -52,7 +48,7 @@ void process(void)
 	printf("\t\t\t-----------------------------\n");
 	Sleep(2500);
 	system("cls");
-	bg_process(tmp);
+	bg_process(tmp, p_use_amount);
 
 	PRO_all_read();
 	system("pause");
@@ -60,7 +56,7 @@ void process(void)
 	main_manu();
 }
 
-void bg_process(plan* prd_plan)
+void bg_process(plan* prd_plan, bomRes* result)
 {
 	char* p_code = prd_plan->CODE;
 	int p_num = atoi(prd_plan->PLAN_PRODUCTION);

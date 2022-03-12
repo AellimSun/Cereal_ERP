@@ -55,8 +55,6 @@ void stock()
 		material_management();
 		break;
 	}
-
-
 }
 
 //모든 재고 조회
@@ -536,7 +534,7 @@ void confirm_Material(plan* p) {
 		system("cls");
 		printf("발주한 재고 기록 작성을 완료했습니다.\n");
 		system("pause");
-		process();
+		process(result3, p);
 	}
 	else {
 		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
