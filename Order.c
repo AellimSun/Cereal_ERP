@@ -1,6 +1,4 @@
 #include "cereal.h"
-//#include <stdlib.h>
-//#define _GNU_SOURCE
 #include <string.h>
 #include <time.h>
 
@@ -112,38 +110,6 @@ void creat_Order_List(Order* head, result* result_head, int num)
 
 }
 
-void print_Node(Order* head)
-{
-	Order* cur;
-	cur = head->next;
-	Sleep(3000);
-
-	printf("~~~printNode~~~\n");
-	while (cur != NULL)
-	{
-		printf("PRD_COD : %s,  ", cur->PRD_CODE);
-		printf("ACC_CODE : %s\n", cur->ACC_CODE);
-
-		cur = cur->next;
-	}
-}
-
-void print_Node_process(bomRes* head)
-{
-	bomRes* cur;
-	cur = head->next;
-
-	printf("~~~print_Node_process~~~\n");
-	while (cur != NULL)
-	{
-		printf("PRD_COD : %s\n", cur->CODE);
-		printf("PRD_VAL : %d\n", cur->AMOUNT);
-		printf("ACC_CODE : %s\n\n", cur->ACC_CODE);
-
-		cur = cur->next;
-	}
-
-}
 
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
@@ -176,14 +142,18 @@ void material_to_prosess(plan* head, bomRes* met)
 void Request_Order(bomRes* met_ord)
 {
 
-	
-	printf("Request_Order\n");
+	if (_create("pre_sample_Order", "O_DATE INT D_DATE INT ACC_CODE VARCHAR(10) ORDER_NUM INT PRD_CODE VARCHAR(10) NUM INT") == -1)
+	{
+		printf("%s\n", err_msg);
+		return -1;
+	}
+
 	char values[30];
-	
+
 	plan* Cod_n_Num;
 
 	//initialization 구조체
-	
+
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
 
 		return -1;
@@ -205,7 +175,6 @@ void Request_Order(bomRes* met_ord)
 	if (met == NULL)
 		return -1;
 	met = met_ord->next;
-	met->ACC_CODE = NULL;
 	//met->AMOUNT = NULL;
 	//met->CODE = NULL;
 	//met->next = NULL;
@@ -217,83 +186,112 @@ void Request_Order(bomRes* met_ord)
 		printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 발주요청\n\n");
 		//printf("======================================\n");
 
-		char* prd_code = met->CODE;
-		//printf("met->CODE : %s", met->CODE);
-		printf("품목 코드 : %s\n", prd_code);
-		int amount = met->AMOUNT;
-
-	
-
-
-		//print_data();
-		//print_data();
-	
-		strcpy(values, "PRD_CODE = '");
-		strcat(values, prd_code);
-		strcat(values, "'");
-
-
-		//printf("values ..-> %s\n", values);
-		//printf("추출한 데이터 확인\n");
-		
-		if (initalizing("account") == -1)
+		if (met->AMOUNT <= 0)
 		{
-			printf("%s\n", err_msg);
 
-			file_column_free();
-			return -1;
-		}
-		//Sleep(3000);
-		Sleep(1000);
-		if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
-			printf("%s\n", err_msg);
+			//system("cls");
+			printf("자재의 요청수량이 0 입니다.\n");
+			met = met->next;
 
-			file_column_free();
-			return -1;
+
 		}
 		else {
-			
-			printf("\n...품목코드 관련 거래처가 존재합니다\n\n");
-		}
 
-		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-			printf("%s\n", err_msg);
 
+			char* prd_code = met->CODE;
+			//printf("met->CODE : %s", met->CODE);
+			printf("품목 코드 : %s\n", prd_code);
+			int amount = met->AMOUNT;
+
+
+
+
+			//print_data();
+			//print_data();
+
+			strcpy(values, "PRD_CODE = '");
+			strcat(values, prd_code);
+			strcat(values, "'");
+
+
+			//printf("values ..-> %s\n", values);
+			//printf("추출한 데이터 확인\n");
+
+			if (initalizing("account") == -1)
+			{
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+			//Sleep(3000);
+			Sleep(1000);
+			if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+			else {
+
+				printf("\n...품목코드 관련 거래처가 존재합니다\n\n");
+			}
+
+			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+
+			result_print(_result, result_count);
+			printf("\n");
+			//free(values);
 			file_column_free();
-			return -1;
+			Sleep(1000);
+
+
+			//차라리 함수를 새로 선언해서 넘겨주자.
+			creat_Order_List(insert_ord, _result, result_count);
+
+			//특정 컬럼 추출
+			//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+			//메모리 핸들링이 넘 심함 수정요망 => 대충 수정함
+			//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
+
+			//발주내역 저장
+			printf("발주내역을 저장합니다..\n");
+			Sleep(1000);
+			storage_Order(insert_ord, amount);
+			//print_data();
+
+			met = met->next;
+			//result_free(_result, result_count);
+
+			//file_column_free();
+			Sleep(3000);
 		}
-		
-		result_print(_result, result_count);
-		printf("\n");
-		//free(values);
+	}
 
-		Sleep(1000);
-	
-		
-		//차라리 함수를 새로 선언해서 넘겨주자.
-		creat_Order_List(insert_ord, _result, result_count);
+	system("cls");
+	printf("저장된 발주 내역입니다\n");
 
-		//특정 컬럼 추출
-		//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
-		//메모리 핸들링이 넘 심함 수정요망 => 대충 수정함
-		//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
 
-		//발주내역 저장
-		printf("발주내역을 저장합니다..\n");
-		Sleep(1000);
-		storage_Order(insert_ord,amount);
-		//print_data();
 
-		met = met->next;
-		result_free(_result, result_count);
+	if (initalizing("pre_sample_Order") == -1)
+	{
+
+		printf("%s\n", err_msg);
 
 		file_column_free();
-		Sleep(3000);
+
+		return -1;
 
 	}
-	
 
-	
+	print_data();
+	file_column_free();
+	Sleep(1000);
 	printf("발주를 종료합니다.");
 	Sleep(500);
 	printf(".");
@@ -301,17 +299,40 @@ void Request_Order(bomRes* met_ord)
 	printf(".");
 	Sleep(500);
 	printf(".");
-	
+
 	return;
 	
 	
+	
+}
+void current_Order_list(char* values)
+{
+
+	if (initalizing("pre_sample_Order") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	if (_insert(values) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	print_data();
+	Sleep(1000);
+	file_column_free();
+
 }
 
 //01 자재 -> 발주 -> 거래처 루트
 int storage_Order(Order* head, int num)
 {
 	
-	file_column_free();
+
 	if (initalizing("sample_Order") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -319,7 +340,8 @@ int storage_Order(Order* head, int num)
 		file_column_free();
 		return -1;
 	}
-	
+
+
 	//발주일 : 오늘 날짜, 납기일 : 내일
 	struct tm* t_order;
 	time_t base = time(NULL);
@@ -386,7 +408,7 @@ int storage_Order(Order* head, int num)
 	strcat(values, ord_date);
 
 
-	//발주내역을을 보여줄 떄 전체 내역이 아닌 저장한 내역만 보여주도록
+	//전체 발주파일에 내역 저장
 	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -394,14 +416,20 @@ int storage_Order(Order* head, int num)
 		file_column_free();
 		return -1;
 	}
-	
-	
+	file_column_free();
+	//현 발주내역을을 보여줄 떄 전체 내역이 아닌 저장한 내역만 보여주도록
+	printf("\n");
+
+	current_Order_list(values);
+
+
 
 }
 
 //02. 메인 -> 발주 -> 발주입력(품목코드) -> 거래처 목록 -> 발주!
 void all_Order_List()
 {
+	char key = NULL;
 	if (initalizing("sample_Order") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -410,7 +438,32 @@ void all_Order_List()
 		return -1;
 	}
 
-	print_data();
+	while (1)
+	{
+		
+		if (key == '`')
+		{
+			printf("메인메뉴로 돌아갑니다");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			file_column_free();
+			return main();
+		}
+		system("cls");
+		print_data();
+		printf("(`) 메인으로");
+		
+		printf("\n->");
+		scanf("%c", &key);
+		//file_column_free();
+		
+
+		
+	}
 	
 	
 	//return;

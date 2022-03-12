@@ -8,9 +8,11 @@ void material_create();
 void get_Materials_From_Bom(BOM_TREE* CurNode, Element1* NODE_CODE);
 void _get_Materials_From_Bom(BOM_TREE* CurNode, int Depth);
 void freeNodes(bomRes* obj);
+void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root);
 
 void stock()
 {
+
 	int input = 0;
 	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리\n");
 	printf("\t\t\t-----------------------------\n");
@@ -22,8 +24,8 @@ void stock()
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|     2. 품목코드로 조회    |\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|     3. create             |\n");
-	printf("\t\t\t-----------------------------\n");
+//	printf("\t\t\t|     3. create             |\n");
+//	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|     0. 이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
@@ -33,6 +35,8 @@ void stock()
 	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
+
+
 	switch (input)
 	{
 	case 1:
@@ -43,14 +47,16 @@ void stock()
 		code_read(NULL);
 		break;
 
-	case 3:
-		material_create();
-		break;
+	//case 3:
+	//	material_create();
+	//	break;
 
 	case 0:
 		material_management();
 		break;
 	}
+
+
 }
 
 //모든 재고 조회
@@ -156,7 +162,7 @@ void code_read(char* condition) {
 
 void material_create() {
 	char values[50];
-	char PRD_CODE[5];
+	char PRD_CODE[6];
 	char PRD_NAME[20];
 	char STATUS[5];
 	char DATE[8];
@@ -204,7 +210,7 @@ void material_create() {
 	strcat(values, "'");
 	printf("\n");
 
-	//_create("material", "PRD_CODE VARCHAR(6) PRD_NAME VARCHAR(20) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
+	_create("material", "PRD_CODE VARCHAR(6) PRD_NAME VARCHAR(20) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
 
 	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
@@ -229,6 +235,213 @@ void material_create() {
 	stock();
 }
 
+//int findMotherAmts(char* child, int res, char* root) {
+//	while (1) {
+//		if (strcmp(child, root) == 0) {
+//			break;
+//		}
+//		int result_count;
+//		result* _result;
+//		char* select_column = "NODE_CODE, REQ_NUM, M_CODE";
+//		char conditional[20] = "NODE_CODE='";
+//		strcat(conditional, child);
+//		strcat(conditional, "'");
+//
+//		if (initalizing("BOM_SAMPLE_3") == -1) {
+//			printf("%s\n", err_msg);
+//
+//			file_column_free();
+//			return -1;
+//		}
+//		if (_select(conditional, select_column, &select_result_str) == -1) {
+//			file_column_free();
+//			return 0;
+//		}
+//		else {
+//			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+//				file_column_free();
+//				result_free(_result, result_count);
+//				return 0;
+//			}
+//			else {
+//				_findMotherAmts(_result, result_count, child, res, root);
+//			}
+//		}
+//	}
+//	return res;
+//}
+
+//void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root) {
+//	if (strcmp(child, root) == 0) {
+//		return;
+//	}
+//	//_result 다시 맨처음으로 보낸뒤 모코드로 다시 올라가 반복
+//	char mCode[10];
+//	while (1) {
+//		if (strcmp(_result->name, "REQ_NUM") == 0) {
+//			res *= _result->_int_data[0];
+//			break;
+//		}
+//		_result = _result->next;
+//	}
+//	while (1) {
+//		if (strcmp(_result->name, "M_CODE") == 0) {
+//			strcpy(mCode, _result->_string_data[0]);
+//			break;
+//		}
+//		_result = _result->next;
+//	}
+//	file_column_free();
+//	result_free(_result, result_count);
+//	findMotherAmts(mCode, res, root);
+//}
+
+void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
+	leafs = leafs->next;
+	int flag = 1;
+	while (leafs->next != NULL) {
+		//원재료 리스트의 포인터 헤더로 다시 옮기기
+		while (result2->next != NULL) {
+			result2 = result2->next;
+			//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
+			//원재료 리스트에 항목 추가할수 있도록 flag 세우기
+			flag = 1;
+			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 넘어감
+			if (strcmp(result2->CODE, leafs->CODE) == 0) {
+				flag = 0;
+				break;
+			}
+		}
+		//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
+		//원재료 리스트에 항목 추가
+		if (flag == 1) {
+			//BOM 역전개로 조회하여 필요한 원재료 개수 구하기
+			int total = 1;
+			BOM_LIST* mList = BOM_RESEARCH(leafs->CODE);
+			while (mList != NULL) {
+				total *= mList->REQ_NUM;
+				mList = mList->next;
+			}
+
+			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
+			newNode->CODE = leafs->CODE;
+			//루트코드로 도달할때까지의 원재료의 필요개수 곱하기
+			newNode->AMOUNT = total;
+			newNode->next = result2->next;
+			result2->next = newNode;
+		}
+		leafs = leafs->next;
+	}
+}
+
+void createOrderedMaterials(bomRes* list) {
+	char values[50];
+	char PRD_CODE[7];
+	char PRD_NAME[20];
+	char STATUS[10] = "store";
+	char DATE[10];
+	char LOT[7];
+
+	struct tm* t;
+	time_t timer;
+
+	timer = time(NULL);    // 현재 시각을 초 단위로 얻기
+	t = localtime(&timer); // 초 단위의 시간을 분리하여 구조체에 넣기
+
+	//DATE에 오늘날짜 집어넣기(20001010형식)
+	sprintf(DATE, "%04d%02d%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
+
+	while (list->next != NULL) {
+		list = list->next;
+		//코드번호로 품목명 가져오기
+		if (initalizing("list") == -1) {
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+
+		int result_count;
+		result* _result;
+		char* select_column = "CODE, NAME";
+		char conditional[20] = "CODE='";
+		strcat(conditional, list->CODE);
+		strcat(conditional, "'");
+
+		if (_select(conditional, select_column, &select_result_str) == -1) {
+			file_column_free();
+			return 0;
+		}
+		else {
+			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+				file_column_free();
+				result_free(_result, result_count);
+				return 0;
+			}
+			else {
+				while (_result != NULL) {
+					if (strcmp(_result->name, "NAME") == 0) {
+						strcpy(PRD_NAME, *(_result->_string_data));
+						break;
+					}
+					else {
+						_result = _result->next;
+					}
+				}
+			}
+		}
+
+		//자재품목 파일 free
+		file_column_free();
+		result_free(_result, result_count);
+
+		for (int i = 0; i < list->AMOUNT; i++) {
+			//자재 파일 열기
+			if (initalizing("material") == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+
+			strcpy(PRD_CODE, list->CODE);
+
+			//LOT번호 만들기
+			int random = 0;
+			char tmpRand[5];
+			srand(time(NULL));
+			random = (rand() % 10000);
+			
+			if (random < 1000)
+				strcpy(LOT, "L0");
+			else
+				strcpy(LOT, "L");
+			
+			strcat(LOT, itoa(random, tmpRand, 10));
+
+			strcpy(values, "'");
+			strcat(values, PRD_CODE);
+			strcat(values, "', '");
+			strcat(values, PRD_NAME);
+			strcat(values, "', '");
+			strcat(values, STATUS);
+			strcat(values, "', ");
+			strcat(values, DATE);
+			strcat(values, ", '");
+			strcat(values, LOT);
+			strcat(values, "'");
+
+			if (_insert(values) == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+			file_column_free();
+		}
+	}
+}
+
 //생산계획 입력 후 받아와서 재고 확인, 발주갔다 돌아와서 공정으로 보내기
 void confirm_Material(plan* p) {
 	char* PLAN_PRODUCTION = p->PLAN_PRODUCTION;
@@ -245,74 +458,62 @@ void confirm_Material(plan* p) {
 	//BOM 조회
 	BOM_TREE* res = BOM_SEARCH(p->CODE);
 
-	//재귀적으로 모든 노드 훓어서 result리스트에 담기
+	//재귀적으로 모든 노드 훓어서 leafs리스트에 담기
 	get_Materials_From_Bom(res, res->NODE_CODE, leafs);
 
 	//원재료(단말노드)만 따로 리스트 만들기
-	leafs = leafs->next;
-	int flag = 1;
-	while (leafs->next != NULL) {
-		//원재료 리스트의 포인터 헤더로 다시 옮기기
-		result2 = head2;
-		while (result2->next != NULL) {
-			result2 = result2->next;
-			//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
-			//원재료 리스트에 항목 추가할수 있도록 flag 세우기
-			flag = 1;
-			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 기존에 숫자만 더해줌
-			if (strcmp(result2->CODE, leafs->CODE) == 0) {
-				result2->AMOUNT += leafs->AMOUNT;
-				flag = 0;
-				break;
-			}
-		}
-		//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
-		//원재료 리스트에 항목 추가
-		if (flag == 1) {
-			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
-			newNode->CODE = leafs->CODE;
-			newNode->AMOUNT = leafs->AMOUNT;
-			newNode->next = result2->next;
-			result2->next = newNode;
-		}
-		leafs = leafs->next;
-	}
+	makeLeafsList(leafs, result2, p->CODE);
+	
 	//트리를 그대로 담아온 리스트는 이제 필요없으므로 free
 	freeNodes(head1);
 
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 재고확인\n\n");
 	//생산계획의 수량에 맞추려면 필요한 원재료 개수 출력
-	printf("\t필요\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t필요\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	bomRes* list = head2;
 	while (list->next != NULL) {
 		list = list->next;
 		int planedAmt = atoi(p->PLAN_PRODUCTION);
 		//char* name = (char*)malloc(sizeof(char));
 		list->AMOUNT *= planedAmt;
-		
-		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
 
-		printf("%s : %d개\n", list->CODE, list->AMOUNT);
+		printf("\t\t\t\t%s(", list->CODE);
+		read_CODE2(list->CODE);
+		printf(") : %d개\n", list->AMOUNT);
 	}
 
 	//현재 가지고있는 재고의 개수 출력
-	printf("\n\t현재\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t현재\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	list = head2;
 	while (list->next != NULL) {
 		list = list->next;
 		int stock = findStock(list->CODE);
 
-		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
-
-		printf("%s : %d개\n", list->CODE, stock);
+		printf("\t\t\t\t%s(", list->CODE);
+		read_CODE2(list->CODE);
+		printf(") : %d개\n", stock);
 	}
 
 	system("pause");
 	system("cls");
 
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 재고확인\n\n");
+
+	printf("\n\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|입력한 계획을 실행하시겠습니까? (Y/N)  |\n");
+	printf("\t\t\t-----------------------------------------\n");
+	printf("\t\t\t\t 입력 :\n");
+
 	//원자재 - 재고수량 = 부족한 항목 출력
 	bomRes* result3 = (bomRes*)malloc(sizeof(bomRes));
 	result3->next = NULL;
-	printf("현재 부족한 항목은\n\n");
+	printf("\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|\t\t부족\t\t\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
 	list = head2;
 	while (list->next != NULL) {
 		list = list->next;
@@ -332,132 +533,42 @@ void confirm_Material(plan* p) {
 
 		//추후 자재품목 리스트에서 코드명으로 자재명 끌어오기
 
-		printf("%s : %d개\n", newnode->CODE, newnode->AMOUNT);
+		printf("\t\t\t\t%s(", newnode->CODE);
+		read_CODE2(newnode->CODE);
+		printf(") : %d개\n", newnode->AMOUNT);
 	}
 
 	//freeNodes(result2);
 
+
+	gotoxy(40, 7);
+	getchar();
 	char input;
-	printf("입니다. 주문하시겠습니까?(y / n) : ");
+	//printf("입니다. 주문하시겠습니까?(y / n) : ");
 	scanf("%c", &input);
 
-	if (input == 'y') {
-		char values[50];
-		char PRD_CODE[5];
-		char PRD_NAME[20];
-		char STATUS[10] = "store";
-		char DATE[8];
-		char LOT[5];
-
-		struct tm* t;
-		time_t timer;
-
-		timer = time(NULL);    // 현재 시각을 초 단위로 얻기
-		t = localtime(&timer); // 초 단위의 시간을 분리하여 구조체에 넣기
-
-		//DATE에 오늘날짜 집어넣기(20001010형식)
-		sprintf(DATE, "%04d%02d%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday);
-
+	if (input == 'Y') {
 		//발주로 보내기
 		Request_Order(result3);
 
 		//발주한 품목 자재에 insert
 		list = result3;
-		while (list->next != NULL) {
-			list = list->next;
-			//코드번호로 품목명 가져오기
-			if (initalizing("list") == -1) {
-				printf("%s\n", err_msg);
-
-				file_column_free();
-				return -1;
-			}
-
-			int result_count;
-			result* _result;
-			char* select_column = "CODE, NAME";
-			char conditional[20] = "CODE='";
-			strcat(conditional, list->CODE);
-			strcat(conditional, "'");
-
-			if (_select(conditional, select_column, &select_result_str) == -1) {
-				file_column_free();
-				return 0;
-			}
-			else {
-				if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-					file_column_free();
-					result_free(_result, result_count);
-					return 0;
-				}
-				else {
-					while (_result != NULL) {
-						if (strcmp(_result->name, "NAME") == 0) {
-							strcpy(PRD_NAME, *(_result->_string_data));
-							break;
-						}
-						else {
-							_result = _result->next;
-						}
-					}
-				}
-			}
-
-			//자재품목 파일 free
-			file_column_free();
-			result_free(_result, result_count);
-
-			for (int i = 0; i < list->AMOUNT; i++) {
-				//자재 파일 열기
-				if (initalizing("material") == -1) {
-					printf("%s\n", err_msg);
-
-					file_column_free();
-					return -1;
-				}
-
-				strcpy(PRD_CODE, list->CODE);
-
-				//LOT번호 만들기
-				int random = 0;
-				char tmpRand[4];
-				srand(time(NULL));
-				random = (rand() % 10000);
-				strcpy(LOT, "L");
-				strcat(LOT, itoa(random, tmpRand, 10));
-
-				strcpy(values, "'");
-				strcat(values, PRD_CODE);
-				strcat(values, "', '");
-				strcat(values, PRD_NAME);
-				strcat(values, "', '");
-				strcat(values, STATUS);
-				strcat(values, "', ");
-				strcat(values, DATE);
-				strcat(values, ", '");
-				strcat(values, LOT);
-				strcat(values, "'");
-
-				if (_insert(values) == -1) {
-					printf("%s\n", err_msg);
-
-					file_column_free();
-					return -1;
-				}
-				file_column_free();
-			}
-		}
-
-		//freeNodes(result3);
+		createOrderedMaterials(list);
 
 		//공정으로 보내기
 		system("cls");
-		printf("발주한 재고 기록 작성을 완료했습니다.\n");
+		printf("\n\t\t\t-----------------------------------------\n");
+		printf("\t\t\t| 발주한 재고 기록 작성을 완료했습니다! |\n");
+		printf("\t\t\t-----------------------------------------\n");
 		system("pause");
-		process();
+		process(result3);
 	}
 	else {
-		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
+		system("cls");
+		printf("\n\t\t\t-----------------------------------------\n");
+		printf("\t\t\t|\t\t취소를 선택하셨습니다.\t|\n");
+		printf("\t\t\t|\t생산 계획 메뉴로 돌아갑니다.\t|\n");
+		printf("\t\t\t-----------------------------------------\n");
 		system("pause");
 		system("cls");
 		production_menu();
