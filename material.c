@@ -23,8 +23,8 @@ void stock()
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|     2. 품목코드로 조회    |\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|     3. create             |\n");
-	printf("\t\t\t-----------------------------\n");
+//	printf("\t\t\t|     3. create             |\n");
+//	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|     0. 이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
@@ -44,9 +44,9 @@ void stock()
 		code_read(NULL);
 		break;
 
-	case 3:
-		material_create();
-		break;
+	//case 3:
+	//	material_create();
+	//	break;
 
 	case 0:
 		material_management();
@@ -205,7 +205,7 @@ void material_create() {
 	strcat(values, "'");
 	printf("\n");
 
-	//_create("material", "PRD_CODE VARCHAR(6) PRD_NAME VARCHAR(20) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
+	_create("material", "PRD_CODE VARCHAR(6) PRD_NAME VARCHAR(20) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
 
 	if (initalizing("material") == -1) {
 		printf("%s\n", err_msg);
@@ -230,66 +230,66 @@ void material_create() {
 	stock();
 }
 
-int findMotherAmts(char* child, int res, char* root) {
-	while (1) {
-		if (strcmp(child, root) == 0) {
-			break;
-		}
-		int result_count;
-		result* _result;
-		char* select_column = "NODE_CODE, REQ_NUM, M_CODE";
-		char conditional[20] = "NODE_CODE='";
-		strcat(conditional, child);
-		strcat(conditional, "'");
+//int findMotherAmts(char* child, int res, char* root) {
+//	while (1) {
+//		if (strcmp(child, root) == 0) {
+//			break;
+//		}
+//		int result_count;
+//		result* _result;
+//		char* select_column = "NODE_CODE, REQ_NUM, M_CODE";
+//		char conditional[20] = "NODE_CODE='";
+//		strcat(conditional, child);
+//		strcat(conditional, "'");
+//
+//		if (initalizing("BOM_SAMPLE_3") == -1) {
+//			printf("%s\n", err_msg);
+//
+//			file_column_free();
+//			return -1;
+//		}
+//		if (_select(conditional, select_column, &select_result_str) == -1) {
+//			file_column_free();
+//			return 0;
+//		}
+//		else {
+//			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+//				file_column_free();
+//				result_free(_result, result_count);
+//				return 0;
+//			}
+//			else {
+//				_findMotherAmts(_result, result_count, child, res, root);
+//			}
+//		}
+//	}
+//	return res;
+//}
 
-		if (initalizing("BOM_SAMPLE_3") == -1) {
-			printf("%s\n", err_msg);
-
-			file_column_free();
-			return -1;
-		}
-		if (_select(conditional, select_column, &select_result_str) == -1) {
-			file_column_free();
-			return 0;
-		}
-		else {
-			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-				file_column_free();
-				result_free(_result, result_count);
-				return 0;
-			}
-			else {
-				_findMotherAmts(_result, result_count, child, res, root);
-			}
-		}
-	}
-	return res;
-}
-
-void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root) {
-	if (strcmp(child, root) == 0) {
-		return;
-	}
-	//_result 다시 맨처음으로 보낸뒤 모코드로 다시 올라가 반복
-	char mCode[10];
-	while (1) {
-		if (strcmp(_result->name, "REQ_NUM") == 0) {
-			res *= _result->_int_data[0];
-			break;
-		}
-		_result = _result->next;
-	}
-	while (1) {
-		if (strcmp(_result->name, "M_CODE") == 0) {
-			strcpy(mCode, _result->_string_data[0]);
-			break;
-		}
-		_result = _result->next;
-	}
-	file_column_free();
-	result_free(_result, result_count);
-	findMotherAmts(mCode, res, root);
-}
+//void _findMotherAmts(result* _result, int result_count, char* child, int res, char* root) {
+//	if (strcmp(child, root) == 0) {
+//		return;
+//	}
+//	//_result 다시 맨처음으로 보낸뒤 모코드로 다시 올라가 반복
+//	char mCode[10];
+//	while (1) {
+//		if (strcmp(_result->name, "REQ_NUM") == 0) {
+//			res *= _result->_int_data[0];
+//			break;
+//		}
+//		_result = _result->next;
+//	}
+//	while (1) {
+//		if (strcmp(_result->name, "M_CODE") == 0) {
+//			strcpy(mCode, _result->_string_data[0]);
+//			break;
+//		}
+//		_result = _result->next;
+//	}
+//	file_column_free();
+//	result_free(_result, result_count);
+//	findMotherAmts(mCode, res, root);
+//}
 
 void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
 	leafs = leafs->next;
@@ -303,7 +303,6 @@ void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
 			flag = 1;
 			//원재료 리스트에 이미 있는 품목이면 리스트를 새로 추가하지 않고 넘어감
 			if (strcmp(result2->CODE, leafs->CODE) == 0) {
-			//	result2->AMOUNT += leafs->AMOUNT;
 				flag = 0;
 				break;
 			}
@@ -311,10 +310,18 @@ void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
 		//while문을 다 돌도록 같은 품목을 찾지 못하면(flag가 0으로 변하지 않으면)
 		//원재료 리스트에 항목 추가
 		if (flag == 1) {
+			//BOM 역전개로 조회하여 필요한 원재료 개수 구하기
+			int total = 1;
+			BOM_LIST* mList = BOM_RESEARCH(leafs->CODE);
+			while (mList != NULL) {
+				total *= mList->REQ_NUM;
+				mList = mList->next;
+			}
+
 			bomRes* newNode = (bomRes*)malloc(sizeof(bomRes));
 			newNode->CODE = leafs->CODE;
 			//루트코드로 도달할때까지의 원재료의 필요개수 곱하기
-			newNode->AMOUNT = findMotherAmts(leafs->CODE, 1, root);
+			newNode->AMOUNT = total;
 			newNode->next = result2->next;
 			result2->next = newNode;
 		}
@@ -324,11 +331,11 @@ void makeLeafsList(bomRes* leafs, bomRes* result2, char* root) {
 
 void createOrderedMaterials(bomRes* list) {
 	char values[50];
-	char PRD_CODE[5];
+	char PRD_CODE[7];
 	char PRD_NAME[20];
 	char STATUS[10] = "store";
 	char DATE[10];
-	char LOT[5];
+	char LOT[7];
 
 	struct tm* t;
 	time_t timer;
@@ -396,7 +403,7 @@ void createOrderedMaterials(bomRes* list) {
 
 			//LOT번호 만들기
 			int random = 0;
-			char tmpRand[4];
+			char tmpRand[5];
 			srand(time(NULL));
 			random = (rand() % 10000);
 			strcpy(LOT, "L");
