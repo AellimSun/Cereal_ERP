@@ -28,7 +28,7 @@ void process(bomRes* result, plan* p)
 	system("cls");
 	//PRO_all_read();
 	//system("pause");
-	system("cls");
+	//system("cls");
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*                         *|\n");
