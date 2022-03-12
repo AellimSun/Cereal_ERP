@@ -1,32 +1,6 @@
 #include "cereal.h"
 #include <stdio.h>
 
-
-//int main(void)
-//{
-//	char* values = "NULL, 800, 'q', 69.11212, 4215.134555666777";
-//	char* conditional = "TP='q'";
-//	char *set = "TP='c'";
-//	char* select_column = "code, number, TP, FLT, DBL";
-//
-//	result* _result;
-//	result* find;
-//	int result_count;
-//
-//	if (initalizing("D:\\git\\my\\Project1\\samplec") == -1)
-//	{
-//		printf("%s\n", err_msg);
-//
-//		file_column_free();
-//		return -1;
-//	}
-//	print_data();
-//
-//	printf("n");
-//
-//}
-
-
 typedef struct Materialsnode {
 	char CODE[5];
 	char NAME[20];
@@ -53,28 +27,32 @@ void product_list()
 	//_create("list", "CODE VARCHAR(6) NAME VARCHAR(30) BACKUP INT MSP CHAR");
 	//print_data();
 	
-		//if (initalizing("list") == -1)
-		//{
-		//printf("%s\n", err_msg);
-
-		//file_column_free();
-		//return -1;
-		//}
-	
-		//_insert("'A0000', '바나나', 10");
-		//
-		//print_data();
-
-		//file_column_free();
-
 	int menu;
-	printf("1.자재품목 등록\n");
-	printf("2.자재품목 수정\n");
-	printf("3.자재품목 조회\n");
-	printf("4.자재품목 삭제\n");
-	printf("===============\n");
-	printf("0.이전으로");
+
+	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> 자재품목 리스트\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      1.자재품목 등록      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      2.자재품목 수정      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.자재품목 조회      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      4.자재품목 삭제      |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      0.이전으로           |\n");
+	printf("\t\t\t-----------------------------\n\n");
+
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 17);
+	
+
 	scanf("%d", &menu);
+	system("cls");
 
 	switch (menu)
 	{
@@ -194,7 +172,6 @@ void insertMaterials()
 
 void updateMaterials()
 {
-	//먼저 수정할 리스트 볼 수 있게 조회하기
 	if (initalizing("list") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -207,17 +184,18 @@ void updateMaterials()
 	printf("\n");
 
 	char search1[10];
-	char temp[30] = "CODE='";
-	char search2[10], search3[10];
-	char temp2[30];
+	char temp1[20] = "CODE='";
+	char search2[30];
+	char search3[30];
+	char temp2[20];
  
-	printf("수정할 거래처의 코드(CODE)를 입력 : ");
+	printf("수정할 자재품목 코드(CODE)를 입력 : ");
 	scanf("%s", search1);
 
-	strcat(temp, search1);
-	strcat(temp, "'");
-
-	char *conditional = temp;
+	strcat(temp1, search1);
+	strcat(temp1, "'");
+	
+	char* conditional = temp1;
 
 	printf("수정할 컬럼명을 입력 : ");
 	scanf("%s", search2);
@@ -225,7 +203,7 @@ void updateMaterials()
 	scanf("%s", search3);
 	strcat(search2, "='");
 	strcat(search2, search3);
-	strcat(search2, "='");
+	strcat(search2, "'");
 
 	char* set = search2;
 
@@ -241,6 +219,10 @@ void updateMaterials()
 	printf("\n");
 	file_column_free();
 
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
+
 	product_list();
 }
 
@@ -248,13 +230,29 @@ void readMaterials()
 {
 	int menu;
 
-	printf("1. 자재품목 코드로 조회\n");
-	printf("2. 자재품목 이름으로 조회\n");
-	printf("3. 자재품목 계정으로 조회\n");
-	printf("4. 자재품목 전체조회\n");
-	printf("0. 이전으로\n");
-	scanf("%d", &menu);
+	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> 자재품목 리스트 -> 자재품목 조회\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|  1. 자재품목 코드로 조회  |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t| 2. 자재품목 이름으로 조회 |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t| 3. 자재품목 계정으로 조회 |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|   4. 자재품목 전체조회    |\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|        0. 이전으로        |\n");
+	printf("\t\t\t-----------------------------\n\n");
+	printf("\t\t\t\t 입력 :\n");
+	printf("\t\t\t\t        ^");
+	gotoxy(40, 17);
 
+	scanf("%d", &menu);
+	system("cls");
+	
 	switch (menu)
 	{
 	case 1:
@@ -288,13 +286,13 @@ void deleteMaterials()
 	print_data();
 	printf("\n");
 
-	char search[10];
-	char temp[20] = "CODE='";
+	char search[20];
+	char temp[30] = "CODE='";
 
 	printf("삭제할 자재품목코드를 입력 : ");
 	scanf("%s", search);
 	strcat(temp, search);
-	strcat(temp, search);
+	strcat(temp, "'");
 
 	char* conditional = temp;
 
@@ -310,8 +308,11 @@ void deleteMaterials()
 	printf("\n");
 	file_column_free();
 	
-	product_list();
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
 
+	product_list();
 }
 
 void read_CODE(char* search)
@@ -337,7 +338,7 @@ void read_CODE(char* search)
 		file_column_free();
 		return -1;
 	}
-	printf("%s", conditional);
+	//printf("%s", conditional);
 
 	if (_select(conditional, select_column, &select_result_str) == -1)
 	{
@@ -361,6 +362,10 @@ void read_CODE(char* search)
 	result_print(_result, result_count);
 	printf("\n");
 	file_column_free();
+
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
 
 	product_list();
 }
@@ -418,7 +423,7 @@ void read_NAME()
 	result* _result;
 	int result_count;
 
-	printf("검색할 자재품목 이름을 입력하세요 : ");
+	printf("검색할 자재품목 이름을 입력 : ");
 	scanf("%s", search);
 
 	strcat(temp, search);
@@ -461,6 +466,10 @@ void read_NAME()
 	printf("\n");
 	file_column_free();
 
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
+
 	product_list();
 }
 
@@ -473,7 +482,7 @@ void read_MSP()
 	result* _result;
 	int result_count;
 
-	printf("원자재:M, 반제품:S, 완제품:P\n 검색할 자재품목 계정을 입력 : \n ");
+	printf("원자재:M, 반제품:S, 완제품:P\n 검색할 자재품목 계정을 입력 : ");
 	scanf("%s", search);
 
 	strcat(temp, search);
@@ -516,6 +525,10 @@ void read_MSP()
 	printf("\n");
 	file_column_free();
 
+	printf("자재품목 리스트로 이동합니다. \n");
+	system("pause");
+	system("cls");
+
 	product_list();
 }
 
@@ -532,6 +545,11 @@ void read_ALL()
 	print_data();
 	printf("\n");
 	file_column_free();
+
+	printf("자재품목 리스트로 이동합니다. \n");
+	//getch();
+	system("pause");
+	system("cls");
 
 	product_list();
 }
