@@ -516,8 +516,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(ROOT_CODE, cur->_string_data[i]);
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "NODE_CODE") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -528,8 +527,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(NODE_CODE, cur->_string_data[i]);
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "PRODUCT_NAME") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -540,8 +538,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		strcpy(PRODUCT_NAME, cur->_string_data[i]);
 
-
-		result* cur = _result;
+				result* cur = _result;
 		while ((strcmp(cur->name, "REQ_NUM") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -552,8 +549,7 @@ BOM_LIST* _BOM_SEARCH(char* _conditional, BOM_LIST* list)
 		}
 		REQ_NUM = cur->_int_data[i];
 
-
-		cur = _result;
+				cur = _result;
 		while ((strcmp(cur->name, "M_CODE") != 0) && cur != NULL)
 			cur = cur->next;
 		if (cur == NULL)
@@ -814,7 +810,7 @@ BOM_LIST* BOM_RESEARCH(char* _conditional)
 	ROOT_LIST =	Make_LIST(_result, result_count, ROOT_LIST, _conditional);
 
 	file_column_free();
-	result_free(_result, result_count); //애매...
+	result_free(_result, result_count);
 	return ROOT_LIST;
 }
 
@@ -947,20 +943,15 @@ BOM_LIST* BOM_CreateNode_list(BOM_LIST* list, Element1* ROOT_CODE, Element1* NOD
 	newNode->pre = NULL;
 
 	if (list == NULL)
-	{
 		list = newNode;
-	}
 	else
 	{
 		BOM_LIST* cur = list;
 		while (cur->next != NULL)
-		{
 			cur = cur->next;
-		}
 		cur->next = newNode;
 		newNode->pre = cur;
 	}
-
 	return list;
 }
 
@@ -1111,10 +1102,6 @@ void BOM_record_main()
 		printf("\t\t\t|*                         *|\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|      1.BOM 신규등록       |\n");
-		//printf("\t\t\t-----------------------------\n");
-		//printf("\t\t\t|      2.BOM 수정           |\n");
-		//printf("\t\t\t-----------------------------\n");
-		//printf("\t\t\t|      3.BOM 삭제           |\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|      0.이전으로           |\n");
 		printf("\t\t\t-----------------------------\n\n");
@@ -1123,7 +1110,7 @@ void BOM_record_main()
 		gotoxy(40, 11);
 
 		scanf("%d", &input);
-	} while (input < -1 || input > 3);
+	} while (input < -1 || input > 1);
 
 
 	switch (input)
@@ -1141,24 +1128,6 @@ void BOM_record_main()
 	{
 		//1.BOM 신규등록 
 		BOM_Create_main();
-		system("cls");
-		BOM_record_main();
-	}
-	break;
-	case 2:
-	{
-		//2.BOM 수정
-		BOM_Update_main();
-		system("pause");
-		system("cls");
-		BOM_record_main();
-	}
-	break;
-	case 3:
-	{
-		//3.BOM 삭제 
-		BOM_Delete_main();
-		system("pause");
 		system("cls");
 		BOM_record_main();
 	}
@@ -1221,6 +1190,7 @@ void BOM_Create_main()
 
 	Element1 _NODE_CODE[10][6] = { 0 };
 	int index = 0;
+
 	//자코드 검색
 	do
 	{
@@ -1623,27 +1593,6 @@ int code_to_name(char* _conditional)
 	file_column_free();
 	result_free(_result, result_count);
 	return 1;
-}
-
-void BOM_Update_main()
-{
-	system("cls");
-	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> BOM 등록 -> BOM 수정\n\n");
-
-
-
-
-
-}
-
-void BOM_Delete_main()
-{
-	system("cls");
-	printf("위치 : 메인메뉴 -> 생산관리 -> 기초정보관리 -> BOM 등록 -> BOM 삭제\n\n");
-
-	print_data();
-	printf("\n");
-	file_column_free();
 }
 
 void init_bom()

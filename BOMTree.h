@@ -82,12 +82,6 @@ char* code_to_name_list(char* _conditional);
 int code_to_name(char* _conditional);
 // BOM 파일에 데이터를 등록하는 함수
 
-void BOM_Update_main();
-// BOM 파일에 데이터를 수정하는 함수
-
-void BOM_Delete_main();
-// BOM 파일에 데이터를 삭제하는 함수
-
 int is_first_data_0();
 void delete_data_0();
 void init_bom();
