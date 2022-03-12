@@ -10,6 +10,7 @@
 
 void init(void);
 void PRO_all_read();
+void pro_read(char*);
 void bg_process(plan* prd_plan, bomRes* result);
 
 int produce_parts(bomRes* head);			// 생산계획따라 자재에서 사용함으로 바꿈
@@ -39,7 +40,8 @@ void process(bomRes* result, plan* p)
 	Sleep(2000);
 	system("cls");
 	bg_process(tmp, p_use_amount);
-	PRO_all_read();
+	//PRO_all_read();
+	pro_read(p->CODE);
 	system("pause");
 
 	free_Bnode(result);
@@ -292,7 +294,7 @@ char* get_PRD_NAME(char* p_code)
 			if (strcmp(cur->name, "NAME") == 0) {
 				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
 				char* res = *(cur->_string_data);
-				printf("%s\n",res);
+				//printf("%s\n",res);
 				file_column_free();
 				return res;
 			}
@@ -400,6 +402,46 @@ void PRO_all_read()
 	//char* values = "'B4001', 'store', 20220308, 'L0004'";
 	int result_count;
 	result* _result;
+	if (initalizing(MAT_FILE_NAME) == -1) {
+		printf("%s\n", err_msg);
+		file_column_free();
+		return -1;
+	}
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		printf("조회할 데이터가 없습니다.\n");
+		file_column_free();
+		system("pause");
+		system("cls");
+	}
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			printf("%s\n", err_msg);
+			file_column_free();
+			return -1;
+		}
+		result_print(_result, result_count);
+		printf("\n\n");
+	}
+	file_column_free();
+	result_free(_result, result_count);
+	system("pause");
+	system("cls");
+}
+void pro_read(char* code)
+{
+	char* text1 = "PRD_CODE = '";
+	char* text2 = "'";
+	char* conditional = (char*)malloc(sizeof(text1) + sizeof(code) + sizeof(text2));
+	if (conditional == 0) exit(1);
+	char* select_column = "PRD_CODE, PRD_NAME, STATUS, DATE, LOT";
+	char* CODE = code;
+	int result_count;
+	result* _result;
+
+	strcpy(conditional, text1);
+	strcat(conditional, CODE);
+	strcat(conditional, text2);
+
 	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
 		file_column_free();
