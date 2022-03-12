@@ -32,7 +32,7 @@ int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
 void produce_product(req_code* head);		//  생산계획따라 품목 자재에 생산 수량 업로드
 void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
-char give_LOT();		// 생산품 LOT번호 생성
+char* give_LOT();		// 생산품 LOT번호 생성
 
 req_code* New(req_code* head, int num, char* code);
 void req_code_free_Head(req_code* head);
@@ -58,11 +58,11 @@ void bg_process(plan* prd_plan)
 	char* con = (char*)malloc(sizeof(prd_plan->CODE));
 	strcpy(con, prd_plan->CODE);
 	bom_res = BOM_SEARCH(con);
-	system("pause");
+	//system("pause");
 	//BOM_Forward_PrintTree(bom_res, con);
-	system("pause");
+	//system("pause");
 
-	BOM_read();
+	//BOM_read();
 	system("pause");
 
 	req_code* mat_head = (req_code*)malloc(sizeof(req_code));
@@ -185,8 +185,7 @@ void pro_material_use(char* p_code, int p_num) {
 			return -1;
 		}
 		result_print(_result, result_count);
-
-		system("pause");
+		//system("pause");
 
 		//update 하기
 		for (int i = 0; i < p_num; i++) {
@@ -219,10 +218,13 @@ void pro_material_use(char* p_code, int p_num) {
 							file_column_free();
 							return -1;
 						}
-						printf("자재수정 : %s\n", conditional1);
+						printf("사용자재 : %s\n", conditional1);
+						printf("자재 생산중...\n");
 						cnt++;
 						free(conditional1);
 						free(lot);
+						Sleep(3000);
+						system("cls");
 					}
 				}
 
@@ -246,17 +248,25 @@ void pro_material_use(char* p_code, int p_num) {
 void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 	char values[50];
 	char* PRD_CODE = p_code;									//수정!!!!!!!!!!
-	char STATUS[5] = "store";
-	char DATE[8];
-	char tmp[4];
+	char STATUS[6] = "store";
+	char DATE[9] = {""};
+	char tmp[9] = {""};
 	char ACC_CODE[5] = "0000";									//수정!!!!!!!!!!-어디서 받을건지
-	char* LOT = give_LOT();
+	char LOT[6];
+
+	strcpy(LOT,give_LOT());
 
 	//날짜 입력
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
-	sprintf(tmp, "%d", tm.tm_year);
+	sprintf(tmp, "%d", tm.tm_year+1900);
+
+
 	strcpy(DATE, tmp);
+	if (tm.tm_mon < 10)
+	{
+		strcat(DATE, "0");
+	}
 	sprintf(tmp, "%d", tm.tm_mon);
 	strcat(DATE, tmp);
 	sprintf(tmp, "%d", tm.tm_mday);
@@ -277,7 +287,7 @@ void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 
 	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
 
-	if (initalizing("material") == -1) {
+	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
 
 		file_column_free();
@@ -291,15 +301,16 @@ void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 		return -1;
 	}
 
-	print_data();
-	printf("\n");
+	//print_data();
+	//printf("\n");
 	file_column_free();
+
 }
-char give_LOT(void)
+char* give_LOT(void)
 {
-	char LOT[5];
+	char LOT[6] = {""};
 	int random = 0;
-	char tmpRand[4];
+	char tmpRand[5];
 
 	srand(time(NULL));
 	random = (rand() % 10000);
@@ -423,7 +434,6 @@ void PRO_all_read() {
 		file_column_free();
 		system("pause");
 		system("cls");
-		stock();
 	}
 	else {
 		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
@@ -474,4 +484,5 @@ void BOM_read()
 
 	print_data();
 	file_column_free();
+
 }
