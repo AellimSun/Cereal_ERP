@@ -497,7 +497,7 @@ void confirm_Material(plan* p) {
 		read_CODE2(list->CODE);
 		printf(") : %d°³\n", stock);
 	}
-
+//
 	system("pause");
 	system("cls");
 
