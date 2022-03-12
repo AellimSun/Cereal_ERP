@@ -161,7 +161,7 @@ void code_read(char* condition) {
 
 void material_create() {
 	char values[50];
-	char PRD_CODE[5];
+	char PRD_CODE[6];
 	char PRD_NAME[20];
 	char STATUS[5];
 	char DATE[8];
@@ -266,11 +266,11 @@ void makeLeafsList(bomRes* leafs, bomRes* result2) {
 
 void createOrderedMaterials(bomRes* list) {
 	char values[50];
-	char PRD_CODE[5];
+	char PRD_CODE[7];
 	char PRD_NAME[20];
 	char STATUS[10] = "store";
 	char DATE[10];
-	char LOT[5];
+	char LOT[6];
 
 	struct tm* t;
 	time_t timer;
@@ -338,10 +338,15 @@ void createOrderedMaterials(bomRes* list) {
 
 			//LOT번호 만들기
 			int random = 0;
-			char tmpRand[4];
+			char tmpRand[5];
 			srand(time(NULL));
 			random = (rand() % 10000);
-			strcpy(LOT, "L");
+			
+			if (random < 1000)
+				strcpy(LOT, "L0");
+			else
+				strcpy(LOT, "L");
+			
 			strcat(LOT, itoa(random, tmpRand, 10));
 
 			strcpy(values, "'");
