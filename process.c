@@ -42,7 +42,7 @@ void process(void)
 	init();
 	printf("공정이 시작됩니다.\n");
 	bg_process();
-}
+}//
 
 void bg_process(void)
 {
