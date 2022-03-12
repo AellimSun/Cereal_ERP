@@ -354,6 +354,7 @@ result* find_result(result* result_head, char* column_name) {
 void result_print(result* result_head, int result_count) {
 	result* cur;
 	cur = result_head;
+	
 	while (1) {
 		printf("     %s", cur->name);
 		if (cur->next == 0)
