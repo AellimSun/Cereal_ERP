@@ -11,6 +11,7 @@ void freeNodes(bomRes* obj);
 
 void stock()
 {
+
 	int input = 0;
 	printf("위치 : 메인메뉴 -> 자재관리 -> 재고관리\n");
 	printf("\t\t\t-----------------------------\n");
@@ -33,6 +34,8 @@ void stock()
 	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
+
+
 	switch (input)
 	{
 	case 1:
@@ -51,6 +54,8 @@ void stock()
 		material_management();
 		break;
 	}
+
+
 }
 
 //모든 재고 조회

@@ -234,7 +234,7 @@ int _insert(char* values) {
 	column* cur = head->next;
 	int index = 0;
 	int IS_STRING = 0;
-
+	
 	strcpy(_values, values);
 	F = fopen(_file_location, "ab");
 	while (1) {

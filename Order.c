@@ -1,6 +1,4 @@
 #include "cereal.h"
-//#include <stdlib.h>
-//#define _GNU_SOURCE
 #include <string.h>
 #include <time.h>
 
@@ -175,7 +173,11 @@ void material_to_prosess(plan* head, bomRes* met)
 //plan구조체로 넘겨줘야한다.
 void Request_Order(bomRes* met_ord)
 {
-
+	if (_create("pre_sample_Order", "O_DATE INT D_DATE INT ACC_CODE VARCHAR(10) ORDER_NUM INT PRD_CODE VARCHAR(10) NUM INT") == -1)
+	{
+		printf("%s\n", err_msg);
+		return -1;
+	}
 	
 	//printf("Request_Order\n");
 	char values[30];
@@ -183,7 +185,7 @@ void Request_Order(bomRes* met_ord)
 	plan* Cod_n_Num;
 
 	//initialization 구조체
-	
+
 	if ((insert_ord = (Order*)malloc(sizeof(Order))) == NULL) {
 
 		return -1;
@@ -266,7 +268,7 @@ void Request_Order(bomRes* met_ord)
 		result_print(_result, result_count);
 		printf("\n");
 		//free(values);
-
+		file_column_free();
 		Sleep(1000);
 	
 		
@@ -285,15 +287,32 @@ void Request_Order(bomRes* met_ord)
 		//print_data();
 
 		met = met->next;
-		result_free(_result, result_count);
+		//result_free(_result, result_count);
 
-		file_column_free();
+		//file_column_free();
 		Sleep(3000);
 
 	}
-	
+
+	system("cls");
+	printf("저장된 발주 내역입니다\n");
 
 	
+
+	if (initalizing("pre_sample_Order") == -1)
+	{
+
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		
+		return -1;
+
+	}
+
+	print_data();
+	file_column_free();
+	Sleep(1000);
 	printf("발주를 종료합니다.");
 	Sleep(500);
 	printf(".");
@@ -306,12 +325,34 @@ void Request_Order(bomRes* met_ord)
 	
 	
 }
+void current_Order_list(char* values)
+{
+
+	if (initalizing("pre_sample_Order") == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	if (_insert(values) == -1)
+	{
+		printf("%s\n", err_msg);
+
+		file_column_free();
+		return -1;
+	}
+	print_data();
+	Sleep(1000);
+	file_column_free();
+
+}
 
 //01 자재 -> 발주 -> 거래처 루트
 int storage_Order(Order* head, int num)
 {
 	
-	file_column_free();
+
 	if (initalizing("sample_Order") == -1)
 	{
 		printf("%s\n", err_msg);
@@ -319,7 +360,8 @@ int storage_Order(Order* head, int num)
 		file_column_free();
 		return -1;
 	}
-	
+
+
 	//발주일 : 오늘 날짜, 납기일 : 내일
 	struct tm* t_order;
 	time_t base = time(NULL);
@@ -386,7 +428,7 @@ int storage_Order(Order* head, int num)
 	strcat(values, ord_date);
 
 
-	//발주내역을을 보여줄 떄 전체 내역이 아닌 저장한 내역만 보여주도록
+	//전체 발주파일에 내역 저장
 	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -394,8 +436,13 @@ int storage_Order(Order* head, int num)
 		file_column_free();
 		return -1;
 	}
-	
-	
+	file_column_free();
+	//현 발주내역을을 보여줄 떄 전체 내역이 아닌 저장한 내역만 보여주도록
+	printf("\n");
+
+	current_Order_list(values);
+
+
 
 }
 
