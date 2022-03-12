@@ -6,6 +6,8 @@
 //#define MAT_FILE_NAME "test_pro_material"
 #define MAT_FILE_NAME "material"
 #define BOM_FILE_NAME "BOM_SAMPLE_3"
+#define LIS_FILE_NAME "list"
+
 void init(void);
 void PRO_all_read();
 void bg_process(plan* prd_plan, bomRes* result);
@@ -15,7 +17,7 @@ void produce_product(char* p_code, int p_num);		//  생산계획따라 품목 자재에 생�
 void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
 char* give_LOT();		// 생산품 LOT번호 생성
-
+char* get_PRD_NAME(char* p_code);
 void free_Bnode(bomRes* head);
 void free_Pnode(plan* head);
 
@@ -24,8 +26,8 @@ void process(bomRes* result, plan* p)
 	plan* tmp = p;
 	bomRes* p_use_amount = result;
 	system("cls");
-	PRO_all_read();
-	system("pause");
+	//PRO_all_read();
+	//system("pause");
 	system("cls");
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
@@ -37,6 +39,7 @@ void process(bomRes* result, plan* p)
 	Sleep(2500);
 	system("cls");
 	bg_process(tmp, p_use_amount);
+	PRO_all_read();
 	system("pause");
 
 	free_Bnode(result);
@@ -55,8 +58,6 @@ void bg_process(plan* prd_plan, bomRes* result)
 
 	system("pause");
 }
-
-
 int produce_parts(bomRes* result)
 {
 	bomRes* cur = result->next;
@@ -77,20 +78,6 @@ int produce_parts(bomRes* result)
 		cur = cur->next;
 	}
 }
-
-void free_node(bomRes* head)
-{
-	bomRes* cur = head->next;
-	if (cur == NULL) exit(1);
-	while (cur->next != NULL)
-	{
-		head = cur;
-		cur = cur->next;
-		free(head);
-	}
-	free(cur);
-}
-
 void pro_material_use(char* p_code, int p_num)
 {
 	char* text1 = "PRD_CODE = '";
@@ -191,6 +178,7 @@ void pro_material_create(char* p_code)
 	char tmp[9] = { "" };
 	char LOT[6];
 
+	strcpy(PRD_NAME,get_PRD_NAME(p_code));
 	strcpy(LOT, give_LOT());
 
 	//날짜 입력
@@ -209,6 +197,8 @@ void pro_material_create(char* p_code)
 	strcpy(values, "'");
 	strcat(values, PRD_CODE);
 	strcat(values, "', '");
+	strcat(values, PRD_NAME);
+	strcat(values, "', '");
 	strcat(values, STATUS);
 	strcat(values, "', ");
 	strcat(values, DATE);
@@ -216,7 +206,7 @@ void pro_material_create(char* p_code)
 	strcat(values, LOT);
 	strcat(values, "'");
 	printf("\n");
-	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
+	//_create("material", "PRD_CODE VARCHAR(6) PRD_NAME VARCHAR(20) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
 	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
 		file_column_free();
@@ -262,6 +252,50 @@ char* give_LOT(void)
 		strcat(LOT, itoa(random, tmpRand4, 10));
 	}
 	return LOT;
+}
+char* get_PRD_NAME(char* p_code)
+{
+	char* text1 = "PRD_CODE='";
+	char* text2 = "'";
+	char* conditional=(char*)malloc(sizeof(text1)+sizeof(text2)+sizeof(p_code));
+	if (conditional == 0) exit(1);
+	char* select_column = "PRD_NAME";
+	//char* values = "'B4001', 'PRD_NAME', 'store', 20220308, 'L0004'";
+	int result_count;
+	result* _result;
+
+	strcpy(conditional, text1);
+	strcat(conditional, p_code);
+	strcat(conditional, text2);
+
+	if (initalizing(LIS_FILE_NAME) == -1) {
+		printf("%s\n", err_msg);
+		file_column_free();
+		return -1;
+	}
+	if (_select(conditional, select_column, &select_result_str) == -1) {
+		printf("조회할 데이터가 없습니다.\n");
+		file_column_free();
+		system("pause");
+		system("cls");
+	}
+	else {
+		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+			printf("%s\n", err_msg);
+			file_column_free();
+			return -1;
+		}
+		result* cur = _result;
+		while (1) {
+			//현재 노드의 컬럼명이 PRD_NAME일 경우
+			if (strcmp(cur->name, "PRD_NAME") == 0) {
+				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
+				return cur->_string_data;
+			}
+			if (cur->next == NULL) break;
+			else cur = cur->next;
+		}
+	}
 }
 void produce_product(char* p_code, int p_num)
 {
