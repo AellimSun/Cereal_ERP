@@ -173,15 +173,15 @@ void material_to_prosess(plan* head, bomRes* met)
 //plan구조체로 넘겨줘야한다.
 void Request_Order(bomRes* met_ord)
 {
+
 	if (_create("pre_sample_Order", "O_DATE INT D_DATE INT ACC_CODE VARCHAR(10) ORDER_NUM INT PRD_CODE VARCHAR(10) NUM INT") == -1)
 	{
 		printf("%s\n", err_msg);
 		return -1;
 	}
-	
-	//printf("Request_Order\n");
+
 	char values[30];
-	
+
 	plan* Cod_n_Num;
 
 	//initialization 구조체
@@ -219,85 +219,97 @@ void Request_Order(bomRes* met_ord)
 		printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 발주요청\n\n");
 		//printf("======================================\n");
 
-		char* prd_code = met->CODE;
-		//printf("met->CODE : %s", met->CODE);
-		printf("품목 코드 : %s\n", prd_code);
-		int amount = met->AMOUNT;
-
-	
-
-
-		//print_data();
-		//print_data();
-	
-		strcpy(values, "PRD_CODE = '");
-		strcat(values, prd_code);
-		strcat(values, "'");
-
-
-		//printf("values ..-> %s\n", values);
-		//printf("추출한 데이터 확인\n");
-		
-		if (initalizing("account") == -1)
+		if (met->AMOUNT <= 0)
 		{
-			printf("%s\n", err_msg);
 
-			file_column_free();
-			return -1;
-		}
-		//Sleep(3000);
-		Sleep(1000);
-		if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
-			printf("%s\n", err_msg);
+			//system("cls");
+			printf("자재의 요청수량이 0 입니다.\n");
+			met = met->next;
 
-			file_column_free();
-			return -1;
+
 		}
 		else {
-			
-			printf("\n...품목코드 관련 거래처가 존재합니다\n\n");
-		}
 
-		if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-			printf("%s\n", err_msg);
 
+			char* prd_code = met->CODE;
+			//printf("met->CODE : %s", met->CODE);
+			printf("품목 코드 : %s\n", prd_code);
+			int amount = met->AMOUNT;
+
+
+
+
+			//print_data();
+			//print_data();
+
+			strcpy(values, "PRD_CODE = '");
+			strcat(values, prd_code);
+			strcat(values, "'");
+
+
+			//printf("values ..-> %s\n", values);
+			//printf("추출한 데이터 확인\n");
+
+			if (initalizing("account") == -1)
+			{
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+			//Sleep(3000);
+			Sleep(1000);
+			if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+			else {
+
+				printf("\n...품목코드 관련 거래처가 존재합니다\n\n");
+			}
+
+			if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+				printf("%s\n", err_msg);
+
+				file_column_free();
+				return -1;
+			}
+
+			result_print(_result, result_count);
+			printf("\n");
+			//free(values);
 			file_column_free();
-			return -1;
+			Sleep(1000);
+
+
+			//차라리 함수를 새로 선언해서 넘겨주자.
+			creat_Order_List(insert_ord, _result, result_count);
+
+			//특정 컬럼 추출
+			//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
+			//메모리 핸들링이 넘 심함 수정요망 => 대충 수정함
+			//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
+
+			//발주내역 저장
+			printf("발주내역을 저장합니다..\n");
+			Sleep(1000);
+			storage_Order(insert_ord, amount);
+			//print_data();
+
+			met = met->next;
+			//result_free(_result, result_count);
+
+			//file_column_free();
+			Sleep(3000);
 		}
-		
-		result_print(_result, result_count);
-		printf("\n");
-		//free(values);
-		file_column_free();
-		Sleep(1000);
-	
-		
-		//차라리 함수를 새로 선언해서 넘겨주자.
-		creat_Order_List(insert_ord, _result, result_count);
-
-		//특정 컬럼 추출
-		//printf("특정컬럼 추출 소스 :: 데이터를 구조체에 저장, 함수로 넘겨서 발주file에 저장하기\n\n");
-		//메모리 핸들링이 넘 심함 수정요망 => 대충 수정함
-		//if (!strcmp(_result->name, "PRD_CODE"))이면, 거래처 리스트에 있는 거래처 코드를 발주 구조체로 받아서 그걸 발주 파일로 업로드해야함.
-
-		//발주내역 저장
-		printf("발주내역을 저장합니다..\n");
-		Sleep(1000);
-		storage_Order(insert_ord,amount);
-		//print_data();
-
-		met = met->next;
-		//result_free(_result, result_count);
-
-		//file_column_free();
-		Sleep(3000);
-
 	}
 
 	system("cls");
 	printf("저장된 발주 내역입니다\n");
 
-	
+
 
 	if (initalizing("pre_sample_Order") == -1)
 	{
@@ -305,7 +317,7 @@ void Request_Order(bomRes* met_ord)
 		printf("%s\n", err_msg);
 
 		file_column_free();
-		
+
 		return -1;
 
 	}
@@ -320,8 +332,9 @@ void Request_Order(bomRes* met_ord)
 	printf(".");
 	Sleep(500);
 	printf(".");
-	
+
 	return;
+	
 	
 	
 }
