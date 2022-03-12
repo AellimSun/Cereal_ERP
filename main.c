@@ -243,6 +243,8 @@ void base_information(void)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.BOM 조회           |\n");
 	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.자재품목 리스트    |\n");
+	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      0.이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
@@ -264,6 +266,11 @@ void base_information(void)
 	{
 		BOM_search_main();
 
+		break;
+	}
+	case 3:
+	{
+		product_list();
 		break;
 	}
 	case 0:
