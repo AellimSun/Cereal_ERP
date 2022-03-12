@@ -65,8 +65,8 @@ void bg_process(plan* prd_plan)
 
 	req_code* mat_head = Head();
 
-	check_parts(mat_head);			//부족한 제작부품 개수 파악
-	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
+	check_parts(mat_head);				//부족한 제작부품 개수 파악
+	produce_parts(mat_head);			//부족한 제작부품 생산명령, 원자재 사용
 	produce_product(p_code,p_num);		//생산계획 품목 생산 및 등록
 
 	system("pause");
@@ -246,9 +246,9 @@ void pro_material_use(char* p_code, int p_num) {
 	Sleep(3000);
 	system("cls");
 }
-void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
+void pro_material_create(char* p_code) {
 	char values[50];
-	char* PRD_CODE = p_code;									//수정!!!!!!!!!!
+	char* PRD_CODE = p_code;
 	char STATUS[6] = "store";
 	char DATE[9] = {""};
 	char tmp[9] = {""};
