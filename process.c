@@ -19,7 +19,6 @@ typedef struct _req_code {
 
 void init(void);
 void PRO_all_read();
-void BOM_read();
 
 void bg_process(plan* prd_plan);
 void check_parts(req_code*);			// 자체생산부품 필요량 파악
@@ -30,7 +29,8 @@ void pro_material_use(char* p_code, int num);
 char* give_LOT();		// 생산품 LOT번호 생성
 
 req_code* New(req_code* head, int num, char* code);
-void req_code_free_Head(req_code* head);
+req_code* Head(void);
+void free_node(req_code* head);
 
 //void process(*plan prd_plan)
 void process(void)
@@ -61,13 +61,7 @@ void bg_process(plan* prd_plan)
 	char* p_code = prd_plan->CODE;
 	int p_num = atoi(prd_plan->PLAN_PRODUCTION);
 
-	req_code* mat_head = (req_code*)malloc(sizeof(req_code));
-	if (mat_head == NULL) exit(1);
-	mat_head->num = NULL;
-	mat_head->code = NULL;
-	mat_head->next = NULL;
-
-	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
+	req_code* mat_head = Head();
 
 	check_parts(mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
@@ -75,7 +69,7 @@ void bg_process(plan* prd_plan)
 
 	system("pause");
 
-	req_code_free_Head(mat_head);
+	free_node(mat_head);
 }
 
 void check_parts(req_code* head)
@@ -116,7 +110,15 @@ int produce_parts(req_code* head)
 		cur = cur->next;
 	}
 }
-
+req_code* Head(void)
+{
+	req_code* head = (req_code*)malloc(sizeof(req_code));
+	if (head == NULL) exit(1);
+	head->num = NULL;
+	head->code = NULL;
+	head->next = NULL;
+	return head;
+}
 req_code* New(req_code* head, int num, char* code)
 {
 	req_code* NewNode = (req_code*)malloc(sizeof(req_code));
@@ -127,7 +129,7 @@ req_code* New(req_code* head, int num, char* code)
 	NewNode->next = head->next;
 	head->next = NewNode;
 }
-void req_code_free_Head(req_code* head)
+void free_node(req_code* head)
 {
 	req_code* cur = head->next;
 	if (cur == NULL) exit(1);
@@ -430,38 +432,4 @@ void PRO_all_read() {
 
 	system("pause");
 	system("cls");
-}
-
-void BOM_read()
-{
-	result* _result;
-	int result_count;
-	char* select_column = "ROOT_CODE";
-
-	//BOM 파일 열기
-	if (initalizing(BOM_FILE_NAME) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		exit(1);
-	}
-
-	//모든 컬럼 구하기
-	if (_select("*", select_column, &select_result_str) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		exit(1);
-	}
-	//모든 컬럼을 가공하여 ROOT_CODE 컬럼 구하기
-	if ((result_count = recv_result(&_result, select_result_str)) == -1) {
-		printf("%s\n", err_msg);
-
-		file_column_free();
-		exit(1);
-	}
-
-	print_data();
-	file_column_free();
-
 }
