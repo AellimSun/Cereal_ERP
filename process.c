@@ -165,7 +165,7 @@ void pro_material_use(char* p_code, int p_num)
 	file_column_free();
 	result_free(_result, result_count);
 	free(conditional);
-	Sleep(3000);
+	Sleep(1000);
 	system("cls");
 }
 void pro_material_create(char* p_code)
@@ -255,17 +255,18 @@ char* give_LOT(void)
 }
 char* get_PRD_NAME(char* p_code)
 {
-	char* text1 = "PRD_CODE='";
+	char* text1 = "CODE= '";
 	char* text2 = "'";
-	char* conditional=(char*)malloc(sizeof(text1)+sizeof(text2)+sizeof(p_code));
+	char* CODE = p_code;
+	char* conditional=(char*)malloc(sizeof(text1)+sizeof(p_code)+sizeof(text2));
 	if (conditional == 0) exit(1);
-	char* select_column = "PRD_NAME";
-	//char* values = "'B4001', 'PRD_NAME', 'store', 20220308, 'L0004'";
+	char* select_column = "NAME";
+	//"list", "CODE VARCHAR(6) NAME VARCHAR(30) BACKUP INT MSP CHAR")
 	int result_count;
 	result* _result;
 
 	strcpy(conditional, text1);
-	strcat(conditional, p_code);
+	strcat(conditional, CODE);
 	strcat(conditional, text2);
 
 	if (initalizing(LIS_FILE_NAME) == -1) {
@@ -274,7 +275,7 @@ char* get_PRD_NAME(char* p_code)
 		return -1;
 	}
 	if (_select(conditional, select_column, &select_result_str) == -1) {
-		printf("조회할 데이터가 없습니다.\n");
+		printf("%s\n", err_msg);
 		file_column_free();
 		system("pause");
 		system("cls");
@@ -288,7 +289,7 @@ char* get_PRD_NAME(char* p_code)
 		result* cur = _result;
 		while (1) {
 			//현재 노드의 컬럼명이 PRD_NAME일 경우
-			if (strcmp(cur->name, "PRD_NAME") == 0) {
+			if (strcmp(cur->name, "NAME") == 0) {
 				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
 				return cur->_string_data;
 			}
@@ -296,6 +297,7 @@ char* get_PRD_NAME(char* p_code)
 			else cur = cur->next;
 		}
 	}
+	file_column_free();
 }
 void produce_product(char* p_code, int p_num)
 {
@@ -392,7 +394,7 @@ void init(void)
 void PRO_all_read()
 {
 	char* conditional = "*";
-	char* select_column = "PRD_CODE, STATUS, DATE, LOT";
+	char* select_column = "PRD_CODE, PRD_NAME, STATUS, DATE, LOT";
 	//char* values = "'B4001', 'store', 20220308, 'L0004'";
 	int result_count;
 	result* _result;
