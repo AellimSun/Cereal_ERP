@@ -46,10 +46,11 @@ void process(void)
 	tmp->values = "2022";
 
 	init();
-	printf("\n\n\n\n\n");
+	printf("\n");
 	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t|*          잠시후         *|\n");
-	printf("\t\t\t|     공정이 시작됩니다.    |\n");
+	printf("\t\t\t|*    공정이 시작됩니다.   *|\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
 	Sleep(2500);
@@ -123,7 +124,7 @@ int produce_parts(req_code* head)
 		printf("\t\t\t|       자재 생산중...      |\n");
 		printf("\t\t\t|*                         *|\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t\t\n");
+		//printf("\t\t\t\t\n");
 		pro_material_use(p_code, p_num);
 		cnt++;
 		cur = cur->next;
@@ -195,9 +196,10 @@ void pro_material_use(char* p_code, int p_num) {
 			result_free(_result, result_count);
 			return -1;
 		}
-		result_print(_result, result_count);
+		//result_print(_result, result_count);
 		//system("pause");
-
+		printf("\t\t\t|*     품목코드 = %s    *|\n", CODE);
+		printf("\t\t\t-----------------------------\n");
 		//update 하기
 		for (int i = 0; i < p_num; i++) {
 			cur = _result;
@@ -229,8 +231,7 @@ void pro_material_use(char* p_code, int p_num) {
 							file_column_free();
 							return -1;
 						}
-						printf("\t\t\t-----------------------------\n");
-						printf("\t\t\t|*  사용자재 : %s  *|\n", conditional1);
+						printf("\t\t\t|*   사용자재 %s  *|\n", conditional1);
 						printf("\t\t\t-----------------------------\n");
 
 						cnt++;
@@ -247,7 +248,6 @@ void pro_material_use(char* p_code, int p_num) {
 
 		}
 		if (cnt < p_num) printf("자재가 부족합니다.\n");
-		printf("\n");
 	}
 	file_column_free();
 	result_free(_result, result_count);
@@ -336,15 +336,16 @@ void produce_product(char* p_code, int p_num)
 	{
 		pro_material_create(p_code);
 	}
-	printf("\n");
+	//printf("\n");
+	gotoxy(0, 1);
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t|       자재 생산 완료!     |\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|*     생산한 자재 : %s *|\n", p_code);
+	printf("\t\t\t|*   생산한 자재 : %s   *|\n", p_code);
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|*       생산량 : %d        *|\n", p_num);
+	printf("\t\t\t|*        생산량 : %d       *|\n", p_num);
 	printf("\t\t\t-----------------------------\n");
 
 	Sleep(3000);
