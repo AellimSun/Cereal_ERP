@@ -408,16 +408,34 @@ void createOrderedMaterials(bomRes* list) {
 
 			//LOT번호 만들기
 			int random = 0;
-			char tmpRand[5];
-			srand(time(NULL));
-			random = (rand() % 10000)+i;
+			char tmpRand1[2];
+			char tmpRand2[3];
+			char tmpRand3[4];
+			char tmpRand4[5];
+			//srand(time(NULL));
+			random = (rand() % 10000);
 			
-			if (random < 1000)
+			if (random < 1000 && random>100)
+			{
 				strcpy(LOT, "L0");
+				strcat(LOT, itoa(random, tmpRand3, 10));
+			}
+			else if (random < 100 && random>10)
+			{
+				strcpy(LOT, "L00");
+				strcat(LOT, itoa(random, tmpRand2, 10));
+			}
+			else if (random < 10)
+			{
+				strcpy(LOT, "L000");
+				strcat(LOT, itoa(random, tmpRand1, 10));
+			}
 			else
+			{
 				strcpy(LOT, "L");
-			
-			strcat(LOT, itoa(random, tmpRand, 10));
+				strcat(LOT, itoa(random, tmpRand4, 10));
+			}
+
 
 			strcpy(values, "'");
 			strcat(values, PRD_CODE);

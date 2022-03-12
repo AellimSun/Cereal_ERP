@@ -60,6 +60,9 @@
     <ClCompile Include="UI.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="소스.c">
+      <Filter>소스 파일\123</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cereal.h">

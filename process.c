@@ -33,6 +33,7 @@ void process(bomRes* result, plan* p)
 	PRO_all_read();
 	system("pause");
 	//init();
+	system("cls");
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*                         *|\n");
@@ -242,6 +243,7 @@ void pro_material_use(char* p_code, int p_num) {
 void pro_material_create(char* p_code) {
 	char values[50];
 	char* PRD_CODE = p_code;
+	char PRD_NAME[20];
 	char STATUS[6] = "store";
 	char DATE[9] = { "" };
 	char tmp[9] = { "" };
@@ -259,7 +261,7 @@ void pro_material_create(char* p_code) {
 	{
 		strcat(DATE, "0");
 	}
-	sprintf(tmp, "%d", tm.tm_mon);
+	sprintf(tmp, "%d", tm.tm_mon+1);
 	strcat(DATE, tmp);
 	sprintf(tmp, "%d", tm.tm_mday);
 	strcat(DATE, tmp);
@@ -298,17 +300,36 @@ void pro_material_create(char* p_code) {
 }
 char* give_LOT(void)
 {
-	char LOT[6] = { "" };
+	char LOT[6];
 	int random = 0;
-	char tmpRand[5];
-
-	srand(time(NULL));
+	char tmpRand1[2];
+	char tmpRand2[3];
+	char tmpRand3[4];
+	char tmpRand4[5];
+	//srand(time(NULL));
 	random = (rand() % 10000);
-	if (random < 1000) 	strcpy(LOT, "L0");
-	else strcpy(LOT, "L");
-	strcat(LOT, itoa(random, tmpRand, 10));
-	Sleep(1000);		//수정,1초 지나게함
-	//printf("LOT = %s", LOT);
+
+	if (random < 1000 && random>100)
+	{
+		strcpy(LOT, "L0");
+		strcat(LOT, itoa(random, tmpRand3, 10));
+	}
+	else if (random < 100 && random>10)
+	{
+		strcpy(LOT, "L00");
+		strcat(LOT, itoa(random, tmpRand2, 10));
+	}
+	else if (random < 10)
+	{
+		strcpy(LOT, "L000");
+		strcat(LOT, itoa(random, tmpRand1, 10));
+	}
+	else
+	{
+		strcpy(LOT, "L");
+		strcat(LOT, itoa(random, tmpRand4, 10));
+	}
+
 	return LOT;
 }
 void produce_product(char* p_code, int p_num)

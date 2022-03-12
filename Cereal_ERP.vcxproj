@@ -152,6 +152,7 @@
     <ClCompile Include="test.c" />
     <ClCompile Include="Test01.c" />
     <ClCompile Include="UI.c" />
+    <ClCompile Include="소스.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BOMTree.h" />

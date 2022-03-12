@@ -225,7 +225,7 @@ void Request_Order(bomRes* met_ord)
 				return -1;
 			}
 			//Sleep(3000);
-			Sleep(1000);
+//			Sleep(1000);
 			if (_select(values, "ACC_CODE, BN_REGI_NUM, PRD_CODE, RorD", &select_result_str) == -1) {
 				printf("%s\n", err_msg);
 
@@ -248,7 +248,7 @@ void Request_Order(bomRes* met_ord)
 			printf("\n");
 			//free(values);
 			file_column_free();
-			Sleep(1000);
+//			Sleep(1000);
 
 
 			//차라리 함수를 새로 선언해서 넘겨주자.
@@ -261,7 +261,7 @@ void Request_Order(bomRes* met_ord)
 
 			//발주내역 저장
 			printf("발주내역을 저장합니다..\n");
-			Sleep(1000);
+//			Sleep(1000);
 			storage_Order(insert_ord, amount);
 			//print_data();
 
@@ -269,7 +269,7 @@ void Request_Order(bomRes* met_ord)
 			//result_free(_result, result_count);
 
 			//file_column_free();
-			Sleep(3000);
+//			Sleep(3000);
 		}
 	}
 
