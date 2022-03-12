@@ -56,6 +56,7 @@ void bg_process(plan* prd_plan)
 {
 	BOM_TREE* bom_res;
 	char* con = (char*)malloc(sizeof(prd_plan->CODE));
+	if (con == NULL) exit(1);
 	strcpy(con, prd_plan->CODE);
 	bom_res = BOM_SEARCH(con);
 	//system("pause");
@@ -63,7 +64,7 @@ void bg_process(plan* prd_plan)
 	//system("pause");
 
 	//BOM_read();
-	system("pause");
+	//system("pause");
 
 	req_code* mat_head = (req_code*)malloc(sizeof(req_code));
 	if (mat_head == NULL) exit(1);
@@ -74,7 +75,7 @@ void bg_process(plan* prd_plan)
 	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
 
 	PRO_all_read();
-	system("pause");
+	Sleep(3000);
 
 	check_parts(PLAN_NUM, bom_res, mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
@@ -113,8 +114,9 @@ int produce_parts(req_code* head)
 	{
 		p_num = cur->num;
 		p_code = cur->code;
-		pro_material_use(p_code, p_num);
 		printf("pro_material_use 실행 %d번\n", cnt + 1);
+		printf("자재 생산중...\n");
+		pro_material_use(p_code, p_num);
 		cnt++;
 		cur = cur->next;
 	}
@@ -133,6 +135,7 @@ req_code* New(req_code* head, int num, char* code)
 void req_code_free_Head(req_code* head)
 {
 	req_code* cur = head->next;
+	if (cur == NULL) exit(1);
 	while (cur->next != NULL)
 	{
 		head = cur;
@@ -219,12 +222,10 @@ void pro_material_use(char* p_code, int p_num) {
 							return -1;
 						}
 						printf("사용자재 : %s\n", conditional1);
-						printf("자재 생산중...\n");
+
 						cnt++;
 						free(conditional1);
 						free(lot);
-						Sleep(3000);
-						system("cls");
 					}
 				}
 
@@ -242,8 +243,8 @@ void pro_material_use(char* p_code, int p_num) {
 	result_free(_result, result_count);
 	free(conditional);
 
-	//system("pause");
-	//system("cls");
+	Sleep(3000);
+	system("cls");
 }
 void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 	char values[50];
@@ -305,6 +306,9 @@ void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 	//printf("\n");
 	file_column_free();
 
+	printf("자재 생산 완료!\n");
+	printf("생산한 자재 : %s\n", PRD_CODE);
+	Sleep(3000);
 }
 char* give_LOT(void)
 {
@@ -409,8 +413,8 @@ void init(void)
 		i++;
 	}
 
-	print_data();
-	printf("\n");
+	//print_data();
+	//printf("\n");
 	file_column_free();
 }
 
