@@ -245,7 +245,7 @@ void Request_Order(bomRes* met_ord)
 
 		//printf("values ..-> %s\n", values);
 		//printf("추출한 데이터 확인\n");
-
+		
 		if (initalizing("account") == -1)
 		{
 			printf("%s\n", err_msg);
@@ -312,7 +312,7 @@ void Request_Order(bomRes* met_ord)
 	Sleep(500);
 	printf(".");
 
-	return main();
+	/*return ;*/
 	
 	
 }
