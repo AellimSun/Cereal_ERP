@@ -112,21 +112,6 @@ void creat_Order_List(Order* head, result* result_head, int num)
 
 }
 
-void print_Node(Order* head)
-{
-	Order* cur;
-	cur = head->next;
-	Sleep(3000);
-
-	printf("~~~printNode~~~\n");
-	while (cur != NULL)
-	{
-		printf("PRD_COD : %s,  ", cur->PRD_CODE);
-		printf("ACC_CODE : %s\n", cur->ACC_CODE);
-
-		cur = cur->next;
-	}
-}
 
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
