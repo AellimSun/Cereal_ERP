@@ -22,14 +22,12 @@ typedef struct _req_code {
 
 void init(void);
 void PRO_all_read();
-void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE);
-void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth);
 void BOM_read();
 
 void bg_process(plan* prd_plan);
 void check_parts(int num, char* bom_res, req_code*);			// 자체생산부품 필요량 파악
 int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
-void produce_product(req_code* head);		//  생산계획따라 품목 자재에 생산 수량 업로드
+void produce_product(char* p_code, int p_num);		//  생산계획따라 품목 자재에 생산 수량 업로드
 void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
 char* give_LOT();		// 생산품 LOT번호 생성
@@ -44,25 +42,29 @@ void process(void)
 	plan* tmp = (plan*)malloc(sizeof(plan));
 	if (tmp == NULL) exit(1);
 	tmp->CODE = "A0001";
-	tmp->PLAN_PRODUCTION = "1";
+	tmp->PLAN_PRODUCTION = "2";
 	tmp->values = "2022";
 
 	init();
-	printf("공정이 시작됩니다.\n");
+	printf("\n\n\n\n\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*          잠시후         *|\n");
+	printf("\t\t\t|     공정이 시작됩니다.    |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	Sleep(2500);
 	bg_process(tmp);
+
+	main();
 }//
 
 void bg_process(plan* prd_plan)
 {
-	BOM_TREE* bom_res;
-	char* con = (char*)malloc(sizeof(prd_plan->CODE));
-	if (con == NULL) exit(1);
-	strcpy(con, prd_plan->CODE);
-	bom_res = BOM_SEARCH(con);
-	//system("pause");
-	//BOM_Forward_PrintTree(bom_res, con);
-	//system("pause");
+	char* p_code = prd_plan->CODE;
+	int p_num = atoi(prd_plan->PLAN_PRODUCTION);
 
+	BOM_TREE* bom_res;
+	bom_res = BOM_SEARCH(p_code);
 	//BOM_read();
 	//system("pause");
 
@@ -73,17 +75,17 @@ void bg_process(plan* prd_plan)
 	mat_head->next = NULL;
 
 	req_code* plan_head = (req_code*)malloc(sizeof(req_code));
-
-	PRO_all_read();
-	Sleep(3000);
+	//printf("자재 목록\n");
+	//PRO_all_read();
 
 	check_parts(PLAN_NUM, bom_res, mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();		//작업지시 확정 - 위에 있는지 확인
-	produce_product(mat_head);		//생산계획 품목 생산 및 등록
+	produce_product(p_code,p_num);		//생산계획 품목 생산 및 등록
 	//pro_material_create();
 
-	PRO_all_read();
+	//printf("자재 목록\n");
+	//PRO_all_read();
 	system("pause");
 
 	req_code_free_Head(mat_head);
@@ -114,8 +116,14 @@ int produce_parts(req_code* head)
 	{
 		p_num = cur->num;
 		p_code = cur->code;
-		printf("pro_material_use 실행 %d번\n", cnt + 1);
-		printf("자재 생산중...\n");
+		//printf("pro_material_use 실행 %d번\n", cnt + 1);
+		printf("\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t|       자재 생산중...      |\n");
+		printf("\t\t\t|*                         *|\n");
+		printf("\t\t\t-----------------------------\n");
+		printf("\t\t\t\t\n");
 		pro_material_use(p_code, p_num);
 		cnt++;
 		cur = cur->next;
@@ -221,7 +229,9 @@ void pro_material_use(char* p_code, int p_num) {
 							file_column_free();
 							return -1;
 						}
-						printf("사용자재 : %s\n", conditional1);
+						printf("\t\t\t-----------------------------\n");
+						printf("\t\t\t|*  사용자재 : %s  *|\n", conditional1);
+						printf("\t\t\t-----------------------------\n");
 
 						cnt++;
 						free(conditional1);
@@ -306,9 +316,6 @@ void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 	//printf("\n");
 	file_column_free();
 
-	printf("자재 생산 완료!\n");
-	printf("생산한 자재 : %s\n", PRD_CODE);
-	Sleep(3000);
 }
 char* give_LOT(void)
 {
@@ -323,43 +330,24 @@ char* give_LOT(void)
 
 	return LOT;
 }
-void produce_product(req_code* head)
+void produce_product(char* p_code, int p_num)
 {
-	pro_material_create("A0001");
-}
-
-
-void PRO_BOM_Forward(BOM_TREE* CurNode, Element1* NODE_CODE)
-{
-	if (strcmp(CurNode->NODE_CODE, NODE_CODE) == 0)
+	for (int i = 0; i < p_num; i++)
 	{
-		//printf("LEVEL\t  품목코드\t필요수량\n");
-		//printf("=================================\n");
-
-		_BOM_Forward_PrintTree(CurNode, 0);
-		return;
+		pro_material_create(p_code);
 	}
-	if (CurNode->LeftChild != NULL)
-		_PRO_BOM_Forward(CurNode->LeftChild, NODE_CODE);
-	if (CurNode->RightSibling != NULL)
-		_PRO_BOM_Forward(CurNode->RightSibling, NODE_CODE);
-}
+	printf("\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t|       자재 생산 완료!     |\n");
+	printf("\t\t\t|*                         *|\n");
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*     생산한 자재 : %s *|\n", p_code);
+	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|*       생산량 : %d       *|\n", p_num);
+	printf("\t\t\t-----------------------------\n");
 
-void _PRO_BOM_Forward(BOM_TREE* CurNode, int Depth)
-{
-	//int i = 0; // 들여쓰기로 트리의 Depth 표현 
-	//for (i = 0; i < Depth; i++)
-	//   printf("   ");
-
-	//printf("%4d\t%8s\t%5d\n", Depth, CurNode->NODE_CODE, CurNode->REQ_NUM);
-
-
-
-	if (CurNode->LeftChild != NULL) // 차일드 존재시
-		_BOM_Forward_PrintTree(CurNode->LeftChild, Depth + 1); // 재귀 호출 - Node의 Child의 깊이는 Node의 Depth에 +1 한 값과 같음
-
-	if (CurNode->RightSibling != NULL) // 형제 존재시
-		_BOM_Forward_PrintTree(CurNode->RightSibling, Depth); // 재귀 호출 - 형제 노드의 깊이는 모두 같음(같은 레벨의 노드
+	Sleep(3000);
 }
 
 void init(void)
