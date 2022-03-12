@@ -26,9 +26,6 @@ void process(bomRes* result, plan* p)
 	plan* tmp = p;
 	bomRes* p_use_amount = result;
 	system("cls");
-	//PRO_all_read();
-	//system("pause");
-	//system("cls");
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*                         *|\n");
@@ -38,8 +35,8 @@ void process(bomRes* result, plan* p)
 	printf("\t\t\t-----------------------------\n");
 	Sleep(2000);
 	system("cls");
+
 	bg_process(tmp, p_use_amount);
-	//PRO_all_read();
 	pro_read(p->CODE);
 	system("pause");
 
