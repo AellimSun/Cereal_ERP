@@ -162,7 +162,7 @@ void code_read(char* condition) {
 
 void material_create() {
 	char values[50];
-	char PRD_CODE[5];
+	char PRD_CODE[6];
 	char PRD_NAME[20];
 	char STATUS[5];
 	char DATE[8];
@@ -411,7 +411,12 @@ void createOrderedMaterials(bomRes* list) {
 			char tmpRand[5];
 			srand(time(NULL));
 			random = (rand() % 10000);
-			strcpy(LOT, "L");
+			
+			if (random < 1000)
+				strcpy(LOT, "L0");
+			else
+				strcpy(LOT, "L");
+			
 			strcat(LOT, itoa(random, tmpRand, 10));
 
 			strcpy(values, "'");

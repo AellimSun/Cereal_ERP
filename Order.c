@@ -126,22 +126,22 @@ void print_Node(Order* head)
 	}
 }
 
-void print_Node_process(bomRes* head)
-{
-	bomRes* cur;
-	cur = head->next;
-
-	printf("~~~print_Node_process~~~\n");
-	while (cur != NULL)
-	{
-		printf("PRD_COD : %s\n", cur->CODE);
-		printf("PRD_VAL : %d\n", cur->AMOUNT);
-		printf("ACC_CODE : %s\n\n", cur->ACC_CODE);
-
-		cur = cur->next;
-	}
-
-}
+//void print_Node_process(bomRes* head)
+//{
+//	bomRes* cur;
+//	cur = head->next;
+//
+//	printf("~~~print_Node_process~~~\n");
+//	while (cur != NULL)
+//	{
+//		printf("PRD_COD : %s\n", cur->CODE);
+//		printf("PRD_VAL : %d\n", cur->AMOUNT);
+//		printf("ACC_CODE : %s\n\n", cur->ACC_CODE);
+//
+//		cur = cur->next;
+//	}
+//
+//}
 
 
 //요청 :: 내가 물건이 없다! ( 자재 -> 품목코드, 거래처코드, 수량  ) 
@@ -207,7 +207,6 @@ void Request_Order(bomRes* met_ord)
 	if (met == NULL)
 		return -1;
 	met = met_ord->next;
-	met->ACC_CODE = NULL;
 	//met->AMOUNT = NULL;
 	//met->CODE = NULL;
 	//met->next = NULL;
