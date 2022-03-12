@@ -36,7 +36,7 @@ void process(bomRes* result, plan* p)
 	printf("\t\t\t|*    공정이 시작됩니다.   *|\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
-	Sleep(2500);
+	Sleep(2000);
 	system("cls");
 	bg_process(tmp, p_use_amount);
 	PRO_all_read();
@@ -172,7 +172,7 @@ void pro_material_create(char* p_code)
 {
 	char values[50];
 	char* PRD_CODE = p_code;
-	char PRD_NAME[20];
+	char PRD_NAME[30];
 	char STATUS[6] = "store";
 	char DATE[9] = { "" };
 	char tmp[9] = { "" };
@@ -291,7 +291,10 @@ char* get_PRD_NAME(char* p_code)
 			//현재 노드의 컬럼명이 PRD_NAME일 경우
 			if (strcmp(cur->name, "NAME") == 0) {
 				//STATUS컬럼에 대응하는 데이터가 store(저장상태)일 경우
-				return cur->_string_data;
+				char* res = *(cur->_string_data);
+				printf("%s\n",res);
+				file_column_free();
+				return res;
 			}
 			if (cur->next == NULL) break;
 			else cur = cur->next;
@@ -319,7 +322,6 @@ void produce_product(char* p_code, int p_num)
 
 	Sleep(3000);
 }
-
 void free_Bnode(bomRes* head)
 {
 	bomRes* cur = head->next;
