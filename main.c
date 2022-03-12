@@ -121,7 +121,7 @@ void production_management(void)
 	printf("\t\t\t|     메뉴를 선택하세요.    |\n");
 	printf("\t\t\t|*                         *|\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|      1. 기초정보관리      |\n");
+	printf("\t\t\t|      1.기초정보관리       |\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.생산계획           |\n");
 	printf("\t\t\t-----------------------------\n");
@@ -178,14 +178,12 @@ void base_information(void)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.BOM 조회           |\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|      3.자재품목 리스트    |\n");
-	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      0.이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
 	printf("\t\t\t\t 입력 :\n");
 	printf("\t\t\t\t        ^");
-	gotoxy(40, 15);
+	gotoxy(40, 13);
 
 	scanf("%d", &input);
 	system("cls");
@@ -193,7 +191,7 @@ void base_information(void)
 	{
 	case 1:
 	{
-
+		BOM_record_main();
 
 		break;
 	}
@@ -201,23 +199,12 @@ void base_information(void)
 	{
 		BOM_search_main();
 
-
-		/*char* con = "A0002";
-		BOM_TREE* res = BOM_SEARCH(con);
-		BOM_Forward_PrintTree(res, con);*/
-
-		break;
-	}
-	case 3:
-	{
-		product_list();
 		break;
 	}
 	case 0:
-		material_management();
+		production_management();
 		break;
 	}
-	
 }
 
 void process(void)
