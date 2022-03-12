@@ -54,6 +54,8 @@ void process(void)
 	system("cls");
 	bg_process(tmp);
 
+	PRO_all_read();
+	system("pause");
 	free(tmp);
 	main_manu();
 }
@@ -252,7 +254,6 @@ void pro_material_create(char* p_code) {
 	char STATUS[6] = "store";
 	char DATE[9] = {""};
 	char tmp[9] = {""};
-	char ACC_CODE[5] = "0000";									//수정!!!!!!!!!!-어디서 받을건지
 	char LOT[6];
 
 	strcpy(LOT,give_LOT());
@@ -261,7 +262,6 @@ void pro_material_create(char* p_code) {
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	sprintf(tmp, "%d", tm.tm_year+1900);
-
 
 	strcpy(DATE, tmp);
 	if (tm.tm_mon < 10)
@@ -280,13 +280,11 @@ void pro_material_create(char* p_code) {
 	strcat(values, "', ");
 	strcat(values, DATE);
 	strcat(values, ", '");
-	strcat(values, ACC_CODE);
-	strcat(values, "', '");
 	strcat(values, LOT);
 	strcat(values, "'");
 	printf("\n");
 
-	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
+	//_create("material", "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
 
 	if (initalizing(MAT_FILE_NAME) == -1) {
 		printf("%s\n", err_msg);
@@ -315,9 +313,11 @@ char* give_LOT(void)
 
 	srand(time(NULL));
 	random = (rand() % 10000);
-	strcpy(LOT, "L");
+	if (random < 1000) 	strcpy(LOT, "L0");
+	else strcpy(LOT, "L");
 	strcat(LOT, itoa(random, tmpRand, 10));
-
+	Sleep(1000);		//수정,1초 지나게함
+	//printf("LOT = %s", LOT);
 	return LOT;
 }
 void produce_product(char* p_code, int p_num)
@@ -343,34 +343,34 @@ void produce_product(char* p_code, int p_num)
 
 void init(void)
 {
-	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT ACC_CODE VARCHAR(6) LOT VARCHAR(6)");
+	_create(MAT_FILE_NAME, "PRD_CODE VARCHAR(6) STATUS VARCHAR(6) DATE INT LOT VARCHAR(6)");
 
 	char* value[30];
 
-	value[0] = "'B0001','store',22031001,'0000','L0001'";
-	value[1] = "'B0001','store',22031002,'0000','L0002'";
-	value[2] = "'B0002','store',22031001,'0000','L0003'";
-	value[3] = "'B0002','store',22031002,'0000','L0004'";
-	value[4] = "'B0002','store',22031003,'0000','L0005'";
-	value[5] = "'B0003','store',22031001,'0000','L0006'";
-	value[6] = "'B0003','store',22031002,'0000','L0007'";
-	value[7] = "'B0003','store',22031003,'0000','L0008'";
-	value[8] = "'B0003','store',22031004,'0000','L0009'";
-	value[9] = "'B0004','store',22031001,'0000','L0010'";
-	value[10] = "'B0004','store',22031002,'0000','L0011'";
-	value[11] = "'B0004','store',22031003,'0000','L0012'";
-	value[12] = "'B0004','store',22031004,'0000','L0013'";
-	value[13] = "'B0004','store',22031005,'0000','L0014'";
-	value[14] = "'C0001','store',22031001,'0000','L0015'";
-	value[15] = "'C0001','store',22031002,'0000','L0016'";
-	value[16] = "'C0001','store',22031003,'0000','L0017'";
-	value[17] = "'C0001','store',22031004,'0000','L0018'";
-	value[18] = "'C0002','store',22031001,'0000','L0019'";
-	value[19] = "'C0002','store',22031002,'0000','L0020'";
-	value[20] = "'C0002','store',22031003,'0000','L0021'";
-	value[21] = "'C0003','store',22031001,'0000','L0022'";
-	value[22] = "'C0003','store',22031002,'0000','L0023'";
-	value[23] = "'D0001','store',22031001,'0000','L0024'";
+	value[0] = "'B0001','store',22031001,'L0001'";
+	value[1] = "'B0001','store',22031002,'L0002'";
+	value[2] = "'B0002','store',22031001,'L0003'";
+	value[3] = "'B0002','store',22031002,'L0004'";
+	value[4] = "'B0002','store',22031003,'L0005'";
+	value[5] = "'B0003','store',22031001,'L0006'";
+	value[6] = "'B0003','store',22031002,'L0007'";
+	value[7] = "'B0003','store',22031003,'L0008'";
+	value[8] = "'B0003','store',22031004,'L0009'";
+	value[9] = "'B0004','store',22031001,'L0010'";
+	value[10] = "'B0004','store',22031002,'L0011'";
+	value[11] = "'B0004','store',22031003,'L0012'";
+	value[12] = "'B0004','store',22031004,'L0013'";
+	value[13] = "'B0004','store',22031005,'L0014'";
+	value[14] = "'C0001','store',22031001,'L0015'";
+	value[15] = "'C0001','store',22031002,'L0016'";
+	value[16] = "'C0001','store',22031003,'L0017'";
+	value[17] = "'C0001','store',22031004,'L0018'";
+	value[18] = "'C0002','store',22031001,'L0019'";
+	value[19] = "'C0002','store',22031002,'L0020'";
+	value[20] = "'C0002','store',22031003,'L0021'";
+	value[21] = "'C0003','store',22031001,'L0022'";
+	value[22] = "'C0003','store',22031002,'L0023'";
+	value[23] = "'D0001','store',22031001,'L0024'";
 
 
 	if (initalizing("test_pro_material") == -1) {
@@ -399,8 +399,8 @@ void init(void)
 
 void PRO_all_read() {
 	char* conditional = "*";
-	char* select_column = "PRD_CODE, STATUS, DATE, ACC_CODE, LOT";
-	//char* values = "'B4001', 'store', 20220308, 'D0004'";
+	char* select_column = "PRD_CODE, STATUS, DATE, LOT";
+	//char* values = "'B4001', 'store', 20220308, 'L0004'";
 	int result_count;
 	result* _result;
 
