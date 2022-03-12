@@ -13,7 +13,7 @@ void read_RorD();
 void deleteAccount();
 void updateAccount();
 void read_prd(char* code);
-
+//거래처 관리 초기화면
 void account()
 {
 	int menu;
@@ -137,9 +137,9 @@ void insertAccount()
 			return -1;
 		}
 
-		char ex1[50] = "'A1001', '18-854-1123', 'D001', 'R'";
-		char ex2[50] = "'A1002', '20-774-4556', 'D002', 'R'";
-		char ex3[50] = "'A1003', '21-814-9563', 'D003', 'R'";
+		char ex1[50] = "'A1001', '18-854-1123', 'D0001', 'R'";
+		char ex2[50] = "'A1002', '20-774-4556', 'D0002', 'R'";
+		char ex3[50] = "'A1003', '21-814-9563', 'D0003', 'R'";
 
 		/*if (_insert(ex1) == -1)
 		{
