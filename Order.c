@@ -2,6 +2,8 @@
 #include <string.h>
 #include <time.h>
 
+
+
 // 발주일, 납기일에 임시로 저장할 시간함수
 //struct tm {
 //	int tm_sec;         /* 초,  range 0 to 59            */
