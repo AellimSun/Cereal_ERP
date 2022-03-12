@@ -357,7 +357,7 @@ void confirm_Material(plan* p) {
 
 		//발주로 보내기
 		Request_Order(result3);
-
+		
 		if (initalizing("material") == -1) {
 			printf("%s\n", err_msg);
 

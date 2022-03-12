@@ -296,14 +296,14 @@ void Request_Order(bomRes* met_ord)
 
 		met = met->next;
 		result_free(_result, result_count);
-		file_column_free();
 
+		file_column_free();
 		Sleep(3000);
 
 	}
 	
 
-
+	
 	printf("발주를 종료합니다.");
 	Sleep(500);
 	printf(".");
@@ -311,8 +311,8 @@ void Request_Order(bomRes* met_ord)
 	printf(".");
 	Sleep(500);
 	printf(".");
-
-	/*return ;*/
+	
+	return;
 	
 	
 }
