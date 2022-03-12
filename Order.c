@@ -177,7 +177,7 @@ void Request_Order(bomRes* met_ord)
 {
 
 	
-	printf("Request_Order\n");
+	//printf("Request_Order\n");
 	char values[30];
 	
 	plan* Cod_n_Num;
