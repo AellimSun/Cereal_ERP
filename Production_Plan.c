@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define SIZE 30
-
+int k = 0;
 plan* production_new_plan();
 plan* production_menu();
 typedef char* element;
@@ -99,16 +99,22 @@ void deQueue(Qlink* aql)
 void printQ(Qlink* aql)
 {
 	Node* curr = aql->front;
-	
-	
+	int j = 0;
+
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 새 계획 수립-> 계획 목록 열람\n\n");
 	if (curr->que == NULL)
 	{
-		printf("저장된 계획이 없습니다.\n");
+		
+		printf("\n\t\t\t-----------------------------------------\n");
+		printf("\t\t\t|저장된 계획이 없습니다.\t\t|\n");
+		printf("\t\t\t-----------------------------------------\n");
+		
 		return 0;
 	}
-	
-	printf("계획연도\t계획량\t품목 코드\n");
-	printf("-----------------------------------------\n");
+	printf("\n\n\t\t\t-----------------------------------------\n");
+	printf("\t\t\t|  계획연도\t계획량\t   품목 코드\t|\n");
+	printf("\t\t\t-----------------------------------------\n");
+
 	while (curr)
 	{
 		char temp[30];
@@ -119,14 +125,35 @@ void printQ(Qlink* aql)
 		char* sArr[10] = { NULL };
 		int i = 0;
 
+		printf("\t\t\t| ");
 		while (ptr != NULL)
 		{
-			printf("%s\t", ptr);
+			if (k == 0)
+			{
+				printf(" %s\t", ptr);
+			}
+			else if (k == 1)
+			{
+				gotoxy(39, 7 + 2 * j);
+				printf(" %s\t", ptr);
+			}
+			else
+			{
+				gotoxy(50, 7 + 2 * j);
+				printf(" %s\t", ptr);
+			}
+			k = k + 1;
+
 			ptr = strtok(NULL, ",");
 		}
 
+		gotoxy(60, 7+2*j);
+		printf("\t|\n");
+		printf("\t\t\t-----------------------------------------\n");
 		curr = curr->link;
-		printf("\n");
+
+		j = j + 1;
+		k = 0;
 	}
 }
 
@@ -263,9 +290,15 @@ plan* production_new_plan()
 
 	getchar();
 	
-	printf("계획연도, 연간계획량, 품목 코드 입력 : ");
+	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 새 계획 수립\n\n");
+	printf("\t\t\t-----------------------------------------\n");
+	printf("\t\t\t| 계획연도, 연간계획량, 품목 코드 입력  |\n");
+	printf("\t\t\t-----------------------------------------\n");
+	
 	for (int i = 0; i < 3; i++)
 	{
+		printf("\t\t\t\t 입력 :\n");
+		gotoxy(40, 5+i);
 		char temp[100];
 		gets(temp);
 		str[i] = (char*)malloc(strlen(temp) + 1);
@@ -303,9 +336,10 @@ plan* production_menu()
 	plan* values;
 	Qlink* HistoryQ = Create();
 
-	printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리\n\n");
+	
 	while(1)
 	{
+		printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리\n\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|*                         *|\n");
 		printf("\t\t\t|     메뉴를 선택하세요.    |\n");
@@ -320,15 +354,9 @@ plan* production_menu()
 
 		printf("\t\t\t\t 입력 :\n");
 		printf("\t\t\t\t        ^");
-		gotoxy(40, 12);
+		gotoxy(40, 14);
 		scanf("%d", &key);
 		system("cls");
-
-		/*printf("1. 새 계획 수립\n");
-		printf("2. 계획 목록 열람\n");
-		printf("3. 뒤로가기");
-		scanf(" %d", &key);
-		system("cls");*/
 
 		if (key == 1)
 		{
@@ -339,7 +367,12 @@ plan* production_menu()
 
 			while (1)
 			{
-				printf("입력한 계획을 실행하시겠습니까? (Y/N)");
+				gotoxy(35, 8);
+				printf("\n\n\t\t\t-----------------------------------------\n");
+				printf("\t\t\t|입력한 계획을 실행하시겠습니까? (Y/N)  |\n");
+				printf("\t\t\t-----------------------------------------\n");
+				printf("\t\t\t\t 입력 :\n");
+				gotoxy(40, 13);
 				scanf(" %c", &str);
 				if (str == 'Y' || str == 'y')
 				{
@@ -350,7 +383,11 @@ plan* production_menu()
 					system("cls");
 					break;
 				}
-				else printf("잘못된 입력입니다.\n");
+				else
+				{
+					gotoxy(35,15);
+					printf("\n\t\t\t잘못된 입력입니다. 다시 입력해주십시오.\n\n");
+				}
 			}
 
 			if (cnt >= 11)
@@ -361,9 +398,12 @@ plan* production_menu()
 		else if (key == 2)
 		{
 			printQ(HistoryQ);
+			printf("\n\n");
 			while (1)
 			{
-				printf("열람을 종료하고 초기화면으로 돌아가시려면 Q키를 입력하세요.");
+				gotoxy(0,2);
+				printf("\t\t\t ->열람을 종료하고 초기화면으로 돌아가시려면 Q키를 입력하세요.\n");
+				gotoxy(86, 2);
 				scanf(" %c", &str);
 				if (str == 'Q' || str == 'q')
 				{
@@ -372,7 +412,8 @@ plan* production_menu()
 				}
 				else
 				{
-					printf("잘못된 입력입니다.\n");
+					gotoxy(25,3);
+					printf("->잘못된 입력입니다. 다시 입력해주십시오.\n");
 				}
 			}
 		}
