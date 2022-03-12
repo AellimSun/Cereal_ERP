@@ -18,7 +18,6 @@ typedef struct Plan
 typedef struct _bomRes {
 	char* CODE;
 	int AMOUNT;
-	char* ACC_CODE;
 	struct _bomRes* next;
 }bomRes;
 
