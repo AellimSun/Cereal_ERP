@@ -506,7 +506,7 @@ void confirm_Material(plan* p) {
 
 		printf("%s : %d°³\n", list->CODE, stock);
 	}
-
+//
 	system("pause");
 	system("cls");
 
