@@ -56,10 +56,10 @@ void bg_process(plan* prd_plan)
 {
 	//BOM_TREE* bom_res;
 	char* con = (char*)malloc(sizeof(prd_plan->CODE));
-	strcpy(con,prd_plan->CODE);
-	bom_res = BOM_SEARCH(con);
+	strcpy(con, prd_plan->CODE);
+	//bom_res = BOM_SEARCH(con);
 	system("pause");
-	BOM_Forward_PrintTree(bom_res,con);
+	//BOM_Forward_PrintTree(bom_res, con);
 	system("pause");
 
 	BOM_read();
@@ -76,7 +76,7 @@ void bg_process(plan* prd_plan)
 	PRO_all_read();
 	system("pause");
 
-	check_parts(PLAN_NUM, bom_res,mat_head);			//부족한 제작부품 개수 파악
+	check_parts(PLAN_NUM, bom_res, mat_head);			//부족한 제작부품 개수 파악
 	produce_parts(mat_head);		//부족한 제작부품 생산명령 - LOT번호 필요...?
 	//confirm_produce();		//작업지시 확정 - 위에 있는지 확인
 	produce_product(mat_head);		//생산계획 품목 생산 및 등록
@@ -92,14 +92,14 @@ void check_parts(int num, char* bom_res, req_code* head)
 {
 	//_BOM_Backward_PrintTree();
 
-	New(head, 1,"B0001");//2
-	New(head, 2,"B0002");//3
-	New(head, 2,"B0003");//4
-	New(head, 3,"B0004");//5
-	New(head, 2,"C0001");//4
-	New(head, 2,"C0002");//3
-	New(head, 2,"C0003");//2
-	New(head, 1,"D0001");//5
+	New(head, 1, "B0001");//2
+	New(head, 2, "B0002");//3
+	New(head, 2, "B0003");//4
+	New(head, 3, "B0004");//5
+	New(head, 2, "C0001");//4
+	New(head, 2, "C0002");//3
+	New(head, 2, "C0003");//2
+	New(head, 1, "D0001");//5
 }
 
 int produce_parts(req_code* head)
@@ -114,7 +114,7 @@ int produce_parts(req_code* head)
 		p_num = cur->num;
 		p_code = cur->code;
 		pro_material_use(p_code, p_num);
-		printf("pro_material_use 실행 %d번\n",cnt+1);
+		printf("pro_material_use 실행 %d번\n", cnt + 1);
 		cnt++;
 		cur = cur->next;
 	}
@@ -245,12 +245,12 @@ void pro_material_use(char* p_code, int p_num) {
 }
 void pro_material_create(char* p_code) {						//수정!!!!!!!!!!-매개변수
 	char values[50];
-	char *PRD_CODE = p_code;									//수정!!!!!!!!!!
+	char* PRD_CODE = p_code;									//수정!!!!!!!!!!
 	char STATUS[5] = "store";
 	char DATE[8];
 	char tmp[4];
-	char ACC_CODE[5]="0000";									//수정!!!!!!!!!!-어디서 받을건지
-	char *LOT = give_LOT();
+	char ACC_CODE[5] = "0000";									//수정!!!!!!!!!!-어디서 받을건지
+	char* LOT = give_LOT();
 
 	//날짜 입력
 	time_t t = time(NULL);
