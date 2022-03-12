@@ -78,6 +78,7 @@ void BOM_Backward_PrintTree(BOM_LIST* result);
 // 해당 노드를 기준으로 하여 상위 노드들을 모두 호출하는 역전개
 
 void BOM_Create_main();
+char* code_to_name_list(char* _conditional);
 int code_to_name(char* _conditional);
 // BOM 파일에 데이터를 등록하는 함수
 
@@ -87,5 +88,8 @@ void BOM_Update_main();
 void BOM_Delete_main();
 // BOM 파일에 데이터를 삭제하는 함수
 
+int is_first_data_0();
+void delete_data_0();
+void init_bom();
 
 #endif // !BOMTREE_H

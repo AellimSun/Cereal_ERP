@@ -192,13 +192,11 @@ void base_information(void)
 	case 1:
 	{
 		BOM_record_main();
-
 		break;
 	}
 	case 2:
 	{
 		BOM_search_main();
-
 		break;
 	}
 	case 0:
