@@ -20,6 +20,7 @@
 
 
 
+
 int result_count;
 
 //발주-삽입(파일) head 노드
