@@ -85,7 +85,7 @@ void material_management(void)
 
 	printf("\t\t\t\t 입력 :\n");
 	printf("\t\t\t\t        ^");
-	gotoxy(40, 17);
+	gotoxy(40, 15);
 	scanf("%d", &input);
 	system("cls");
 	switch (input)
@@ -97,11 +97,11 @@ void material_management(void)
 		order();
 		break;
 
-	case 3:
-		delivery();
-		break;
+	//case 3:
+		//delivery();
+		//break;
 
-	case 4:
+	case 3:
 		account();
 		break;
 
@@ -125,7 +125,7 @@ void production_management(void)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.생산계획           |\n");
 	printf("\t\t\t-----------------------------\n");
-	printf("\t\t\t|      3.공정관리           |\n");
+	printf("\t\t\t|      0.이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
 	printf("\t\t\t\t 입력 :\n");
@@ -221,12 +221,14 @@ void base_information(void)
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      2.BOM 조회           |\n");
 	printf("\t\t\t-----------------------------\n");
+	printf("\t\t\t|      3.자재품목리스트     |\n");
+	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|      0.이전으로           |\n");
 	printf("\t\t\t-----------------------------\n\n");
 
 	printf("\t\t\t\t 입력 :\n");
 	printf("\t\t\t\t        ^");
-	gotoxy(40, 13);
+	gotoxy(40, 15);
 
 	scanf("%d", &input);
 	system("cls");

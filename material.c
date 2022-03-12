@@ -32,7 +32,7 @@ void stock()
 
 	printf("\t\t\t\t ют╥б :\n");
 	printf("\t\t\t\t        ^");
-	gotoxy(40, 15);
+	gotoxy(40, 13);
 	scanf("%d", &input);
 	system("cls");
 
