@@ -3,42 +3,34 @@
 #include <time.h>
 
 #define PRO_FILE_NAME "process"
-#define MAT_FILE_NAME "test_pro_material"
+//#define MAT_FILE_NAME "test_pro_material"
+#define MAT_FILE_NAME "material"
 #define BOM_FILE_NAME "BOM_SAMPLE_3"
-
-typedef struct _process {
-	int data;
-	struct _process* next;
-}S_process;
-
-typedef struct _req_code {
-	int num;
-	char* code;
-	struct _req_code* next;
-}req_code;
 
 void init(void);
 void PRO_all_read();
 
 void bg_process(plan* prd_plan, bomRes* result);
-void check_parts(req_code*);			// 자체생산부품 필요량 파악
-int produce_parts(req_code* head);			// 생산계획따라 자재에서 사용함으로 바꿈
+//void check_parts(bomRes*);			// 자체생산부품 필요량 파악
+int produce_parts(bomRes* head);			// 생산계획따라 자재에서 사용함으로 바꿈
 void produce_product(char* p_code, int p_num);		//  생산계획따라 품목 자재에 생산 수량 업로드
 void pro_material_create(char* p_code);
 void pro_material_use(char* p_code, int num);
 char* give_LOT();		// 생산품 LOT번호 생성
 
-req_code* New(req_code* head, int num, char* code);
-req_code* Head(void);
-void free_node(req_code* head);
+bomRes* New(bomRes* head, int num, char* code);
+bomRes* Head(void);
+void free_node(bomRes* head);
 
 //void process(*plan prd_plan)
 void process(bomRes* result , plan* p)
 {
 	plan* tmp = p;
 	bomRes* p_use_amount = result;
-
-	init();
+	system("cls");
+	PRO_all_read();
+	system("pause");
+	//init();
 	printf("\n");
 	printf("\t\t\t-----------------------------\n");
 	printf("\t\t\t|*                         *|\n");
@@ -61,42 +53,42 @@ void bg_process(plan* prd_plan, bomRes* result)
 	char* p_code = prd_plan->CODE;
 	int p_num = atoi(prd_plan->PLAN_PRODUCTION);
 
-	req_code* mat_head = Head();
+	//bomRes* mat_head = Head();
 
-	check_parts(mat_head);				//부족한 제작부품 개수 파악
-	produce_parts(mat_head);			//부족한 제작부품 생산명령, 원자재 사용
+	//check_parts(mat_head);				//부족한 제작부품 개수 파악
+	produce_parts(result);			//부족한 제작부품 생산명령, 원자재 사용
 	produce_product(p_code,p_num);		//생산계획 품목 생산 및 등록
 
 	system("pause");
 
-	free_node(mat_head);
+	free_node(result);
 }
 
-void check_parts(req_code* head)
-{
-	//_BOM_Backward_PrintTree();
+//void check_parts(bomRes* head)
+//{
+//	//_BOM_Backward_PrintTree();
+//
+//	New(head, 1, "B0001");//2
+//	New(head, 2, "B0002");//3
+//	New(head, 2, "B0003");//4
+//	New(head, 3, "B0004");//5
+//	New(head, 2, "C0001");//4
+//	New(head, 2, "C0002");//3
+//	New(head, 2, "C0003");//2
+//	New(head, 1, "D0001");//5
+//}
 
-	New(head, 1, "B0001");//2
-	New(head, 2, "B0002");//3
-	New(head, 2, "B0003");//4
-	New(head, 3, "B0004");//5
-	New(head, 2, "C0001");//4
-	New(head, 2, "C0002");//3
-	New(head, 2, "C0003");//2
-	New(head, 1, "D0001");//5
-}
-
-int produce_parts(req_code* head)
+int produce_parts(bomRes* head)
 {
-	req_code* cur = head->next;
+	bomRes* cur = head->next;
 	int p_num;
 	char* p_code;
 	int cnt = 0;
 
 	while (cur != NULL)
 	{
-		p_num = cur->num;
-		p_code = cur->code;
+		p_num = cur->AMOUNT;
+		p_code = cur->CODE;
 		//printf("pro_material_use 실행 %d번\n", cnt + 1);
 		printf("\n");
 		printf("\t\t\t-----------------------------\n");
@@ -110,28 +102,28 @@ int produce_parts(req_code* head)
 		cur = cur->next;
 	}
 }
-req_code* Head(void)
+bomRes* Head(void)
 {
-	req_code* head = (req_code*)malloc(sizeof(req_code));
+	bomRes* head = (bomRes*)malloc(sizeof(bomRes));
 	if (head == NULL) exit(1);
-	head->num = NULL;
-	head->code = NULL;
+	head->AMOUNT = NULL;
+	head->CODE = NULL;
 	head->next = NULL;
 	return head;
 }
-req_code* New(req_code* head, int num, char* code)
+bomRes* New(bomRes* head, int num, char* code)
 {
-	req_code* NewNode = (req_code*)malloc(sizeof(req_code));
+	bomRes* NewNode = (bomRes*)malloc(sizeof(bomRes));
 	if (NewNode == NULL) exit(1);
 
-	NewNode->num = num;
-	NewNode->code = code;
+	NewNode->AMOUNT = num;
+	NewNode->CODE = code;
 	NewNode->next = head->next;
 	head->next = NewNode;
 }
-void free_node(req_code* head)
+void free_node(bomRes* head)
 {
-	req_code* cur = head->next;
+	bomRes* cur = head->next;
 	if (cur == NULL) exit(1);
 	while (cur->next != NULL)
 	{

@@ -410,7 +410,7 @@ void createOrderedMaterials(bomRes* list) {
 			int random = 0;
 			char tmpRand[5];
 			srand(time(NULL));
-			random = (rand() % 10000);
+			random = (rand() % 10000)+i;
 			
 			if (random < 1000)
 				strcpy(LOT, "L0");
@@ -537,7 +537,7 @@ void confirm_Material(plan* p) {
 		system("cls");
 		printf("발주한 재고 기록 작성을 완료했습니다.\n");
 		system("pause");
-		process(result3);
+		process(result3,p);
 	}
 	else {
 		printf("\n취소를 선택하셨습니다.\n작업이 모두 취소되고 생산 계획 메뉴로 돌아갑니다.\n");
