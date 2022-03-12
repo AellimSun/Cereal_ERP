@@ -207,7 +207,6 @@ void Request_Order(bomRes* met_ord)
 	if (met == NULL)
 		return -1;
 	met = met_ord->next;
-	met->ACC_CODE = NULL;
 	//met->AMOUNT = NULL;
 	//met->CODE = NULL;
 	//met->next = NULL;
