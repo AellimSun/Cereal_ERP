@@ -298,6 +298,7 @@ void storage_Orders(Order* head, int* num)
 	//발주일
 	itoa(t_order->tm_mon + 1, ord_date, 10);	//월
 	strcpy(values, ord_date);
+
 	itoa(t_order->tm_mday, ord_date, 10);	//일
 	strcat(values, ord_date);
 	strcat(values, ", ");
