@@ -168,7 +168,7 @@ void order(void)
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|    1. 발주내역 전체 조회  |\n");
 		printf("\t\t\t-----------------------------\n");
-		printf("\t\t\t|                           |\n");
+		printf("\t\t\t|   2.품목별 발주내역 조회  |\n");
 		printf("\t\t\t-----------------------------\n");
 		printf("\t\t\t|                           |\n");
 		printf("\t\t\t-----------------------------\n");
@@ -187,6 +187,7 @@ void order(void)
 			break;
 
 		case 2:
+			part_Order_List();
 			break;
 
 		case 3:

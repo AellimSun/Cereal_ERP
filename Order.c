@@ -33,10 +33,10 @@ Order* creatNode_Order()
 
 void creat_Order_List(Order* head, result* result_head, int num)
 {
-	
+
 	result* cur;
 	cur = result_head;
-	
+
 	for (int i = 0; i < num; i++) {
 
 
@@ -54,12 +54,12 @@ void creat_Order_List(Order* head, result* result_head, int num)
 					{
 
 						head->ACC_CODE = cur->_string_data[i];
-						
+
 					}
 					else if (strcmp(cur->name, "PRD_CODE") == 0)
 					{
 						head->PRD_CODE = cur->_string_data[i];
-						
+
 					}
 
 				}
@@ -104,7 +104,7 @@ void Request_Order(bomRes* met_ord)
 
 		return -1;
 	}
-	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL; 
+	insert_ord->ACC_CODE = NULL; insert_ord->PRD_CODE = NULL;
 	//insert_ord->D_Day = 0; insert_ord->NUM = 0; insert_ord->O_Day = 0;
 	insert_ord->next = NULL;
 
@@ -128,9 +128,9 @@ void Request_Order(bomRes* met_ord)
 	while (met != NULL)
 	{
 		system("cls");
-	
+
 		printf("위치 : 메인메뉴 -> 생산관리 -> 생산계획 관리 -> 발주요청\n\n");
-		
+
 
 		if (met->AMOUNT <= 0)
 		{
@@ -145,7 +145,7 @@ void Request_Order(bomRes* met_ord)
 
 
 			prd_code = met->CODE;
-			
+
 			printf("품목 코드 : %s\n", prd_code);
 			amount = met->AMOUNT;
 
@@ -234,9 +234,9 @@ void Request_Order(bomRes* met_ord)
 	printf(".");
 
 	return;
-	
-	
-	
+
+
+
 }
 void current_Order_list(char* values)
 {
@@ -248,6 +248,7 @@ void current_Order_list(char* values)
 		file_column_free();
 		return -1;
 	}
+
 	if (_insert(values) == -1)
 	{
 		printf("%s\n", err_msg);
@@ -264,7 +265,7 @@ void current_Order_list(char* values)
 //01 자재 -> 발주 -> 거래처 루트
 void storage_Orders(Order* head, int* num)
 {
-	
+
 
 	if (initalizing("sample_Order") == -1)
 	{
@@ -298,7 +299,6 @@ void storage_Orders(Order* head, int* num)
 	//발주일
 	itoa(t_order->tm_mon + 1, ord_date, 10);	//월
 	strcpy(values, ord_date);
-
 	itoa(t_order->tm_mday, ord_date, 10);	//일
 	strcat(values, ord_date);
 	strcat(values, ", ");
@@ -366,10 +366,10 @@ void all_Order_List()
 
 	while (1)
 	{
-		
+
 		if (key == '`')
 		{
-			printf("메인메뉴로 돌아갑니다");
+			printf("발주 메뉴(으)로 돌아갑니다");
 			Sleep(500);
 			printf(".");
 			Sleep(500);
@@ -377,25 +377,112 @@ void all_Order_List()
 			Sleep(500);
 			printf(".");
 			file_column_free();
-			return main();
+			system("cls");
+			return order();
 		}
 		system("cls");
 		printf("저장된 발주 내역입니다\n");
 		print_data();
 		printf("(`) 메인으로");
-		
+
 		printf("\n->");
 		scanf("%c", &key);
 		//file_column_free();
-		
 
-		
+
+
 	}
-	
-	
-	//return;
-} 
 
+
+
+	//return;
+}
+
+void part_Order_List()
+{
+	char code[7];
+	char* values = NULL;
+	//char key = NULL;
+
+	// 품목코드로 검색?
+
+
+
+	while (1)
+	{
+		if (initalizing("sample_Order") == -1)
+		{
+			printf("%s\n", err_msg);
+
+			file_column_free();
+			return -1;
+		}
+
+		printf("(`) 발주 메뉴(으)로\n");
+		printf("검색할 품목코드를 입력하시오  --> ");
+		scanf("%s", code);
+
+		if (code[0] == '`')
+		{
+			printf("발주 메뉴(으)로 돌아갑니다");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			Sleep(500);
+			printf(".");
+			file_column_free();
+			system("cls");
+			return order();
+		}
+		else
+		{
+			system("cls");
+
+			values = malloc(sizeof(code + sizeof("PRD_CODE = ") + 3));
+
+			strcpy(values, "PRD_CODE = '");
+			strcat(values, code);
+			strcat(values, "'");
+
+
+			if (_select(values, "O_DATE, D_DATE, ACC_CODE, ORDER_NUM, PRD_CODE, NUM", &select_result_str) == -1)
+			{
+				//printf("%s\n", err_msg);
+				system("cls");
+				printf("없는 코드입니다. 확인 후 다시 입력해주시길 바랍니다.\n\n");
+				//return -1;
+			}
+			else
+			{
+				//system("cls");
+
+				if ((result_count = recv_result(&_result, select_result_str)) == -1) {
+					printf("%s\n", err_msg);
+
+					file_column_free();
+					return -1;
+				}
+				printf("저장된 발주 내역입니다\n");
+				result_print(_result, result_count);
+				printf("\n");
+				file_column_free();
+				Sleep(1000);
+
+			}
+
+
+
+
+
+			//file_column_free();
+
+		}
+
+	}
+
+
+}
 
 
 
